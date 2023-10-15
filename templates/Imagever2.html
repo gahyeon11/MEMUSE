@@ -14,11 +14,17 @@
         <img id="background" src="static/bg.jpeg" alt="background">
         <canvas id="myCanvas" width="512" height="512"></canvas>
     </div>
-    
+    <select id="filterOptions">
+        <option value="none">Original</option>
+        <option value="grayscale(100%)">Grayscale</option>
+        <option value="sepia(100%)">Sepia</option>
+        <option value="blur(5px)">Blur</option>
+    </select>    
+    <button onclick="applyDirectFilter()">Apply Filter</button>
+
     <input type="number" id="rotateAngle" placeholder="Enter rotation angle">
     <button onclick="rotate()">Rotate</button>
 
-    
     <button onclick="undo()">Undo</button>
     <button onclick="redo()">Redo</button>
     

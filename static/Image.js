@@ -97,10 +97,15 @@ window.addEventListener('keydown', (e) => {
 });
 
 async function saveImage() {
+    const filterSelect = document.getElementById('filterOptions');
+    const selectedFilter = filterSelect.value; // 사용자가 선택한 필터 값을 가져옵니다.
+
     const canvas = document.createElement('canvas');
     canvas.width = background.clientWidth; 
     canvas.height = background.clientHeight; 
     const ctx = canvas.getContext('2d');
+
+    ctx.filter = selectedFilter; // 선택된 필터 값을 캔버스에 적용합니다.
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -251,13 +256,24 @@ window.rotateImage = function(degrees) {
     };
 };
 
-
-
-function applyFilter(filter) {
-    ctx.filter = filter;
-    ctx.drawImage(background, 0, 0);
-    saveState(); 
+function applySelectedFilter() {
+    const filterSelect = document.getElementById('filterOptions');
+    const selectedFilter = filterSelect.value; 
+    console.log("Selected Filter:", selectedFilter);
+    applyFilter(selectedFilter);
 }
+
+function applyDirectFilter() {
+    const filterSelect = document.getElementById('filterOptions');
+    const selectedFilter = filterSelect.value;
+    background.style.filter = selectedFilter;  // 배경 이미지에 필터 적용
+
+    const overlays = document.querySelectorAll('.overlay');
+    overlays.forEach(overlay => {
+        overlay.style.filter = selectedFilter;  // 오버레이 이미지에 필터 적용
+    });
+}
+
 
 const layerPanel = document.getElementById('layerPanel');
 
