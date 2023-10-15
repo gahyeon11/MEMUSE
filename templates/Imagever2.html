@@ -5,186 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Positioning</title>
-    <style>
-        #container {
-            position: relative;
-            width: 512px;
-            height: 512px;
-            overflow: hidden;
-        }
-
-        #background {
-            width: 512px;
-            height: 512px;
-            z-index: 1; /* 배경 이미지의 z-index를 설정 */
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 2; /* 오버레이 이미지의 z-index를 설정 */
-            cursor: pointer;
-            max-width: 512px; /* 배경 이미지의 1/2로 제한 */
-            max-height: 512px; /* 배경 이미지의 1/2로 제한 */
-        }
-    </style>
+    <link rel="stylesheet" href="static/ImgeStyle.css">
+    <script src="static/Image.js" defer></script>
 </head>
 
 <body>
     <div id="container">
         <img id="background" src="static/bg.jpeg" alt="background">
+        <canvas id="myCanvas" width="512" height="512"></canvas>
     </div>
+    
+    <input type="number" id="rotateAngle" placeholder="Enter rotation angle">
+    <button onclick="rotate()">Rotate</button>
+
+    
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
+    
+    <div id="layerPanel"></div>
+        
     <button onclick="saveImage()">Save Image</button>
-    <script>
-        const loadedImages = new Set();
-        const container = document.getElementById('container');
-        const background = document.getElementById('background');
-        let selectedOverlay = null;
-        const positions = [
-            { top: '0%', left: '0%' },   // 1
-            { top: '0%', left: '33%' },   // 2번 위치: 중앙 상단
-            { top: '0%', left: '66%' },   // 3번 위치: 오른쪽 상단
-            { top: '33%', left: '0%' },   // 4번 위치: 왼쪽 중앙
-            { top: '33%', left: '33%' },  // 5번 위치: 정중앙
-            { top: '33%', left: '66%' },  // 6번 위치: 오른쪽 중앙
-            { top: '66%', left: '0%' },   // 7번 위치: 왼쪽 하단
-            { top: '66%', left: '33%' },  // 8번 위치: 중앙 하단
-            { top: '66%', left: '66%' }
-        ];
-        function loadNewImage() {
-            fetch('/images')
-                .then(response => response.json())
-                .then(data => {
-                    data.images.forEach(image => {
-                        if (loadedImages.has(image)) {  // 이미 불러온 이미지는 건너뛴다.
-                            return;
-                        }
-                        loadedImages.add(image);
-
-                        const img = document.createElement('img');
-                        img.classList.add('overlay');
-                        img.src = '/processed/' + image;
-
-                        img.style.width = (background.clientWidth / 2) + 'px';
-                        img.style.height = 'auto';
-
-                        img.style.top = '0px';  // 이미지의 위치를 (0,0)으로 설정
-                        img.style.left = '0px';
-                        
-                        img.onclick = () => selectOverlay(img);  
-                        container.appendChild(img);
-                    });
-                })
-                .catch(error => console.error(error));
-        }
-        function resizeOverlay(scaleFactor) {
-            if (selectedOverlay) {
-                selectedOverlay.style.transform = 'scale(' + scaleFactor + ')';
-            }
-        }
-    
-        window.addEventListener('keydown', (e) => {
-            if (!selectedOverlay) return;
-    
-            const key = parseInt(e.key);
-            if (key >= 1 && key <= 9) {
-                const bgWidth = background.clientWidth;
-                const bgHeight = background.clientHeight;
-                
-                // 배경 이미지를 9분할하여 각 부분의 좌표를 계산
-                const cols = 3;
-                const rows = 3;
-                const cellWidth = bgWidth / cols;
-                const cellHeight = bgHeight / rows;
-                const col = (key - 1) % cols;
-                const row = Math.floor((key - 1) / rows);
-    
-                // 오버레이 이미지를 해당 좌표로 이동
-                const overlayX = col * cellWidth;
-                const overlayY = row * cellHeight;
-                selectedOverlay.style.left = `${overlayX}px`;
-                selectedOverlay.style.top = `${overlayY}px`;
-            }
-
-        
-            if (e.key === '+') {
-                selectedOverlay.style.width = selectedOverlay.clientWidth * 1.1 + "px";  
-                selectedOverlay.style.height = "auto";  
-            }
-            if (e.key === '-') {
-                selectedOverlay.style.width = selectedOverlay.clientWidth * 0.9 + "px";  
-                selectedOverlay.style.height = "auto";  
-            }
-            if (e.key === 'Enter') { 
-                if (selectedOverlay) {
-                    selectedOverlay.style.border = 'none'; 
-                    selectedOverlay = null; 
-                }
-                return;
-            }
-        });
-        function selectOverlay(overlay) {
-            if (selectedOverlay) {
-                selectedOverlay.style.border = 'none';
-            }
-            selectedOverlay = overlay;
-            selectedOverlay.style.border = '2px solid red';
-        }
-        
-        setInterval(loadNewImage, 5000); 
-
-        async function saveImage() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512; 
-            canvas.height = 512;
-            const ctx = canvas.getContext('2d');
-            const container = document.getElementById('container');
-        
-                
-            const background = document.getElementById('background');
-            ctx.drawImage(background, 0, 0, 512, 512);
-        
-                
-            const overlays = document.querySelectorAll('.overlay');
-            overlays.forEach(overlay => {  
-                ctx.drawImage(overlay, overlay.offsetLeft, overlay.offsetTop, overlay.clientWidth,
-                 overlay.clientHeight);  
-            });
-                
-            const dataUrl = canvas.toDataURL('image/png');
-        
-            try {
-                    
-                const response = await fetch('/save-image', {
-                    method: 'POST',
-                    body: dataURItoBlob(dataUrl), 
-                    headers: { 'Content-Type': 'image/png' }
-                });
-        
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log(result.message); 
-                } else {
-                    console.error('Failed to save image');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-        
-            // Data URL을 Blob 객체로 변환하는 함수
-        function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const buffer = new Uint8Array(byteString.length);
-            for (let i = 0; i < byteString.length; i++) {
-                buffer[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([buffer], { type: mimeString });
-        }
-    </script>
-        
+    <div id="error" style="color: red;"></div>
 </body>
 
 </html>
