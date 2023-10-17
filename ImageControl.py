@@ -3,7 +3,7 @@ import os
 from rembg import remove
 from io import BytesIO
 from PIL import Image
-
+23
 app = Flask(__name__)
 OBJECT_FOLDER = 'object'
 PROCESSED_FOLDER = 'processed'

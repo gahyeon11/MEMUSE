@@ -53,8 +53,8 @@ selected_lora = input("원하는 스타일을 입력하세요: ")
 
 # payload에 필요한 키와 값 추가 : prompt, steps, neagtive_prompt, width, height, LORA 등
 payload = {
-    "prompt" : "girl, in class, coding computer, computer monitor, sitting chair, pink curly hair, cute face, purple eye",
-    "negative_prompt" : "easynegative, negative_hand_neg, (worst quality, low quality, normal quality:1.4), lowres, skin spots, acnes, skin blemishes, age spot, glans, extra fingers",
+    "prompt" : "classroom, office, no people",
+    "negative_prompt" : "FastNegativeV2,(bad-artist:1),(worst quality, low quality:1.4),(bad_prompt_version2:0.8),bad-hands-5,lowres,bad anatomy,bad hands,((text)),(watermark),error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,((username)),blurry,(extra limbs),bad-artist-anime,badhandv4,EasyNegative,ng_deepnegative_v1_75t,verybadimagenegative_v1.3,BadDream,(three hands:1.6),(three legs:1.2),(more than two hands:1.4),(more than two legs,:1.2),label,",
     "steps" : 25
 }
 
