@@ -30,7 +30,7 @@
             recognition.onresult = function (event) {
                 var interim_transcript = '';
                 var final_transcript = '';
-                
+
                 for (var i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
                         final_transcript += event.results[i][0].transcript;
@@ -38,11 +38,11 @@
                         interim_transcript += event.results[i][0].transcript;
                     }
                 }
-                
+
                 document.getElementById('result').innerHTML = '중간값: ' + interim_transcript + '<br/>결과값: ' + final_transcript;
 
                 if (final_transcript) {
-                    final_transcripts.push(final_transcript);
+                    final_transcripts.push(final_transcript); // 배열에 문장을 그대로 저장.
                     document.getElementById('finalResults').innerHTML = '최종 결과 프롬프트: ' + final_transcripts.join(' ');
                 }
             };
@@ -59,62 +59,40 @@
             });
 
             document.getElementById('sendResults').addEventListener('click', () => {
-                translateText(final_transcripts.join(' ')); 
+                translateText(final_transcripts); // 문장 배열을 그대로 전달.
             });
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
 
-        function translateText(text) {
-            var clientId = 'fIfMjFH9VJ1GjQPim7j5';
-            var clientSecret = 'SH5iWQfw7q';
+        function translateText(sentences) {
+            var translatedSentences = [];
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/translate', true);  // 자체 서버의 엔드포인트로 변경
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.setRequestHeader('X-Naver-Client-Id', clientId);
-            xhr.setRequestHeader('X-Naver-Client-Secret', clientSecret);
+            sentences.forEach(sentence => {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/translate', false); // 동기 방식으로 변경
+                xhr.setRequestHeader('Content-Type', 'application/json');
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var translatedText = response.message.result.translatedText;
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        var translatedText = response.translated_text;
+                        translatedSentences.push(translatedText);
 
-                    // 번역된 텍스트를 화면에 표시
-                    document.getElementById('result').innerHTML = '번역된 텍스트: ' + translatedText;
-                    document.getElementById('translatedResults').innerText = '최종 프롬프트(번역): ' + translatedText;
-
-                    // 번역된 텍스트를 서버에 전송
-                    sendResultsToServer(final_transcripts.join(' '), translatedText);
-                }
-            };
-
-            var body = 'source=ko&target=en&text=' + encodeURI(text);
-            xhr.send(body);
-        }
-
-        function sendResultsToServer(originalText, translatedText) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:5000/save-results", true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.status === "success" && response.original_text === originalText && response.translated_text === translatedText) {
-                        document.getElementById('serverResponse').innerText = "전송 성공";
-                    } else {
-                        document.getElementById('serverResponse').innerText = "전송 실패";
+                        var serverMessage = response.message;
+                        document.getElementById('serverResponse').innerText = serverMessage;
                     }
-                }
-            };
+                };
 
-            var data = {
-                originalText: originalText,
-                translatedText: translatedText
-            };
+                var data = {
+                    text: sentence // 문장을 그대로 전달.
+                };
 
-            xhr.send(JSON.stringify(data));
+                xhr.send(JSON.stringify(data));
+            });
+
+            document.getElementById('result').innerHTML = '번역된 텍스트: ' + translatedSentences.join('. ');
+            document.getElementById('translatedResults').innerText = '최종 프롬프트(번역): ' + translatedSentences.join('. ');
         }
     </script>
 </body>
