@@ -39,11 +39,7 @@ def translate():
 
         url = 'https://openapi.naver.com/v1/papago/n2mt'
         headers = {
-<<<<<<< HEAD
             'Content-Type': 'application/json',  # JSON 형식으로 설정
-=======
-            'Content-Type': 'application/x-www-form-urlencoded',
->>>>>>> 38ce6e3e60f81e8e4bf67cb9bed6df4db9ec5db5
             'X-Naver-Client-Id': client_id,
             'X-Naver-Client-Secret': client_secret,
         }
@@ -71,10 +67,7 @@ def translate():
         logging.error(f"Exception: {e}")
         return jsonify(status="failure", error=str(e), message="서버 저장 실패"), 500
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 38ce6e3e60f81e8e4bf67cb9bed6df4db9ec5db5
 @app.route("/translations", methods=["GET"])
 def get_translations():
     try:
