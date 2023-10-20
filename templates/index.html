@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
     <title>음성 인식</title>
 </head>
-
 <body>
     <button id="startRecognition">음성 인식 시작</button>
     <button id="sendResults">결과 전송</button>
@@ -16,6 +14,7 @@
     <div id='finalResults'>최종 결과 프롬프트:</div>
     <div id='translatedResults'>최종 프롬프트(번역):</div>
     <div id='serverResponse'></div>
+    <div id='translatedPrompt'>std 프롬프트:</div>
 
     <script>
         if (annyang) {
@@ -64,37 +63,65 @@
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
+        function getTranslatedText(callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/translate', true); // 예상되는 서버 경로로 수정
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var translatedPrompt = response.translatedPrompt; // 예상되는 서버 응답에서 필요한 데이터 가져오기
+                    callback(translatedPrompt);
+                }
+            };
+            
+            xhr.send();
+        }
+        
+        // 'sendResults' 버튼 클릭 시 서버로부터 번역된 텍스트를 가져와서 출력
+        document.getElementById('sendResults').addEventListener('click', () => {
+            getTranslatedText(function (translatedPrompt) {
+                document.getElementById('translatedPrompt').innerText = 'std 프롬프트: ' + translatedPrompt;
+            });
+        });
 
         function translateText(sentences) {
             var translatedSentences = [];
-
+        
             sentences.forEach(sentence => {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/translate', false); // 동기 방식으로 변경
                 xhr.setRequestHeader('Content-Type', 'application/json');
-
+        
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         var response = JSON.parse(xhr.responseText);
                         var translatedText = response.translated_text;
                         translatedSentences.push(translatedText);
-
+        
                         var serverMessage = response.message;
                         document.getElementById('serverResponse').innerText = serverMessage;
+        
+                        // 추가: 번역된 프롬프트 표시
+                        var translatedPrompt = response.translated_text;
+                        document.getElementById('translatedPrompt').innerText = 'std 프롬프트: ' + translatedPrompt;
+
                     }
                 };
-
+        
                 var data = {
                     text: sentence // 문장을 그대로 전달.
                 };
-
+        
                 xhr.send(JSON.stringify(data));
             });
 
+        
             document.getElementById('result').innerHTML = '번역된 텍스트: ' + translatedSentences.join('. ');
             document.getElementById('translatedResults').innerText = '최종 프롬프트(번역): ' + translatedSentences.join('. ');
         }
+        
     </script>
 </body>
-
 </html>
