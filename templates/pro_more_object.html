@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-6-fJZ">
-  <a href="pro_object_complete.html">   
+  <a href="{{ url_for('pro_object_complete') }}">   
   <img class="auto-group-bwbf-msP" src="../static/assets/auto-group-bwbf.png"/></a>
   <div class="auto-group-jtvh-68y">
     <div class="group-61-1Fw">
       <div class="auto-group-xbuv-Mah">
         <div class="group-62-U9X">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-oBo" src="../static/assets/group-11-6Dw.png"/></a>
           <div class="me-muse-vnD">ME:MUSE</div>
         </div>
         <div class="group-10-SEm">
           <div class="group-1-npR">
-            <div class="workplace-iTB"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-RcV"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-9YV"><a href="guide.html">Guide</a></div>
-            <div class="login-UKs"><a href="login.html">Login</a></div>
+            <div class="workplace-iTB"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-RcV"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-9YV"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-UKs"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-osw">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-mpm" src="../static/assets/icons8-user1-1-o8D.png"/></a>
           </div>
         </div>
@@ -78,8 +78,8 @@
         클릭 또는 말씀해 주세요.
         </div>
         <div class="auto-group-vunh-k5f">
-          <div class="group-40-Tkm"><a href="pro_object.html" style="color:white">예</a></div>
-          <div class="group-41-iAu"><a href="pro_edit_object.html" style="color:white">아니오</a></div>
+          <div class="group-40-Tkm"><a href="{{ url_for('pro_object') }}" style="color:white">예</a></div>
+          <div class="group-41-iAu"><a href="{{ url_for('pro_edit_object') }}" style="color:white">아니오</a></div>
         </div>
       </div>
       <img class="bi-mic-fill-9X7" src="../static/assets/bi-mic-fill-PQV.png"/>

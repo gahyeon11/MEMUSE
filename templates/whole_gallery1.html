@@ -23,19 +23,19 @@
     <div class="group-61-kUq">
       <div class="auto-group-zbyj-hus">
         <div class="group-62-Cbj">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-KRT" src="../static/assets/group-11-xfK.png"/></a>
           <div class="me-muse-T1s">ME:MUSE</div>
         </div>
         <div class="group-10-Md3">
           <div class="group-1-K45">
-            <div class="workplace-q2R"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-MFf"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-sjo"><a href="guide.html">Guide</a></div>
-            <div class="login-zpR"><a href="login.html">Login</a></div>
+            <div class="workplace-q2R"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-MFf"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-sjo"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-zpR"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-LNV">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-W25" src="../static/assets/icons8-user1-1-Y1F.png"/></a>
           </div>
         </div>
@@ -55,11 +55,11 @@
       <span style="color:#1400ff; font-weight:bold">
         “만화 전시회”</span></span>
         <div style="text-align:right; position:absolute; right:400px; height:180px; font-weight:bold; line-height:24px;">
-          <a href="whole_gallery1.html"><span>전체</a><span><br/> 
-            <a href="cartoon_gallery1.html"><span>만화</a><span><br/> 
-            <a href="watercolor_gallery1.html"><span>수채화</a><span><br/> 
-            <a href="pastel_gallery1.html"><span>파스텔</a><span><br/> 
-            <a href="live_gallery1.html"><span>실사</a><span><br/>
+          <a href="{{ url_for('whole_gallery1') }}"><span>전체</a><span><br/> 
+            <a href="{{ url_for('cartoon_gallery1') }}"><span>만화</a><span><br/> 
+            <a href="{{ url_for('watercolor_gallery1') }}"><span>수채화</a><span><br/> 
+            <a href="{{ url_for('pastel_gallery1') }}"><span>파스텔</a><span><br/> 
+            <a href="{{ url_for('live_gallery1') }}"><span>실사</a><span><br/>
       </div>
       </div>
     <div class="auto-group-vk3s-MD3">
@@ -105,13 +105,13 @@
       </div>
       <div class="auto-group-ju3f-KTw">
         <div class="group-29-dUd">
-          <div class="group-28-mKw"><a href="whole_gallery1.html">1</a></div>
+          <div class="group-28-mKw"><a href="{{ url_for('whole_gallery1') }}">1</a></div>
         </div>
         <div class="group-30-cLZ">
-          <div class="group-28-9LV"><a href="whole_gallery2.html">2</a></div>
+          <div class="group-28-9LV"><a href="{{ url_for('whole_gallery2') }}">2</a></div>
         </div>
         <div class="group-31-R37">
-          <div class="group-28-Lfs"><a href="whole_gallery3.html">3</a></div>
+          <div class="group-28-Lfs"><a href="{{ url_for('whole_gallery3') }}">3</a></div>
         </div>
         <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
       </div>

@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-9-gHf">
-  <a href="pro_edit_obj_check.html">   
+  <a href="{{ url_for('pro_edit_obj_check') }}">   
   <img class="auto-group-kw7s-Pxm" src="../static/assets/auto-group-kw7s.png"/></a>
   <div class="auto-group-dsgr-vho">
     <div class="group-61-FEH">
       <div class="auto-group-wbhs-c4q">
         <div class="group-62-7nH">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-eXK" src="../static/assets/group-11-xC1.png"/></a>
           <div class="me-muse-ndX">ME:MUSE</div>
         </div>
         <div class="group-10-twT">
           <div class="group-1-FX7">
-            <div class="workplace-yi1"><a href="-1J1.html">Workplace</a></div>
-            <div class="museum-VgM"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-DMT"><a href="guide.html">Guide</a></div>
-            <div class="login-8jK"><a href="login.html">Login</a></div>
+            <div class="workplace-yi1"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-VgM"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-DMT"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-8jK"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-sS1">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-EnM" src="../static/assets/icons8-user1-1-8E5.png"/></a>
           </div>
         </div>
@@ -79,8 +79,8 @@
         <span class="item--LVF-sub-2">&nbsp;‘이동 안함 ’</span>
         <span class="item--LVF-sub-3">을 클릭 또는 말씀해 주세요.</span>
       </div>
-      <div class="group-63-BGu"><a href="pro_filter.html" style="color:white">이동 안함</a></div>
-      <a href="pro_edit_shot_check.html"><div class="rectangle-9-SCq">
+      <div class="group-63-BGu"><a href="{{ url_for('pro_filter') }}" style="color:white">이동 안함</a></div>
+      <a href="{{ url_for('pro_edit_shot_check') }}"><div class="rectangle-9-SCq">
       </div></a>
     </div>
   </div>

@@ -23,19 +23,19 @@
     <div class="group-61-tR7">
       <div class="auto-group-x4yq-337">
         <div class="group-62-kiD">
-          <a href="intro.html">
+          <a href="{{ url_for('/') }}">
           <img class="group-11-5Eh" src="../static/assets/group-11-BRB.png"/></a>
           <div class="me-muse-CKK">ME:MUSE</div>
         </div>
         <div class="group-10-W57">
           <div class="group-1-ruf">
-            <div class="workplace-CCq"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-iBB"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-e4q"><a href="guide.html">Guide</a></div>
-            <div class="login-AJ5"><a href="login.html">Login</a></div>
+            <div class="workplace-CCq"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-iBB"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-e4q"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-AJ5"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-Vr9">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-Tny" src="../static/assets/icons8-user1-1-vvV.png"/></a>
           </div>
         </div>

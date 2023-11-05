@@ -18,25 +18,25 @@
 </head>
 <body>
 <div class="item-12-1-mLM">
-  <a href="pro_specify_obj_num.html">   
+  <a href="{{ url_for('pro_specify_obj_num') }}">   
   <img class="auto-group-qok5-VGM" src="../static/assets/auto-group-qok5.png"/></a>
   <div class="auto-group-gj7w-cbs">
     <div class="group-61-YEd">
       <div class="auto-group-9cdo-JUh">
         <div class="group-62-1tu">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-9ER" src="../static/assets/group-11-ZZT.png"/></a>
           <div class="me-muse-V3P">ME:MUSE</div>
         </div>
         <div class="group-10-zF3">
           <div class="group-1-xBs">
-            <div class="workplace-g7s"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-PY5"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-Wsb"><a href="guide.html">Guide</a></div>
-            <div class="login-SWM"><a href="login.html">Login</a></div>
+            <div class="workplace-g7s"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-PY5"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-Wsb"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-SWM"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-jVT">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-gfb" src="../static/assets/icons8-user1-1-1aq.png"/></a>
           </div>
         </div>
@@ -77,8 +77,8 @@
       <div class="rectangle-9-6ty">
       </div>
       <div class="auto-group-dquy-EkH">
-        <div class="auto-group-cybb-yC5"><a href="pro_specify_obj_num2.html" style="color:white">예</a></div>
-        <div class="auto-group-fjqf-2w3"><a href="pro_specify_obj_num.html" style="color:white">아니오</a></div>
+        <div class="auto-group-cybb-yC5"><a href="{{ url_for('pro_specify_obj_num2') }}" style="color:white">예</a></div>
+        <div class="auto-group-fjqf-2w3"><a href="{{ url_for('pro_specify_obj_num') }}" style="color:white">아니오</a></div>
       </div>
       <div class="item--uV3">
         <span class="item--uV3-sub-0">맞으면&nbsp;</span>
