@@ -85,10 +85,10 @@ def voice_login_join_choice():
 def cartoon_gallery1():
     return render_template('cartoon_gallery1.html')
 @app.route('/cartoon_gallery2')
-def cartoon_gallery1():
+def cartoon_gallery2():
     return render_template('cartoon_gallery2.html')
 @app.route('/cartoon_gallery3')
-def cartoon_gallery1():
+def cartoon_gallery3():
     return render_template('cartoon_gallery3.html')
 @app.route('/guide')
 def guide():
