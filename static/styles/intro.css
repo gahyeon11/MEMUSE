@@ -413,6 +413,7 @@ body {
   flex-shrink: 0;
 }
 .item-1-pAV .auto-group-lc9o-RV3 .auto-group-deps-yKo .group-23-BCu {
+  color: #0d273e;
   margin: 0rem 15.55rem 0rem 13.15rem;
   width: calc(100% - 25.0rem);
   height: 8.7rem;
@@ -424,7 +425,7 @@ body {
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1.2125;
-  color: #0d273e;
+  
   /* font-family: Inter, 'Source Sans Pro'; */
   font-family: 'Hahmlet', Inter, serif;
   white-space: nowrap;

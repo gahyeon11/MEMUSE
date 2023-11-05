@@ -11,10 +11,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anybody%3A700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500%2C600"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="./styles/login.css"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/styles/login.css"/>
 </head>
 <body>
 <div class="item--39B">
@@ -25,7 +25,7 @@
       <div class="auto-group-mquj-9bX">
         <div class="group-62-4yP">
           <a href="intro.html">  
-          <img class="group-11-CZo" src="./assets/group-11-iyP.png"/></a>
+          <img class="group-11-CZo" src="/static/assets/group-11-iyP.png"/></a>
           <div class="me-muse-Ydf">ME:MUSE</div>
         </div>
         <div class="group-10-G3s">
@@ -37,22 +37,29 @@
           </div>
           <div class="group-2-dh3">
             <a href="my_page.html"> 
-            <img class="icons8-user1-1-o5j" src="./assets/icons8-user1-1-tCZ.png"/></a>
+            <img class="icons8-user1-1-o5j" src="/static/assets/icons8-user1-1-tCZ.png"/></a>
           </div>
         </div>
       </div>
-      <img class="line-2-vw3" src="./assets/line-2-QFj.png"/>
+      <img class="line-2-vw3" src="/static/assets/line-2-QFj.png"/>
     </div>
-    <img class="group-11-Tvy" src="./assets/group-11-ZUd.png"/>
+    <img class="group-11-Tvy" src="/static/assets/group-11-ZUd.png"/>
     <div class="auto-group-7ekt-bnH">
-      <form action="intro.html" method="#" id="login-form">
-      <div class="auto-group-2zoo-v3s"><input type="text" id="id" required autofocus placeholder="아이디"></div>
-      <div class="auto-group-qiwb-xWM"><input type="password" id="pwd" required placeholder="비밀번호"></div>
-      <div class="group-6-1zR"><input type="submit" value="로그인" style="background:#003D75; color:white"></div></form>
-      <div class="item--Ut1"><a href="join.html">회원가입</a></div>
+      
+        <div class="auto-group-2zoo-v3s">
+          <input type="text" name="username" id="id" required autofocus placeholder="아이디">
+        </div>
+        <div class="auto-group-qiwb-xWM">
+          <input type="password" name="password" id="pwd" required placeholder="비밀번호">
+        </div>
+        <div class="group-6-1zR">
+          <a href="{{ url_for('workplace') }}" input type="submit" value="로그인" style="background:#003D75; color:white">로그인</a>
+        </div>
+        <div class="item--Ut1"><a href="{{ url_for('register') }}">회원가입</a></div>
     </div>
   </div>
   <div class="rectangle-30-ag9">
   </div>
 </div>
 </body>
+</html>
