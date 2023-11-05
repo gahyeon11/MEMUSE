@@ -2,6 +2,7 @@ import json
 import requests
 import io
 import base64
+import sqlite3
 from PIL import Image, PngImagePlugin
 from datetime import datetime
 
@@ -51,9 +52,27 @@ for key in LORA_CHOICES.keys():
 
 selected_lora = input("원하는 스타일을 입력하세요: ")
 
+def get_latest_translated_text():
+    # 데이터베이스 연결
+    conn = sqlite3.connect('translations.db')
+    c = conn.cursor()
+
+    # 가장 최근의 번역된 텍스트를 검색
+    c.execute('SELECT translated_text FROM translations ORDER BY id DESC LIMIT 1')
+
+    # 데이터 가져오기
+    result = c.fetchone()
+    conn.close()
+
+    # 결과가 있다면 번역된 텍스트를 반환, 없으면 빈 문자열 반환
+    return result[0] if result else ""
+
+
+translated_text = get_latest_translated_text()
+print(translated_text)
 # payload에 필요한 키와 값 추가 : prompt, steps, neagtive_prompt, width, height, LORA 등
 payload = {
-    "prompt" : "girl, in class, coding computer, computer monitor, sitting chair, pink curly hair, cute face, purple eye",
+    "prompt" : translated_text,
     "negative_prompt" : "easynegative, negative_hand_neg, (worst quality, low quality, normal quality:1.4), lowres, skin spots, acnes, skin blemishes, age spot, glans, extra fingers",
     "steps" : 25
 }
@@ -65,6 +84,8 @@ if selected_lora in LORA_CHOICES:
         payload["prompt"] += lora_style
 else:
     print("잘못된 선택입니다.")
+
+print(payload)
 
 # API 요청, 반환값은 images, parameter, info
 response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
