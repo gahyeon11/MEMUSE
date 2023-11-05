@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <title>작업실</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/workplace.css') }}"/>
+  <link rel="stylesheet" href="../static/styles/workplace.css"/>
 </head>
 <body>
 <div class="item--hry">
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <img class="line-2-Me1" src="{{ url_for('static', filename='assets/line-2-ByK.png') }}"/>
+      <img class="line-2-Me1" src="../static/assets/line-2-ByK.png"/>
     </div>
     <div class="auto-group-9pds-6Lh">
       <div class="auto-group-vbxo-DgD">
@@ -53,11 +53,42 @@
           <div class="group-62-4MP"><a href="{{ url_for('pro_style') }}" style="color:white">전문가</a></div>
         </div>
       </div>
-      <img class="bi-mic-fill-63B" src="{{ url_for('static', filename='assets/bi-mic-fill-X77.png') }}"/>
+      <img class="bi-mic-fill-63B" src="../static/assets/bi-mic-fill-X77.png"/>
     </div>
   </div>
   <div class="rectangle-30-oiH">
   </div>
 </div>
+<script>
+  // 음성 인식 API 초기화
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  // 음성 인식 시작
+  recognition.start();
+
+  // 음성 인식 결과 이벤트 리스너
+  recognition.onresult = (event) => {
+    const result = event.results[event.results.length - 1][0].transcript;
+    console.log('음성 인식 결과:', result);
+
+    // 인식된 음성 명령에 따라 URL로 이동
+
+    if (result === '마이페이지') {
+      window.location.href = 'mypage.html'; // mypage.html 페이지로 이동
+    }
+    if (result === '가이드') {
+      window.location.href = 'guide.html'; // guide.html 페이지로 이동
+    }
+    if (result === '초보자') {
+      window.location.href = 'new_style.html'; // new_shot.html 페이지로 이동
+    }
+    if (result === '전문가') {
+      window.location.href = 'pro_style.html'; // new_shot.html 페이지로 이동
+    }
+    // 다른 명령에 대한 처리도 추가할 수 있습니다.
+  };
+</script>
 </body>
 </html>
