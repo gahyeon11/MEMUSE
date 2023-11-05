@@ -59,18 +59,21 @@
     <img class="group-11-Tvy" src="/static/assets/group-11-ZUd.png"/>
     <div class="auto-group-7ekt-bnH">
       
+      <form action="{{ url_for('login') }}" method="post" id="login-form">
         <div class="auto-group-2zoo-v3s">
           <input type="text" name="username" id="id" required autofocus placeholder="아이디">
         </div>
         <div class="auto-group-qiwb-xWM">
           <input type="password" name="password" id="pwd" required placeholder="비밀번호">
         </div>
-        <div class="group-6-1zR">
-          <a href="{{ url_for('workplace') }}" input type="submit" value="로그인" style="background:#003D75; color:white">로그인</a>
+        <div class="group-6-1zR"><a href="workplace.html">
+          <input type="submit" value="로그인" style="background:#003D75; color:white"></a>
         </div>
-        <div class="item--Ut1"><a href="{{ url_for('register') }}">회원가입</a></div>
+      </form>
+      <div class="item--Ut1">
+        <a href="{{ url_for('register') }}">회원가입</a>
+      </div>
     </div>
-  </div>
   <div class="rectangle-30-ag9">
   </div>
 </div>
