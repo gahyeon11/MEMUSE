@@ -4,65 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
     <title>음성 인식</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 </head>
 <body>
-    <button id="startRecognition">음성 인식 시작</button>
-    <button id="sendResults">결과 전송</button>
     <div id='result'>결과가 없습니다.</div>
     <div id='finalResults'>최종 결과 프롬프트:</div>
     <div id='translatedResults'>최종 프롬프트(번역):</div>
-    <div id='serverResponse'></div>
-    <div id='translatedPrompt'>std 프롬프트:</div>
+    <button id="sendResults">번역 시작</button>
+    <button id="saveResults">번역 결과 저장</button>
 
     <script>
         if (annyang) {
             annyang.setLanguage('ko');
-            annyang.start({ autoRestart: false, continuous: true });
-
-            var recognition = annyang.getSpeechRecognizer();
             var final_transcripts = [];
 
-            recognition.interimResults = true;
-
-            recognition.onresult = function (event) {
-                var interim_transcript = '';
-                var final_transcript = '';
-
-                for (var i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal) {
-                        final_transcript += event.results[i][0].transcript;
-                    } else {
-                        interim_transcript += event.results[i][0].transcript;
-                    }
-                }
-
-                document.getElementById('result').innerHTML = '중간값: ' + interim_transcript + '<br/>결과값: ' + final_transcript;
-
-                if (final_transcript) {
-                    final_transcripts.push(final_transcript); // 배열에 문장을 그대로 저장.
-                    document.getElementById('finalResults').innerHTML = '최종 결과 프롬프트: ' + final_transcripts.join(' ');
+            // 명령어를 통한 음성 인식 제어
+            var commands = {
+                '음성 시작': function() {
+                    annyang.resume();
+                },
+                '음성 중지': function() {
+                    annyang.pause();
                 }
             };
 
-            const startButton = document.getElementById('startRecognition');
-            startButton.addEventListener('click', () => {
-                if (annyang.isListening()) {
-                    annyang.pause();
-                    startButton.innerText = '음성 인식 시작';
-                } else {
-                    annyang.resume();
-                    startButton.innerText = '음성 인식 일시 중지';
-                }
+            // 명령어 추가
+            annyang.addCommands(commands);
+
+            // 음성 결과 처리 콜백
+            annyang.addCallback('result', function(phrases) {
+                var final_transcript = phrases[0].trim();
+                final_transcripts.push(final_transcript);
+                document.getElementById('finalResults').textContent = '최종 결과 프롬프트: ' + final_transcripts.join(' ');
+                document.getElementById('result').textContent = '결과값: ' + final_transcript;
             });
 
-            document.getElementById('sendResults').addEventListener('click', () => {
-                translateText(final_transcripts); // 문장 배열을 그대로 전달.
+            // 번역 시작 버튼 이벤트 리스너 설정
+            document.getElementById('sendResults').addEventListener('click', function() {
+                translateText(final_transcripts);
             });
+
+            // 결과 저장 버튼 이벤트 리스너 설정
+            document.getElementById('saveResults').addEventListener('click', function() {
+                saveTranslationResults(final_transcripts);
+            });
+
+            // annyang 시작, 하지만 자동으로는 인식을 시작하지 않음
+            annyang.start({ autoRestart: true, continuous: true });
+
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
+<<<<<<< HEAD
+
+=======
         function getTranslatedText(callback, textToTranslate) {
             // AJAX 요청 생성
             var xhr = new XMLHttpRequest();
@@ -94,42 +90,78 @@
                 getTranslatedText(displayTranslatedText, sentence);
             });
         });
+>>>>>>> 89ebaafd0551bcdccce6eee6213f166b7a44aaec
         function translateText(sentences) {
-            var translatedSentences = [];
-        
-            sentences.forEach(sentence => {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/translate', false); // 동기 방식으로 변경
-                xhr.setRequestHeader('Content-Type', 'application/json');
-        
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        var translatedText = response.translated_text;
-                        translatedSentences.push(translatedText);
-        
-                        var serverMessage = response.message;
-                        document.getElementById('serverResponse').innerText = serverMessage;
-        
-                        // 추가: 번역된 프롬프트 표시
-                        var translatedPrompt = response.translated_text;
-                        document.getElementById('translatedPrompt').innerText = 'std 프롬프트: ' + translatedPrompt;
-
-                    }
-                };
-        
-                var data = {
-                    text: sentence // 문장을 그대로 전달.
-                };
-        
-                xhr.send(JSON.stringify(data));
+            Promise.all(sentences.map(sentence => {
+                // POST request to your translation endpoint
+                return fetch('/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: sentence })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const translatedText = data.translated_text;
+                    document.getElementById('translatedResults').innerText += '번역된 프롬프트: ' + translatedText + "\n";
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            })).then(() => {
+                console.log('All translations are done!');
             });
+        }
+
+        function saveTranslationResults(sentences) {
+            sentences.forEach(sentence => {
+                // POST request to your translation endpoint
+                fetch('/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: sentence })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Now save the translation result
+                    fetch('/save-results', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            originalText: sentence,
+                            translatedText: data.translated_text
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(saveData => {
+                        if(saveData.status === "success") {
+                            console.log('Result saved:', saveData);
+                            // Success message handling
+                        } else {
+                            console.error('Error saving result:', saveData.error);
+                            // Error message handling
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            });
+<<<<<<< HEAD
+        }
+=======
 
         
             document.getElementById('result').innerHTML = '번역된 텍스트: ' + translatedSentences.join('. ');
             document.getElementById('translatedResults').innerText = '최종 프롬프트(번역): ' + translatedSentences.join('. ');
         } 
         
+>>>>>>> 89ebaafd0551bcdccce6eee6213f166b7a44aaec
     </script>
 </body>
 </html>
