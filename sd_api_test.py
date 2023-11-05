@@ -52,6 +52,7 @@ for key in LORA_CHOICES.keys():
 
 selected_lora = input("원하는 스타일을 입력하세요: ")
 
+# 데이터베이스의 텍스트 프롬프트로 연결
 def get_latest_translated_text():
     # 데이터베이스 연결
     conn = sqlite3.connect('translations.db')
@@ -67,6 +68,29 @@ def get_latest_translated_text():
     # 결과가 있다면 번역된 텍스트를 반환, 없으면 빈 문자열 반환
     return result[0] if result else ""
 
+# 이미지 데이터베이스 파일명
+db_file = 'image_storage.db'
+
+# 데이터베이스에 이미지 테이블 생성
+def create_image_table():
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+    c.execute(''' CREATE TABLE IF NOT EXISTS images(
+        id INTEGER PRIMARY KEY,
+        image BLOB NOT NULL,
+        created_at DATETIME NOT NULL);
+        ''')
+    conn.commit()
+    conn.close()
+
+create_image_table()
+
+def insert_image_to_db(image_data, created_at):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+    c.execute("INSERT INTO images (image, created_at) VALUES (?, ?)", (image_data, created_at))
+    conn.commit()
+    conn.close()
 
 translated_text = get_latest_translated_text()
 print(translated_text)
@@ -92,13 +116,16 @@ response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
 
 r = response.json()
 
-# 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-for i in r['images']:
-    image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+# 이미지 저장, 데이터베이스에 이미지 데이터 삽입
+
+for idx, base64_str in enumerate(r['images']):
+    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    image_data = base64.b64decode(base64_str.split(",",1)[1])
+    image = Image.open(io.BytesIO(image_data)))
 
     # API 요청을 보내 이미지 정보 검색
     png_payload = {
-        "image": "data:image/png;base64," + i
+        "image": "data:image/png;base64," + idx
     }
     response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
 
@@ -112,3 +139,6 @@ for i in r['images']:
 
     # 이미지 저장
     image.save(file_name, pnginfo = pnginfo)
+    
+    # 데이터베이스에 이미지 데이터 삽입
+    insert_image_to_db(image_data, current_time)
