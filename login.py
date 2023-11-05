@@ -305,6 +305,11 @@ def whole_gallery2():
 def whole_gallery3():
     return render_template('whole_gallery3.html')
 
+@app.route('/intro')
+def intro():
+ 
+    return render_template('intro.html')
+
 @app.route('/')
 def index():
     return render_template('intro.html')
