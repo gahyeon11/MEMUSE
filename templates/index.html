@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
     <title>음성 인식</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 </head>
 <body>
-    <button id="startRecognition">음성 인식 시작</button>
     <div id='result'>결과가 없습니다.</div>
     <div id='finalResults'>최종 결과 프롬프트:</div>
     <div id='translatedResults'>최종 프롬프트(번역):</div>
@@ -19,28 +17,27 @@
     <script>
         if (annyang) {
             annyang.setLanguage('ko');
-            
             var final_transcripts = [];
 
-            // 새로운 콜백 이벤트를 추가합니다.
+            // 명령어를 통한 음성 인식 제어
+            var commands = {
+                '음성 시작': function() {
+                    annyang.resume();
+                },
+                '음성 중지': function() {
+                    annyang.pause();
+                }
+            };
+
+            // 명령어 추가
+            annyang.addCommands(commands);
+
+            // 음성 결과 처리 콜백
             annyang.addCallback('result', function(phrases) {
-                // 이벤트가 최종 결과인지 확인합니다.
                 var final_transcript = phrases[0].trim();
                 final_transcripts.push(final_transcript);
                 document.getElementById('finalResults').textContent = '최종 결과 프롬프트: ' + final_transcripts.join(' ');
                 document.getElementById('result').textContent = '결과값: ' + final_transcript;
-            });
-
-            // 시작 버튼 이벤트 리스너 설정
-            const startButton = document.getElementById('startRecognition');
-            startButton.addEventListener('click', function() {
-                if (annyang.isListening()) {
-                    annyang.pause();
-                    this.textContent = '음성 인식 시작';
-                } else {
-                    annyang.resume();
-                    this.textContent = '음성 인식 일시 중지';
-                }
             });
 
             // 번역 시작 버튼 이벤트 리스너 설정
@@ -53,16 +50,16 @@
                 saveTranslationResults(final_transcripts);
             });
 
-            // annyang 시작
-            annyang.start({ autoRestart: false, continuous: true });
+            // annyang 시작, 하지만 자동으로는 인식을 시작하지 않음
+            annyang.start({ autoRestart: true, continuous: true });
 
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
 
-        
         function translateText(sentences) {
             Promise.all(sentences.map(sentence => {
+                // POST request to your translation endpoint
                 return fetch('/translate', {
                     method: 'POST',
                     headers: {
@@ -70,15 +67,9 @@
                     },
                     body: JSON.stringify({ text: sentence })
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     const translatedText = data.translated_text;
-                    // 다른 작업 수행...
                     document.getElementById('translatedResults').innerText += '번역된 프롬프트: ' + translatedText + "\n";
                 })
                 .catch(error => {
@@ -91,6 +82,7 @@
 
         function saveTranslationResults(sentences) {
             sentences.forEach(sentence => {
+                // POST request to your translation endpoint
                 fetch('/translate', {
                     method: 'POST',
                     headers: {
@@ -100,6 +92,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    // Now save the translation result
                     fetch('/save-results', {
                         method: 'POST',
                         headers: {
@@ -114,21 +107,18 @@
                     .then(saveData => {
                         if(saveData.status === "success") {
                             console.log('Result saved:', saveData);
-                            // 성공 메시지 처리
+                            // Success message handling
                         } else {
                             console.error('Error saving result:', saveData.error);
-                            // 오류 메시지 처리
+                            // Error message handling
                         }
-                    }
-                    )
-                }
-                )
-            }
-            )
+                    });
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            });
         }
-
-
     </script>
 </body>
 </html>
-
