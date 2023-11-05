@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="C:\Users\DS\Documents\GitHub\MEMUSE\favicon.ico">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-        <title>음성 인식</title>
-    </head>
-    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <title>음성 인식</title>
+</head>
 <body>
     <button id="startRecognition">음성 인식 시작</button>
     <div id='result'>결과가 없습니다.</div>
@@ -20,55 +19,48 @@
     <script>
         if (annyang) {
             annyang.setLanguage('ko');
-            annyang.start({ autoRestart: false, continuous: true });
-
-            var recognition = annyang.getSpeechRecognizer();
+            
             var final_transcripts = [];
 
-            recognition.interimResults = true;
+            // 새로운 콜백 이벤트를 추가합니다.
+            annyang.addCallback('result', function(phrases) {
+                // 이벤트가 최종 결과인지 확인합니다.
+                var final_transcript = phrases[0].trim();
+                final_transcripts.push(final_transcript);
+                document.getElementById('finalResults').textContent = '최종 결과 프롬프트: ' + final_transcripts.join(' ');
+                document.getElementById('result').textContent = '결과값: ' + final_transcript;
+            });
 
-            recognition.onresult = function (event) {
-                var interim_transcript = '';
-                var final_transcript = '';
-
-                for (var i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal) {
-                        final_transcript += event.results[i][0].transcript;
-                    } else {
-                        interim_transcript += event.results[i][0].transcript;
-                    }
-                }
-
-                document.getElementById('result').innerHTML = '중간값: ' + interim_transcript + '<br/>결과값: ' + final_transcript;
-
-                if (final_transcript) {
-                    final_transcripts.push(final_transcript);
-                    document.getElementById('finalResults').innerHTML = '최종 결과 프롬프트: ' + final_transcripts.join(' ');
-                }
-            };
-
+            // 시작 버튼 이벤트 리스너 설정
             const startButton = document.getElementById('startRecognition');
-            startButton.addEventListener('click', () => {
+            startButton.addEventListener('click', function() {
                 if (annyang.isListening()) {
                     annyang.pause();
-                    startButton.innerText = '음성 인식 시작';
+                    this.textContent = '음성 인식 시작';
                 } else {
                     annyang.resume();
-                    startButton.innerText = '음성 인식 일시 중지';
+                    this.textContent = '음성 인식 일시 중지';
                 }
             });
 
-            document.getElementById('sendResults').addEventListener('click', () => {
+            // 번역 시작 버튼 이벤트 리스너 설정
+            document.getElementById('sendResults').addEventListener('click', function() {
                 translateText(final_transcripts);
             });
 
-            document.getElementById('saveResults').addEventListener('click', () => {
+            // 결과 저장 버튼 이벤트 리스너 설정
+            document.getElementById('saveResults').addEventListener('click', function() {
                 saveTranslationResults(final_transcripts);
             });
+
+            // annyang 시작
+            annyang.start({ autoRestart: false, continuous: true });
+
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
 
+        
         function translateText(sentences) {
             Promise.all(sentences.map(sentence => {
                 return fetch('/translate', {
@@ -126,4 +118,17 @@
                         } else {
                             console.error('Error saving result:', saveData.error);
                             // 오류 메시지 처리
-                       
+                        }
+                    }
+                    )
+                }
+                )
+            }
+            )
+        }
+
+
+    </script>
+</body>
+</html>
+
