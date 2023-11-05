@@ -85,6 +85,7 @@ def create_image_table():
 
 create_image_table()
 
+# DB에 이미지 저장
 def insert_image_to_db(image_data, created_at):
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
@@ -93,7 +94,10 @@ def insert_image_to_db(image_data, created_at):
     conn.close()
 
 translated_text = get_latest_translated_text()
+
+# 중간 로그 출력
 print(translated_text)
+
 # payload에 필요한 키와 값 추가 : prompt, steps, neagtive_prompt, width, height, LORA 등
 payload = {
     "prompt" : translated_text,
@@ -117,11 +121,10 @@ response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
 r = response.json()
 
 # 이미지 저장, 데이터베이스에 이미지 데이터 삽입
-
 for idx, base64_str in enumerate(r['images']):
     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
     image_data = base64.b64decode(base64_str.split(",",1)[1])
-    image = Image.open(io.BytesIO(image_data)))
+    image = Image.open(io.BytesIO(base64.b64decode(idx.split(",",1)[1])))
 
     # API 요청을 보내 이미지 정보 검색
     png_payload = {
