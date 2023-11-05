@@ -124,7 +124,7 @@ r = response.json()
 for idx, base64_str in enumerate(r['images']):
     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
     image_data = base64.b64decode(base64_str.split(",",1)[1])
-    image = Image.open(io.BytesIO(base64.b64decode(idx.split(",",1)[1])))
+    image = Image.open(io.BytesIO(base64.b64decode(idx.split(",",1)[0])))
 
     # API 요청을 보내 이미지 정보 검색
     png_payload = {
