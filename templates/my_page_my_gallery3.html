@@ -23,19 +23,19 @@
     <div class="group-61-zYh">
       <div class="auto-group-3lj3-YKK">
         <div class="group-62-f93">
-          <a href="intro.html">  
+          <a href="{{ url_for("intro")}}"> 
           <img class="group-11-zBK" src="../static/assets/group-11-qA9.png"/></a>
           <div class="me-muse-KDb">ME:MUSE</div>
         </div>
         <div class="group-10-cyP">
           <div class="group-1-mrH">
-            <div class="workplace-J5X"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-CRo"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-7of"><a href="guide.html">Guide</a></div>
-            <div class="login-eHo"><a href="login.html">Login</a></div>
+            <div class="workplace-J5X"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-CRo"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-7of"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-eHo"><a href="{{url_for("login")}}">Login</a></div>
           </div>
           <div class="group-2-aBT">
-            <a href="my_page.html"> 
+            <a href="{{ url_for("my_page")}}"> 
             <img class="icons8-user1-1-Y8H" src="../static/assets/icons8-user1-1-thX.png"/></a>
           </div>
         </div>
@@ -88,13 +88,13 @@
       </div>
       <div class="auto-group-6s9k-pHP">
         <div class="group-29-dUd">
-          <div class="group-28-mKw"><a href="my_page_my_gallery1.html">1</a></div>
+          <div class="group-28-mKw"><a href="{{url_for("my_page_my_gallery1")}}">1</a></div>
         </div>
         <div class="group-30-cLZ">
-          <div class="group-28-9LV"><a href="my_page_my_gallery2.html">2</a></div>
+          <div class="group-28-9LV"><a href="{{url_for("my_page_my_gallery2")}}">2</a></div>
         </div>
         <div class="group-31-R37">
-          <div class="group-28-Lfs"><a href="my_page_my_gallery3.html">3</a></div>
+          <div class="group-28-Lfs"><a href="{{url_for("my_page_my_gallery3")}}">3</a></div>
         </div>
         <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
       </div>

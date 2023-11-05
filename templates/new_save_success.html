@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-17-1Wy">
-  <a href="new_complete.html">   
+  <a href="{{url_for("new_complete")}}">   
   <img class="auto-group-t96h-u6Z" src="../static/assets/auto-group-t96h.png"/></a>
   <div class="auto-group-tsy5-Dd3">
     <div class="group-61-Xdj">
       <div class="auto-group-ffvs-59T">
         <div class="group-62-Awb">
-          <a href="intro.html">
+          <a href="{{ url_for("intro")}}">  
           <img class="group-11-gQ9" src="../static/assets/group-11-Fzh.png"/></a>
           <div class="me-muse-1SR">ME:MUSE</div>
         </div>
         <div class="group-10-JRX">
           <div class="group-1-G7T">
-            <div class="workplace-adw"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-6cH"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-Dwo"><a href="guide.html">Guide</a></div>
-            <div class="login-M2R"><a href="login.html">Login</a></div>
+            <div class="workplace-adw"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-6cH"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-Dwo"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-M2R"><a href="{{url_for("login")}}">Login</a></div>
           </div>
           <div class="group-2-gKb">
-            <a href="my_page.html"> 
+            <a href="{{ url_for("my_page")}}"> 
             <img class="icons8-user1-1-F7o" src="../static/assets/icons8-user1-1-yXF.png"/></a>
           </div>
         </div>
@@ -66,7 +66,7 @@
       </div>
       <div class="group-23-Yk9">
         <img class="rectangle-33-U81" src="../static/assets/rectangle-33-zxZ.png"/>
-        <div class="item--nuP"><a href="whole_gallery1.html" style="color:white"> 다른 작가의 전시회 관람 하기</a></div>
+        <div class="item--nuP"><a href="{{url_for("whole_gallery1")}}" style="color:white"> 다른 작가의 전시회 관람 하기</a></div>
       </div>
       <img class="bi-mic-fill-k3s" src="../static/assets/bi-mic-fill-hCm.png"/>
     </div>

@@ -24,19 +24,19 @@
     <div class="group-61-yW9">
       <div class="auto-group-2czd-WFB">
         <div class="group-62-Cth">
-          <a href="intro.html">  
+          <a href="{{ url_for("intro")}}">  
           <img class="group-11-KyK" src="../static/assets/group-11-pZw.png"/></a>
           <div class="me-muse-GNm">ME:MUSE</div>
         </div>
         <div class="group-10-mqK">
           <div class="group-1-jGM">
-            <div class="workplace-TCM"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-xuo"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-Veq"><a href="guide.html">Guide</a></div>
-            <div class="login-Dqj"><a href="login.html">Login</a></div>
+            <div class="workplace-TCM"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-xuo"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-Veq"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-Dqj"><a href="{{url_for("login")}}">Login</a></div>
           </div>
           <div class="group-2-kKs">
-            <a href="my_page.html"> 
+            <a href="{{ url_for("my_page")}}"> 
             <img class="icons8-user1-1-iXb" src="../static/assets/icons8-user1-1-bTX.png"/></a>
           </div>
         </div>

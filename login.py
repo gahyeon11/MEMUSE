@@ -29,8 +29,8 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/join', methods=['GET', 'POST'])
+def join():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -162,9 +162,6 @@ def pro_complete():
 @app.route('/pro_edit_obj_check')
 def pro_edit_obj_check():
     return render_template('pro_edit_obj_check.html')
-@app.route('/pro_edit_obj_num')
-def pro_edit_obj_num():
-    return render_template('pro_edit_obj_num.html')
 @app.route('/pro_edit_obj_num')
 def pro_edit_obj_num():
     return render_template('pro_edit_obj_num.html')

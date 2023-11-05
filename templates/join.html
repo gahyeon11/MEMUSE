@@ -23,19 +23,19 @@
     <div class="group-61-Ews">
       <div class="auto-group-2b77-bGd">
         <div class="group-62-iMF">
-          <a href="intro.html">  
+          <a href="{{ url_for("intro")}}">
           <img class="group-11-3eR" src="../static/assets/group-11-c4H.png"/></a>
           <div class="me-muse-y2H">ME:MUSE</div>
         </div>
         <div class="group-10-stM">
           <div class="group-1-Eiu">
-            <div class="workplace-a25"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-hMb"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-cjT"><a href="guide.html">Guide</a></div>
-            <div class="login-8xh"><a href="login.html">Login</a></div>
+            <div class="workplace-a25"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-hMb"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-cjT"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-8xh"><a href="{{url_for("login")}}">Login</a></div>
           </div>
           <div class="group-2-fSq">
-            <a href="my_page.html"> 
+            <a href="{{ url_for("my_page")}}"> 
             <img class="icons8-user1-1-qMK" src="../static/assets/icons8-user1-1-uLM.png"/></a>
           </div>
         </div>
@@ -44,7 +44,7 @@
     </div>
     <img class="group-12-huK" src="../static/assets/group-12.png"/>
     <div class="auto-group-k5gm-pyw">
-      <form action="join_success.html" method="#" id="join-membership-form">
+      <form action="{{ url_for("join_success")}}" method="#" id="join-membership-form">
       <div class="auto-group-vkym-w2y"><input type="text" id="name" required autofocus placeholder="이름"></div><br>
       <div class="auto-group-7tus-npH"><input type="text" id="birth" required placeholder="생년월일(8자리)"></div><<br>
       <div class="auto-group-h1wp-4G1"><input type="text" id="id" required placeholder="아이디"></div><br>

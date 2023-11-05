@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-6-39T">
-  <a href="new_filter.html">   
+  <a href="{{url_for("new_filter.html")}}">   
   <img class="auto-group-qyh3-Z7o" src="../static/assets/auto-group-qyh3.png"/></a>
   <div class="auto-group-cyaz-fwX">
     <div class="group-61-Bey">
       <div class="auto-group-7ayo-jRb">
         <div class="group-62-rFK">
-          <a href="intro.html">  
+          <a href="{{ url_for("intro")}}">  
           <img class="group-11-NUZ" src="../static/assets/group-11-rdw.png"/></a>
           <div class="me-muse-hmj">ME:MUSE</div>
         </div>
         <div class="group-10-zkq">
           <div class="group-1-MbP">
-            <div class="workplace-5nH"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-CM7"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-X8V"><a href="guide.html">Guide</a></div>
-            <div class="login-EYh"><a href="login.html">Login</a></div>
+            <div class="workplace-5nH"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-CM7"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-X8V"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-EYh"><a href="{{url_for("login")}}">Login</a></div>
           </div>
           <div class="group-2-mHj">
-            <a href="my_page.html"> 
+            <a href="{{ url_for("my_page")}}"> 
             <img class="icons8-user1-1-vgR" src="../static/assets/icons8-user1-1-bVB.png"/></a>
           </div>
         </div>
@@ -59,7 +59,7 @@
           <div class="item--vEV">김밈</div>
           <div class="line-1-DzH">
           </div>
-          <form action="pro_save_success.html" id="captions-form">
+          <form action="{{url_for("pro_save_success")}}" id="captions-form">
           <div class="group-26-ZYM"><textarea id="title" required autofocus placeholder="작품 제목" cols="30"></textarea></div>
           <div class="item-2023-QJ5">2023</div>
           <div class="auto-group-bzhs-iJm"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7"></textarea></div>
@@ -76,10 +76,10 @@
       * 저장하지 않으면 작품은 사라집니다.
       </div>
       <div class="auto-group-n9ms-Gd7">
-        <form action="new_save_success.html" id="captions-form">
+        <form action="{{url_for("new_save_success")}}" id="captions-form">
           <div class="group-58-Bzy"><input type="submit" value="예" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem"></div>
           </form>
-        <div class="group-59-dry"><a href="new_no_save.html" style="color:white">아니오</a></div>
+        <div class="group-59-dry"><a href="{{url_for("new_no_save")}}" style="color:white">아니오</a></div>
       </div>
       <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/>
     </div>

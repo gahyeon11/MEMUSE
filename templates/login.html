@@ -24,19 +24,19 @@
     <div class="group-61-ba1">
       <div class="auto-group-mquj-9bX">
         <div class="group-62-4yP">
-          <a href="intro.html">  
+          <a href="{{ url_for("intro")}}">  
           <img class="group-11-CZo" src="../static/assets/group-11-iyP.png"/></a>
           <div class="me-muse-Ydf">ME:MUSE</div>
         </div>
         <div class="group-10-G3s">
           <div class="group-1-ctR">
-            <div class="workplace-MLD"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-Tu3"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-ayf"><a href="guide.html">Guide</a></div>
-            <div class="login-hoP"><a href="login.html">Login</a></div>
+            <div class="workplace-MLD"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-Tu3"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-ayf"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-hoP"><a href="{{url_for("login")}}">Login</a></div>
           </div>
           <div class="group-2-dh3">
-            <a href="my_page.html"> 
+            <a href="{{ url_for("my_page")}}"> 
             <img class="icons8-user1-1-o5j" src="../static/assets/icons8-user1-1-tCZ.png"/></a>
           </div>
         </div>
@@ -45,11 +45,11 @@
     </div>
     <img class="group-11-Tvy" src="../static/assets/group-11-ZUd.png"/>
     <div class="auto-group-7ekt-bnH">
-      <form action="workplace.html" method="#" id="login-form">
+      <form action="{{ url_for("workplace")}}" method="#" id="login-form">
       <div class="auto-group-2zoo-v3s"><input type="text" id="id" required autofocus placeholder="아이디"></div>
       <div class="auto-group-qiwb-xWM"><input type="password" id="pwd" required placeholder="비밀번호"></div>
       <div class="group-6-1zR"><input type="submit" value="로그인" style="background:#003D75; color:white"></div></form>
-      <div class="item--Ut1"><a href="join.html">회원가입</a></div>
+      <div class="item--Ut1"><a href="{{ url_for("join")}}">회원가입</a></div>
             <img class="icons8-user1-1-o5j" src="../static/assets/icons8-user1-1-tCZ.png"/></a>
           </div>
         </div>
@@ -66,7 +66,7 @@
         <div class="auto-group-qiwb-xWM">
           <input type="password" name="password" id="pwd" required placeholder="비밀번호">
         </div>
-        <div class="group-6-1zR"><a href="workplace.html">
+        <div class="group-6-1zR"><a href="{{ url_for('workplace') }}">
           <input type="submit" value="로그인" style="background:#003D75; color:white"></a>
         </div>
       </form>

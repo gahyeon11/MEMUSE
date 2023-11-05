@@ -23,18 +23,18 @@
     <div class="group-61-H37">
       <div class="auto-group-evxd-EU9">
         <div class="group-62-M2y">
-          <a href="intro.html">  
+          <a href="{{ url_for("intro")}}"> 
           <img class="group-11-4xy" src="../static/assets/group-11.png"/></a>
           <div class="me-muse-bi1">ME:MUSE</div>
         </div>
         <div class="group-10-7AZ">
           <div class="group-1-4rV">
-            <div class="workplace-nnV"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-WTb"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-2wj"><a href="guide.html">Guide</a></div>
-            <div class="login-9mT"><a href="login.html">Login</a></div>
+            <div class="workplace-nnV"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
+            <div class="museum-WTb"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
+            <div class="guide-2wj"><a href="{{ url_for("guide")}}">Guide</a></div>
+            <div class="login-9mT"><a href="{{url_for("login")}}">Login</a></div>
           </div>
-          <a href="my_page.html"> 
+          <a href="{{ url_for("my_page")}}"> 
           <img class="icons8-user1-1-sxM" src="../static/assets/icons8-user1-1-Xxu.png"/></a>
         </div>
       </div>
@@ -50,7 +50,7 @@
       </div>
       <div class="item-00000000-6kZ">아이디 : 00000000</div>
       <div class="item-00000000-bBX">생년월일 : 00000000</div>
-      <div class="group-23-Ha9"><a href="my_page_my_gallery1.html" style="color: white">
+      <div class="group-23-Ha9"><a href="{{url_for("my_page_my_gallery1")}}" style="color: white">
         <img class="rectangle-33-cMX" src="../static/assets/rectangle-33.png"/>
         <div class="item--XUV">나만의 전시회 보러 가기</a></div>
       </div>
