@@ -10,7 +10,7 @@ CORS(app)
 # 데이터베이스 설정
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///translations.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(24) 
+app.config['SECRET_KEY'] = os.urandom(24)
 
 db = SQLAlchemy(app)
 
@@ -37,12 +37,12 @@ def register():
         email = request.form['email']
 
         # 새 사용자 객체를 생성할 때 해시된 비밀번호를 사용
-        new_user = User(id=id,username=username, password=password, email=email)
+        new_user = User(username=username, password=password, email=email)
         db.session.add(new_user)
         db.session.commit()
 
         return redirect(url_for('login'))
-    return render_template('-Xq3.html')  # HTML 파일명이 잘못되었을 수 있습니다. 실제 파일명을 확인하세요.
+    return render_template('join.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -55,26 +55,26 @@ def login():
             # 비밀번호가 일치하는 경우
             session['logged_in'] = True
             session['username'] = user.username
-            return redirect(url_for('dashboard'))  # 함수명 'home'이 정의되지 않았습니다. 'dashboard'로 변경했습니다.
+            return redirect(url_for('dashboard'))
         else:
             return 'Invalid credentials'
-    return render_template('-ucV.html')
-# 기타 라우트들...
+    return render_template('login.html')
+
 @app.route('/dashboard')
 def dashboard():
     if 'logged_in' in session:
         # 대시보드 페이지를 보여주는 로직
-        return render_template('dashboard.html')  # 'dashboard.html'은 실제 파일명으로 교체해야 합니다.
+        return render_template('dashboard.html')
     else:
         # 사용자가 로그인하지 않았으면 로그인 페이지로 리디렉션
         return redirect(url_for('login'))
-@app.route('/ucV')
-def ucv():
-    return render_template('-ucV.html')
+@app.route('/workplace')
+def workplace():
+    return render_template('workplace.html')
 
 @app.route('/')
 def index():
-    return render_template('-VAH.html') 
+    return render_template('intro.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

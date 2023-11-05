@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <title>작업실</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../static/styles/workplace.css"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/workplace.css') }}"/>
 </head>
 <body>
 <div class="item--hry">
@@ -24,7 +24,7 @@
     <div class="group-61-fSR">
       <div class="auto-group-pahf-d8M">
         <div class="group-62-ivV">
-          <a href="intro.html"><img class="group-11-eJM" src="../static/assets/group-11-N3K.png"/></a>
+          <a href="intro.html"><img class="group-11-eJM" src="{{ url_for('static', filename='assets/group-11-N3K.png') }}"/></a>
           <div class="me-muse-aSu">ME:MUSE</div>
         </div>
         <div class="group-10-5eZ">
@@ -36,11 +36,11 @@
           </div>
           <div class="group-2-sD3">
             <a href="my_page.html"> 
-            <img class="icons8-user1-1-E3b" src="../static/assets/icons8-user1-1-urH.png"/></a>
+            <img class="icons8-user1-1-E3b" src="{{ url_for('static', filename='assets/icons8-user1-1-urH.png') }}"/></a>
           </div>
         </div>
       </div>
-      <img class="line-2-Me1" src="../static/assets/line-2-ByK.png"/>
+      <img class="line-2-Me1" src="{{ url_for('static', filename='assets/line-2-ByK.png') }}"/>
     </div>
     <div class="auto-group-9pds-6Lh">
       <div class="auto-group-vbxo-DgD">
@@ -53,10 +53,11 @@
           <div class="group-62-4MP"><a href="pro_style.html" style="color:white">전문가</a></div>
         </div>
       </div>
-      <img class="bi-mic-fill-63B" src="../static/assets/bi-mic-fill-X77.png"/>
+      <img class="bi-mic-fill-63B" src="{{ url_for('static', filename='assets/bi-mic-fill-X77.png') }}"/>
     </div>
   </div>
   <div class="rectangle-30-oiH">
   </div>
 </div>
 </body>
+</html>
