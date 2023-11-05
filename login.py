@@ -11,9 +11,12 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///translations.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
-
 db = SQLAlchemy(app)
-
+@app.context_processor
+def inject_user():
+    if 'username' in session:
+        return dict(username=session['username'])
+    return dict(username=None)
 class User(db.Model):
     """ 사용자 테이블 생성 """
     id = db.Column(db.Integer, primary_key=True)
@@ -33,10 +36,9 @@ with app.app_context():
 def join():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = generate_password_hash(request.form['password'])  # 해시된 비밀번호를 저장
         email = request.form['email']
 
-        # 새 사용자 객체를 생성할 때 해시된 비밀번호를 사용
         new_user = User(username=username, password=password, email=email)
         db.session.add(new_user)
         db.session.commit()
@@ -55,20 +57,18 @@ def login():
             # 비밀번호가 일치하는 경우
             session['logged_in'] = True
             session['username'] = user.username
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('join_success'))
         else:
             return 'Invalid credentials'
     return render_template('login.html')
-
-@app.route('/dashboard')
-def dashboard():
-    if 'logged_in' in session:
-        # 대시보드 페이지를 보여주는 로직
-        return render_template('dashboard.html')
-    else:
-        # 사용자가 로그인하지 않았으면 로그인 페이지로 리디렉션
+@app.route('/join_success')
+def join_success():
+    if not session.get('logged_in'):
         return redirect(url_for('login'))
-    
+    else:
+        # 세션에서 username을 가져와서 dashboard.html에 전달합니다.
+        username = session.get('username')
+        return render_template('join_success.html', username=username)
 @app.route('/workplace')
 def workplace():
     return render_template('workplace.html')
@@ -94,9 +94,7 @@ def cartoon_gallery3():
 def guide():
     return render_template('guide.html')
 
-@app.route('/join_success')
-def join_success():
-    return render_template('join_success.html')
+
 
 @app.route('/live_gallery1')
 def live_gallery1():
