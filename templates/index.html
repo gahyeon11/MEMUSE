@@ -63,29 +63,37 @@
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
-        function getTranslatedText(callback) {
+        function getTranslatedText(callback, textToTranslate) {
+            // AJAX 요청 생성
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/translate', true); // 예상되는 서버 경로로 수정
+            xhr.open('POST', '/translate', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var translatedPrompt = response.translatedPrompt; // 예상되는 서버 응답에서 필요한 데이터 가져오기
-                    callback(translatedPrompt);
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        callback(response.translated_text);
+                    } else {
+                        // 오류 처리
+                        console.error('Error: ' + xhr.statusText);
+                    }
                 }
             };
-            
-            xhr.send();
+            // 서버에 보낼 데이터 준비
+            var data = JSON.stringify({ text: textToTranslate });
+            xhr.send(data);
         }
-        
-        // 'sendResults' 버튼 클릭 시 서버로부터 번역된 텍스트를 가져와서 출력
-        document.getElementById('sendResults').addEventListener('click', () => {
-            getTranslatedText(function (translatedPrompt) {
-                document.getElementById('translatedPrompt').innerText = 'std 프롬프트: ' + translatedPrompt;
+        function displayTranslatedText(translatedText) {
+            document.getElementById('translatedPrompt').innerText = 'std 프롬프트: ' + translatedText;
+        }
+
+        // 'sendResults' 버튼 클릭 시 번역 시작
+        document.getElementById('sendResults').addEventListener('click', function () {
+            final_transcripts.forEach(function (sentence) {
+                getTranslatedText(displayTranslatedText, sentence);
             });
         });
-
         function translateText(sentences) {
             var translatedSentences = [];
         
@@ -120,7 +128,7 @@
         
             document.getElementById('result').innerHTML = '번역된 텍스트: ' + translatedSentences.join('. ');
             document.getElementById('translatedResults').innerText = '최종 프롬프트(번역): ' + translatedSentences.join('. ');
-        }
+        } 
         
     </script>
 </body>

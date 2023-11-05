@@ -34,7 +34,7 @@ translated_text = ""
 def index():
     return render_template("index.html")
 
-@app.route('/translate', methods=['POST'])
+@app.route('/translate', methods=['GET', 'POST'])
 def translate():
     global translated_text  # 전역 변수를 사용
     try:
