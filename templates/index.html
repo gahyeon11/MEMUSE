@@ -56,7 +56,41 @@
         } else {
             alert('Sorry, your browser does not support speech recognition.');
         }
+<<<<<<< HEAD
 
+=======
+        function getTranslatedText(callback, textToTranslate) {
+            // AJAX 요청 생성
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/translate', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        callback(response.translated_text);
+                    } else {
+                        // 오류 처리
+                        console.error('Error: ' + xhr.statusText);
+                    }
+                }
+            };
+            // 서버에 보낼 데이터 준비
+            var data = JSON.stringify({ text: textToTranslate });
+            xhr.send(data);
+        }
+        function displayTranslatedText(translatedText) {
+            document.getElementById('translatedPrompt').innerText = 'std 프롬프트: ' + translatedText;
+        }
+
+        // 'sendResults' 버튼 클릭 시 번역 시작
+        document.getElementById('sendResults').addEventListener('click', function () {
+            final_transcripts.forEach(function (sentence) {
+                getTranslatedText(displayTranslatedText, sentence);
+            });
+        });
+>>>>>>> 89ebaafd0551bcdccce6eee6213f166b7a44aaec
         function translateText(sentences) {
             Promise.all(sentences.map(sentence => {
                 // POST request to your translation endpoint
@@ -118,7 +152,16 @@
                     console.error('There has been a problem with your fetch operation:', error);
                 });
             });
+<<<<<<< HEAD
         }
+=======
+
+        
+            document.getElementById('result').innerHTML = '번역된 텍스트: ' + translatedSentences.join('. ');
+            document.getElementById('translatedResults').innerText = '최종 프롬프트(번역): ' + translatedSentences.join('. ');
+        } 
+        
+>>>>>>> 89ebaafd0551bcdccce6eee6213f166b7a44aaec
     </script>
 </body>
 </html>
