@@ -68,7 +68,7 @@ def dashboard():
     else:
         # 사용자가 로그인하지 않았으면 로그인 페이지로 리디렉션
         return redirect(url_for('login'))
-@app.route('/placespace')
+@app.route('/workplace')
 def workplace():
     return render_template('workplace.html')
 
