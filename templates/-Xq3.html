@@ -11,9 +11,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo+Black%3A400"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C600%2C700"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles/-Xq3.css"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="./styles/-Xq3.css"/> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/-Xq3.css') }}"/>
+
 </head>
 <body>
 <div class="item--UJV">
@@ -44,12 +46,19 @@
     </div>
     <img class="group-12-huK" src="./assets/group-12.png"/>
     <div class="auto-group-k5gm-pyw">
-      <form action="-K2y.html" method="#" id="join-membership-form">
+      <!-- <form action="-K2y.html" method="#" id="join-membership-form">
       <div class="auto-group-vkym-w2y"><input type="text" id="name" required autofocus placeholder="이름"></div><br>
       <div class="auto-group-7tus-npH"><input type="text" id="birth" required placeholder="생년월일(8자리)"></div><<br>
       <div class="auto-group-h1wp-4G1"><input type="text" id="id" required placeholder="아이디"></div><br>
       <div class="auto-group-uajv-8Wm"><input type="password" id="pwd" required placeholder="비밀번호(숫자 6자리)"></div><br>
-      <div class="group-6-DYD"><input type="submit" value="가입하기" style="background:#003D75; color:white"></div></form>
+      <div class="group-6-DYD"><input type="submit" value="가입하기" style="background:#003D75; color:white"></div></form> -->
+      <form action="-K2y.html" method="post" id="join-membership-form">
+        <div class="auto-group-vkym-w2y"><input type="text" name="username" id="name" required autofocus placeholder="이름"></div><br>
+        <div class="auto-group-7tus-npH"><input type="text" id="birth" required placeholder="생년월일(8자리)"></div><<br>
+        <div class="auto-group-h1wp-4G1"><input type="text" name="email" id="email" required placeholder="이메일"></div><br>
+        <div class="auto-group-uajv-8Wm"><input type="password" name="password" id="pwd" required placeholder="비밀번호(숫자 6자리)"></div><br>
+        <div class="group-6-DYD"><input type="submit" value="가입하기" style="background:#003D75; color:white"></div>
+      </form>
     </div>
   </div>
   <div class="rectangle-30-Uj3">

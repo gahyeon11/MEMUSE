@@ -26,7 +26,6 @@ conn.commit()
 def index():
     return render_template("index.html")
 
-<<<<<<< HEAD
 
 
 # 네이버 파파고 API 키 값
@@ -34,9 +33,6 @@ NAVER_CLIENT_ID = 'fIfMjFH9VJ1GjQPim7j5'
 NAVER_CLIENT_SECRET = 'iue1sb53T7'
 
 @app.route('/translate', methods=['POST'])
-=======
-@app.route('/translate', methods=['GET', 'POST'])
->>>>>>> 89ebaafd0551bcdccce6eee6213f166b7a44aaec
 def translate():
     try:
         data = request.get_json()  # `request.json` 대신 `request.get_json()` 사용

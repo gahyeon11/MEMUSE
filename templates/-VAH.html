@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles/-VAH.css"/>
+  <link rel="stylesheet"  href="{{ url_for('static', filename='styles/-VAH.css') }}">
 </head>
 <body>
 <div class="item-1-pAV">
@@ -22,7 +22,7 @@
     <div class="auto-group-nps5-suT">
       <div class="group-22-zjB">
         <a href="-VAH.html"> 
-        <img class="group-6-KmT" src="./assets/group-6-8t9.png"/></a>
+        <img class="group-6-KmT" src="{{ url_for('static', filename='assets/group-6-8t9.png') }}"/></a>
         <div class="me-muse-rWV">ME:MUSE</div>
       </div>
       <div class="group-10-B2y">
@@ -34,11 +34,11 @@
         </div>
         <div class="group-2-azD">
           <a href="-69f.html"> 
-          <img class="icons8-user1-1-MEH" src="./assets/icons8-user1-1-ruF.png"/></a>
+          <img class="icons8-user1-1-MEH" src="{{ url_for('static', filename='assets/icons8-user1-1-ruF.png') }}"/></a>
         </div>
       </div>
     </div>
-    <img class="line-2-H7w" src="./assets/line-2-1sP.png"/>
+    <img class="line-2-H7w" src="{{ url_for('static', filename='assets/line-2-1sP.png') }}"/></a>
   </div>
   <div class="auto-group-lc9o-RV3">
     <div class="group-12-xWu">
@@ -63,8 +63,9 @@
               목소리만으로 그림을 그리고, 전시회를 열어보세요.
             <br/>
             
-            </div><a href="-ucV.html">
-            <div class="group-23-BCu">나만의 AI 그림 그리러 가기</div></a>
+            </div>
+            
+            <div class="group-23-BCu"><a href="{{ url_for('ucv') }}">나만의 AI 그림 그리러 가기</div></a>
           </div>
         </div>
       </div>
