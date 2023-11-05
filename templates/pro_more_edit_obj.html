@@ -88,4 +88,39 @@
   <div class="rectangle-30-ePB">
   </div>
 </div>
+<script>
+  // 음성 인식 API 초기화
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  // 음성 인식 시작
+  recognition.start();
+
+  // 음성 인식 결과 이벤트 리스너
+  recognition.onresult = (event) => {
+    const result = event.results[event.results.length - 1][0].transcript;
+    console.log('음성 인식 결과:', result);
+
+    // 인식된 음성 명령에 따라 URL로 이동
+
+    if (result === '마이페이지') {
+      window.location.href = 'mypage.html'; // mypage.html 페이지로 이동
+    }
+    if (result === '가이드') {
+      window.location.href = 'guide.html'; // guide.html 페이지로 이동
+    }
+    if (result === '예') {
+      window.location.href = 'pro_edit_obj_num.html'; // pro_edit_obj_num.html 페이지로 이동
+    }
+    if (result === '아니오') {
+      window.location.href = 'pro_filter.html'; // pro_filter.html 페이지로 이동
+    }
+    if (result === '이전으로') {
+      window.location.href = 'pro_more_object.html'; // pro_more_object.html 페이지로 이동
+    }
+    // 다른 명령에 대한 처리도 추가할 수 있습니다.
+  };
+</script>
 </body>
+</html>
