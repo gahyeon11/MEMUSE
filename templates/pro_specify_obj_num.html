@@ -18,25 +18,25 @@
 </head>
 <body>
 <div class="item-12-MoF">
-  <a href="pro_specify_obj.html">   
+  <a href="{{ url_for('pro_specify_obj') }}">   
   <img class="auto-group-zqkk-Ucy" src="../static/assets/auto-group-zqkk.png"/></a>
   <div class="auto-group-flcy-Pzq">
     <div class="group-61-uiH">
       <div class="auto-group-nqdb-s9K">
         <div class="group-62-nGH">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-WTB" src="../static/assets/group-11-VuK.png"/></a>
           <div class="me-muse-3T7">ME:MUSE</div>
         </div>
         <div class="group-10-wYV">
           <div class="group-1-uER">
-            <div class="workplace-dRK"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-wwo"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-saZ"><a href="guide.html">Guide</a></div>
-            <div class="login-Br9"> <a href="login.html">Login</a></div>
+            <div class="workplace-dRK"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-wwo"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-saZ"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-Br9"> <a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-Jvm">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-gH7" src="../static/assets/icons8-user1-1-w1K.png"/></a>
           </div>
         </div>
@@ -80,8 +80,8 @@
         <span class="item--9bF-sub-2">‘이동 안함 ’</span>
         <span class="item--9bF-sub-3">을 클릭 또는 말씀해 주세요.</span>
       </div>
-      <div class="group-63-Vh3"><a href="pro_filter.html" style="color:white">이동 안함</a></div>
-      <a href="pro_specify_obj_check.html"><div class="rectangle-9-YfK">
+      <div class="group-63-Vh3"><a href="{{ url_for('pro_filter') }}" style="color:white">이동 안함</a></div>
+      <a href="{{ url_for('pro_specify_obj_check') }}"><div class="rectangle-9-YfK">
       </div></a>
     </div>
   </div>

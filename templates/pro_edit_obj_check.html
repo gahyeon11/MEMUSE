@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-8-x73">
-  <a href="pro_edit_obj_num.html">   
+  <a href="{{ url_for('pro_edit_obj_num') }}">   
   <img class="auto-group-xprr-5Bf" src="../static/assets/auto-group-xprr.png"/></a>
   <div class="auto-group-x6vw-odT">
     <div class="group-61-L7b">
       <div class="auto-group-wykk-gx9">
         <div class="group-62-bpD">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-vbb" src="../static/assets/group-11-Khb.png"/></a>
           <div class="me-muse-fp5">ME:MUSE</div>
         </div>
         <div class="group-10-BXX">
           <div class="group-1-jow">
-            <div class="workplace-fBo"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-mkd"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-JVf"><a href="guide.html">Guide</a></div>
-            <div class="login-2Rf"><a href="login.html">Login</a></div>
+            <div class="workplace-fBo"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-mkd"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-JVf"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-2Rf"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-ZgV">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-jay" src="../static/assets/icons8-user1-1-pvD.png"/></a>
           </div>
         </div>
@@ -53,8 +53,8 @@
         <span class="item--Lch-sub-4">를 클릭 또는 말씀해 주세요.</span>
       </div>      
       <div class="auto-group-xzuk-GzD">
-        <div class="auto-group-rw3s-oz9"><a href="pro_edit_shot_num.html" style="color:white">예</a></div>
-        <div class="auto-group-kghw-4fB"><a href="pro_edit_obj_num.html" style="color:white">아니오</a></div>
+        <div class="auto-group-rw3s-oz9"><a href="{{ url_for('pro_edit_shot_num') }}" style="color:white">예</a></div>
+        <div class="auto-group-kghw-4fB"><a href="{{ url_for('pro_edit_obj_num') }}" style="color:white">아니오</a></div>
       </div>
       <div class="rectangle-9-sY5">
       </div>

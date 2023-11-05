@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-3-jRb">
-  <a href="pro_lora_num.html">   
+  <a href="{{ url_for('pro_lora_num') }}">   
   <img class="auto-group-fq2v-3x5" src="../static/assets/auto-group-fq2v.png"/></a>
   <div class="auto-group-jkff-mt5">
     <div class="group-61-hWq">
       <div class="auto-group-z3yd-G49">
         <div class="group-62-n2V">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-VxV" src="../static/assets/group-11-QF3.png"/></a>
           <div class="me-muse-Ev5">ME:MUSE</div>
         </div>
         <div class="group-10-x5P">
           <div class="group-1-7DB">
-            <div class="workplace-dBX"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-wi1"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-UC9"><a href="guide.html">Guide</a></div>
-            <div class="login-b1s"><a href="login.html">Login</a></div>
+            <div class="workplace-dBX"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-wi1"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-UC9"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-b1s"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-v49">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-5hj" src="../static/assets/icons8-user1-1-WWd.png"/></a>
           </div>
         </div>
@@ -86,8 +86,8 @@
         </div>
       </div>
       <div class="auto-group-623s-7Ff">
-        <div class="group-38-EbB"><a href="pro_back.html" style="color:white">처음</a></div>
-        <div class="group-39-6dP"><a href="pro_object.html" style="color:white">다음</a></div>
+        <div class="group-38-EbB"><a href="{{ url_for('pro_back') }}" style="color:white">처음</a></div>
+        <div class="group-39-6dP"><a href="{{ url_for('pro_object') }}" style="color:white">다음</a></div>
       </div>
     </div>
   </div>

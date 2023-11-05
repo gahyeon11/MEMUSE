@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-11-xKT">
-  <a href="pro_edit_shot_check.html">   
+  <a href="{{ url_for('pro_edit_shot_check') }}">   
   <img class="auto-group-fdq3-GL9" src="../static/assets/auto-group-fdq3.png"/></a>
   <div class="auto-group-pmrt-z1F">
     <div class="group-61-Jnd">
       <div class="auto-group-sovj-GDf">
         <div class="group-62-BLd">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-Jw3" src="../static/assets/group-11-eSu.png"/></a>
           <div class="me-muse-rBs">ME:MUSE</div>
         </div>
         <div class="group-10-M8d">
           <div class="group-1-hyB">
-            <div class="workplace-dbw"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-Yiu"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-f2q"><a href="guide.html">Guide</a></div>
-            <div class="login-yJR"><a href="login.html">Login</a></div>
+            <div class="workplace-dbw"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-Yiu"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-f2q"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-yJR"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-uhs">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-56Z" src="../static/assets/icons8-user1-1-KW1.png"/></a>
           </div>
         </div>
@@ -78,8 +78,8 @@
         클릭 또는 말씀해 주세요.
         </div>
         <div class="auto-group-oo2z-iiV">
-          <div class="group-52-SPb"><a href="pro_edit_obj_num.html" style="color:white">예</a></div>
-          <div class="group-54-haR"><a href="pro_specify_obj.html" style="color:white">아니오</a></div>
+          <div class="group-52-SPb"><a href="{{ url_for('pro_edit_obj_num') }}" style="color:white">예</a></div>
+          <div class="group-54-haR"><a href="{{ url_for('pro_specify_obj') }}" style="color:white">아니오</a></div>
         </div>
       </div>
       <img class="bi-mic-fill-vxy" src="../static/assets/bi-mic-fill-EfT.png"/>

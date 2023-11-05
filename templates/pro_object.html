@@ -17,25 +17,25 @@
 </head>
 <body>
 <div class="item-1-LC1">
-  <a href="pro_back_complete.html">   
+  <a href="{{ url_for('pro_back_complete') }}">   
   <img class="auto-group-ejmt-EoB" src="../static/assets/auto-group-ejmt.png"/></a>
   <div class="auto-group-5ndw-m2R">
     <div class="group-61-5J1">
       <div class="auto-group-hcmx-ERo">
         <div class="group-62-x6u">
-          <a href="intro.html">  
+          <a href="{{ url_for('/') }}">  
           <img class="group-11-szZ" src="../static/assets/group-11-zWd.png"/></a>
           <div class="me-muse-pQ1">ME:MUSE</div>
         </div>
         <div class="group-10-vC9">
           <div class="group-1-5Kw">
-            <div class="workplace-oWq"><a href="workplace.html">Workplace</a></div>
-            <div class="museum-v5f"><a href="whole_gallery1.html">Gallery</a></div>
-            <div class="guide-3RB"><a href="guide.html">Guide</a></div>
-            <div class="login-9z1"><a href="login.html">Login</a></div>
+            <div class="workplace-oWq"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-v5f"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-3RB"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-9z1"><a href="{{ url_for('login') }}">Login</a></div>
           </div>
           <div class="group-2-5sf">
-            <a href="my_page.html"> 
+            <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-qrq" src="../static/assets/icons8-user1-1-Gv5.png"/></a>
           </div>
         </div>
@@ -75,7 +75,7 @@
       <div class="item--9ds">
         <span class="item--9ds-sub-0">어떤 오브젝트를 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
       </div>
-      <form action="pro_object_complete.html" method="#" id="mood" style="width:850px">
+      <form action="{{ url_for('pro_object_complete') }}" method="#" id="mood" style="width:850px">
       <div class="auto-group-ct25-WWM"><textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea></div>
       <br>
       <div class="item--8Xj" style="transform:translate(43%,0)">
