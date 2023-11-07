@@ -167,11 +167,22 @@ def new_object():
 def new_save_success():
     return render_template('new_save_success.html')
 
-@app.route('/new_shot')
+@app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.get_json()
+
+        # prompt 키로부터 값 가져옴
+        prompt_value = data.get('promt', '')
+
+        #print(payload)
+
+        redirect_url = url_for('new_back')
+        return jsonify(redirect = redirect_url)
     return render_template('new_shot.html')
 
-@app.route('/new_style', methods=['POST', 'GET'])
+@app.route('/new_style', methods=['GET', 'POST'])
 def new_style():
     if request.method == 'POST':
         # POST 요청 시 JSON 처리
@@ -181,9 +192,22 @@ def new_style():
         option_payload = {
             "sd_model_checkpoint" : selected_model
         }
-        
+        payload = {}
+
+        # checkpoint 모델 변경
         response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
+
+        # payload 옵션 추가
+        options = data.get('options', {})
+        if 'styleNumber' in options:
+            del options['styleNumber'] #styleNumber 키 제거
+        # payload 딕셔너리에 options 값 추가
+        for key, value in options.items():
+            payload[key] = value
         
+        print("payload = ", payload)
+        
+        # 다음 페이지 리디렉션 url
         redirect_url = url_for('new_shot', _external=True)
         return jsonify(redirect = redirect_url)
     

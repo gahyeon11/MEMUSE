@@ -98,20 +98,70 @@
 <script>
   // 선택지 선택 시 값 서버 전달
   function submitStyle(styleNumber) {
+    // styleNumber 값에 따라 payload 생성
+    let options;
+    switch (styleNumber){
+      case 1:
+        //helloflatcute2d_V10
+        options = {
+          "sampler_index": "Euler a",
+          "steps": 30,
+          "cfg_scale": 7,
+          "denoising_strength": 0.5
+        };
+        break;
+      case 2:
+        // chosen-mix
+        options = {
+          "sampler_index": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 5,
+          "denoising_strength": 0.5
+        };
+        break;
+      case 3:
+        // pastel-Mix[Anime]
+        options = {
+          "sampler_index": "DPM++ 2M Karras",
+          "steps" : 20,
+          "cfg_scale": 7,
+          "denoising_strength": 0.6
+        };
+        break;
+      case 4:
+        // pasteldiffusedmiox
+        options = {
+          "sampler_index": "DPM++ 2M Karras",
+          "steps" : 20,
+          "cfg_scale": 7,
+          "denoising_strength": 0.6
+        };
+        break;
+      default:
+        options = {
+          "sampler_index": "DPM++ 2M Karras",
+          "steps" : 20,
+          "cfg_scale": 7,
+          "denoising_strength": 0.6
+        };
+    }
+
+    // options와 styleNumber 서버 전송
     fetch('/new_style', {
       method: 'POST',
-      headers: {
+      headers:{
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({style: styleNumber})
+      body: JSON.stringify({style: styleNumber, options: options})
     })
     .then(response => response.json())
     .then(data => {
-      window.location.href = data.redirect;
+      // 서버에서 전달 받은 URL로 리디렉션
+      window.lacation.href = data.redirect;
     })
     .catch((error) => {
       console.error('Error:', error);
-    })
+    });
   }
 
   // 음성 인식 API 초기화
