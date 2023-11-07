@@ -16,6 +16,11 @@ CORS(app)
 
 # Stable Diffusion의 로컬 주소
 url = "http://127.0.0.1:7860"
+# Stable Diffusion에 적용될 프롬프트
+payload = {
+    "prompt" : "",
+    "negative_prompt" : "easynegative"
+}
 
 # 데이터베이스 설정
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///translations.db'
@@ -169,18 +174,25 @@ def new_save_success():
 
 @app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
+    # payload 값 참조
+    global payload
+
     if request.method == 'POST':
         # POST 요청 시 JSON 데이터 파싱
-        data = request.get_json()
+        data = request.json
 
-        # prompt 키로부터 값 가져옴
-        prompt_value = data.get('promt', '')
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
 
-        #print(payload)
+        print("payload 확인:", payload)
 
+        # 다음 페이지 리디렉션 url
         redirect_url = url_for('new_back')
         return jsonify(redirect = redirect_url)
-    return render_template('new_shot.html')
+    
+    else:
+        # GET 요청시 HTML 반환
+        return render_template('new_shot.html')
 
 @app.route('/new_style', methods=['GET', 'POST'])
 def new_style():
@@ -192,7 +204,6 @@ def new_style():
         option_payload = {
             "sd_model_checkpoint" : selected_model
         }
-        payload = {}
 
         # checkpoint 모델 변경
         response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
