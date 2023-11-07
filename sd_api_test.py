@@ -50,7 +50,7 @@ for key in LORA_CHOICES.keys():
 
 selected_lora = input("원하는 스타일을 입력하세요: ")
 
-}
+
 def get_latest_translated_text():
     # 데이터베이스 연결
     conn = sqlite3.connect('translations.db')

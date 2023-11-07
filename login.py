@@ -3,9 +3,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+import requests
+import io
+import json
+import sqlite3
+from PIL import Image, PngImagePlugin
+from datetime import datetime
+
 
 app = Flask(__name__)
 CORS(app)
+
+# Stable Diffusion의 로컬 주소
+url = "http://127.0.0.1:7860"
 
 # 데이터베이스 설정
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///translations.db'
@@ -168,6 +178,11 @@ def new_style():
         data = request.json
         style_number = data['style']
         selected_model = models[style_number - 1]
+        option_payload = {
+            "sd_model_checkpoint" : selected_model
+        }
+        
+        response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
         
         redirect_url = url_for('new_shot', _external=True)
         return jsonify(redirect = redirect_url)
