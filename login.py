@@ -29,6 +29,15 @@ class User(db.Model):
         self.password = generate_password_hash(password)  # 생성자에서 비밀번호를 해시하여 저장
         self.email = email
 
+# 모델 리스트
+models = [
+    "helloflatcute2d_V10.safetensors [5a7204177d]",
+    "pasteldiffusedmix_v22.safetensors [7d21f7acff]",
+    "pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]",
+    "chosenMix_bakedVae.safetensors [52b8ebbd5b]",
+    "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+    ]
+
 with app.app_context():
     db.create_all()
 
@@ -152,9 +161,20 @@ def new_save_success():
 def new_shot():
     return render_template('new_shot.html')
 
-@app.route('/new_style')
+@app.route('/new_style', methods=['POST', 'GET'])
 def new_style():
-    return render_template('new_style.html')
+    if request.method == 'POST':
+        # POST 요청 시 JSON 처리
+        data = request.json
+        style_number = data['style']
+        selected_model = models[style_number - 1]
+        
+        redirect_url = url_for('new_shot', _external=True)
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청 시 HTML 반환
+        return render_template('new_style.html')
 
 @app.route('/pastel_gallery1')
 def pastel_gallery1():
