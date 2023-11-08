@@ -59,7 +59,7 @@
           <div class="line-1-DzH">
           </div>
           <!-- 수정된 부분: 작품 제목 입력 필드와 작품 설명 입력 필드에 id 추가 -->
-          <form action="pro_save_success.html" id="captions-form">
+          <form action="{{url_for("pro_save_success")}}" id="captions-form">
             <div class="group-26-ZYM">
               <!-- 작품 제목 입력 필드 -->
               <input id="title" type="text" required autofocus placeholder="작품 제목" cols="30">
@@ -83,13 +83,13 @@
       </div>
       <div class="auto-group-n9ms-Gd7">
         <!-- 저장 버튼의 id 추가 -->
-        <form action="new_save_success.html" id="save-button-form">
+        <form action="{{url_for("new_save_success")}}" id="save-button-form">
           <div class="group-58-Bzy">
             <!-- 저장 버튼 추가 -->
             <button id="save-button" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
           </div>
         </form>
-        <div class="group-59-dry"><a href="new_no_save.html" style="color:white">아니오</a></div>
+        <div class="group-59-dry"><a href="{{url_for("new_no_save")}}" style="color:white">아니오</a></div>
       </div>
       <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/>
     </div>
@@ -98,67 +98,74 @@
   </div>
 </div>
 <script>
-  // 음성 인식 API 초기화
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
+ // 음성 인식 API 초기화
+const recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
 
-  // 작품 제목과 작품 설명을 저장할 변수
-  let title = '';
-  let captions = '';
-  let isTitleComplete = false;
+// 작품 제목과 작품 설명을 저장할 변수
+let title = '';
+let captions = '';
+let isTitleComplete = false;
 
-  // 페이지 로드 시 음성 인식 시작
-  window.addEventListener('load', () => {
-    recognition.start();
-  });
+// 페이지 로드 시 음성 인식 시작
+window.addEventListener('load', () => {
+  recognition.start();
+});
 
-  // 음성 인식 결과 이벤트 리스너
-  recognition.onresult = (event) => {
-    const result = event.results[event.results.length - 1][0].transcript;
-    console.log('음성 인식 결과:', result);
+// 음성 인식 결과 이벤트 리스너
+recognition.onresult = (event) => {
+  const result = event.results[event.results.length - 1][0].transcript;
+  console.log('음성 인식 결과:', result);
 
-    if (result === '마이페이지') {
-      window.location.href = 'mypage.html'; // mypage.html 페이지로 이동
-    }
-    if (result === '가이드') {
-      window.location.href = 'guide.html'; // guide.html 페이지로 이동
-    }
-    if (result === '이전으로') {
-      window.location.href = 'new_filter.html'; // new_shot.html 페이지로 이동
-    }
+  // 인식된 음성 명령에 따라 페이지 이동
+  switch (result) {
+    case '마이페이지':
+      window.location.href = '/mypage'; // 마이페이지로 이동
+      break;
+    case '가이드':
+      window.location.href = '/guide'; // 가이드 페이지로 이동
+      break;
+    case '이전으로':
+      window.location.href = '/new_filter'; // 이전 페이지로 이동
+      break;
+    case '저장':
+      window.location.href = '/new_save_success'; // 저장 페이지로 이동
+      break;
+  }
 
-    if (!isTitleComplete) {
-      // 작품 제목 입력 상태에서 "완료"를 말하면 작품 설명 입력 상태로 변경
-      if (result.includes('완료')) {
-        isTitleComplete = true;
-        document.getElementById('title').disabled = true; // 제목 입력 비활성화
-        document.getElementById('captions').focus(); // 설명 입력 활성화
-      } else {
-        // 작품 제목을 입력받는 상태
-        title += result + ' '; // 작품 제목을 누적
-        document.getElementById('title').value = title;
-      }
+  if (!isTitleComplete) {
+    // 작품 제목 입력 상태에서 "완료"를 말하면 작품 설명 입력 상태로 변경
+    if (result.includes('완료')) {
+      isTitleComplete = true;
+      document.getElementById('title').disabled = true; // 제목 입력 비활성화
+      document.getElementById('captions').focus(); // 설명 입력 활성화
     } else {
-      // 작품 설명을 입력받는 상태
-      captions += result + ' '; // 설명을 누적
-      document.getElementById('captions').value = captions;
-
-      // "저장" 음성이 인식되면 작품 저장 페이지로 이동
-      if (result.includes('저장')) {
-        const form = document.getElementById('captions-form');
-        form.action = 'new_save_success.html'; // 저장 페이지로 변경
-        form.submit();
-      }
+      // 작품 제목을 입력받는 상태
+      title += result + ' '; // 작품 제목을 누적
+      document.getElementById('title').value = title;
     }
-  };
+  } else {
+    // 작품 설명을 입력받는 상태
+    captions += result + ' '; // 설명을 누적
+    document.getElementById('captions').value = captions;
 
-  // 저장 버튼 클릭 시 작품 저장 페이지로 이동
-  document.getElementById('save-button').addEventListener('click', () => {
-    const form = document.getElementById('captions-form');
-    form.action = 'new_save_success.html'; // 저장 페이지로 변경
-    form.submit();
-  });
+    // "저장" 음성이 인식되면 작품 저장 페이지로 이동
+    // if (result.includes('저장')) {
+    //   const form = document.getElementById('captions-form');
+    //   form.action = 'new_save_success.html'; // 저장 페이지로 변경
+    //   form.submit();
+    // }
+  }
+};
+
+// 저장 버튼 클릭 시 작품 저장 페이지로 이동
+document.getElementById('save-button').addEventListener('click', () => {
+  const form = document.getElementById('captions-form');
+  form.action = 'new_save_success.html'; // 저장 페이지로 변경
+  form.submit();
+});
+
 </script>
 </body>
 </html>
