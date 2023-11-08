@@ -15,6 +15,7 @@ import requests
 import io
 import json
 import sqlite3
+import base64
 from PIL import Image, PngImagePlugin
 from datetime import datetime
 
@@ -256,6 +257,33 @@ def new_complete():
 @app.route('/new_filter')
 def new_filter():
     username = session.get('username', 'Guest')
+    # payload 값 참조
+    global payload
+
+    # 이미지 생성 API 요청
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    print(payload)
+
+    r = response.json()
+
+    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    for i in r['images']:
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        # API 요청을 보내 이미지 정보 검색
+        png_payload = {
+            "image": "data:image/png;base64," + i
+        }
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        # PIL 이미지에 메타 데이터 삽입
+        pnginfo = PngImagePlugin.PngInfo()
+        pnginfo.add_text("parameters", response2.json().get("info"))
+        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'object/output_t2i{current_time}.png'
+
+        # 이미지 저장
+        image.save(file_name, pnginfo = pnginfo)
+
     return render_template('new_filter.html', username=username)
 
 @app.route('/new_no_save')
@@ -536,11 +564,11 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
+    #print(app.config['SQLALCHEMY_DATABASE_URI'])
     with app.app_context():
         users = User.query.all()  # 모든 User 레코드를 조회합니다.
-        for user in users:
-            print(user.id, user.name, user.birthdate, user.username, user.password)
+        #for user in users:
+            #print(user.id, user.name, user.birthdate, user.username, user.password)
         if db.engine.url.drivername == "sqlite":
             migrate.init_app(app, db, render_as_batch=True)
         else:
