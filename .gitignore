@@ -3389,8 +3389,7 @@ venv/Lib/site-packages/Pillow-10.1.0.dist-info/zip-safe
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,flask,venv
 
 ### Flask ###
-instance/*
-!instance/.gitignore
+
 .webassets-cache
 .env
 
