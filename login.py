@@ -11,12 +11,26 @@ import logging
 # from models import User
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+import requests
+import io
+import json
+import sqlite3
+from PIL import Image, PngImagePlugin
+from datetime import datetime
+
 
 app = Flask(__name__)
 CORS(app)
 
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
+# Stable Diffusion의 로컬 주소
+url = "http://127.0.0.1:7860"
+# Stable Diffusion에 적용될 프롬프트
+payload = {
+    "prompt" : "",
+    "negative_prompt" : "easynegative"
+}
 
 # 데이터베이스 설정
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -64,6 +78,29 @@ def inject_user():
     if 'username' in session:
         return dict(username=session['username'])
     return dict(username=None)
+class User(db.Model):
+    """ 사용자 테이블 생성 """
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)  # 해시된 비밀번호 저장을 위해 필드 길이 증가
+    email = db.Column(db.String(80), unique=True, nullable=False)
+
+    def __init__(self, username, password, email):
+        self.username = username
+        self.password = generate_password_hash(password)  # 생성자에서 비밀번호를 해시하여 저장
+        self.email = email
+
+# 모델 리스트
+models = [
+    "helloflatcute2d_V10.safetensors [5a7204177d]",
+    "pasteldiffusedmix_v22.safetensors [7d21f7acff]",
+    "pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]",
+    "chosenMix_bakedVae.safetensors [52b8ebbd5b]",
+    "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+    ]
+
+with app.app_context():
+    db.create_all()
 
 @app.route('/join', methods=['GET', 'POST'])
 def join():
@@ -218,13 +255,59 @@ def new_object():
 def new_save_success():
     return render_template('new_save_success.html')
 
-@app.route('/new_shot')
+@app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
-    return render_template('new_shot.html')
+    # payload 값 참조
+    global payload
 
-@app.route('/new_style')
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('new_back')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청시 HTML 반환
+        return render_template('new_shot.html')
+
+@app.route('/new_style', methods=['GET', 'POST'])
 def new_style():
-    return render_template('new_style.html')
+    if request.method == 'POST':
+        # POST 요청 시 JSON 처리
+        data = request.json
+        style_number = data['style']
+        selected_model = models[style_number - 1]
+        option_payload = {
+            "sd_model_checkpoint" : selected_model
+        }
+
+        # checkpoint 모델 변경
+        response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
+
+        # payload 옵션 추가
+        options = data.get('options', {})
+        if 'styleNumber' in options:
+            del options['styleNumber'] #styleNumber 키 제거
+        # payload 딕셔너리에 options 값 추가
+        for key, value in options.items():
+            payload[key] = value
+        
+        print("payload = ", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('new_shot', _external=True)
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청 시 HTML 반환
+        return render_template('new_style.html')
 
 @app.route('/pastel_gallery1')
 def pastel_gallery1():
