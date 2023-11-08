@@ -263,10 +263,32 @@ def new_no_save():
     username = session.get('username', 'Guest')
     return render_template('new_no_save.html', username=username)
 
-@app.route('/new_object')
+@app.route('/new_object', methods=['GET', 'POST'])
 def new_object():
+<<<<<<< HEAD
     username = session.get('username', 'Guest')
     return render_template('new_object.html', username=username)
+=======
+    # payload 값 참조
+    global payload
+
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('new_filter')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청시 HTML 반환
+        return render_template('new_object.html')
+>>>>>>> aa5c27d139d0a1b394ef30ccf7019891f67c65ea
 
 @app.route('/new_save_success')
 def new_save_success():
