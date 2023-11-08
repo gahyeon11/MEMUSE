@@ -160,7 +160,6 @@ def workplace():
         flash('Please login to view this page.', 'error')
         return redirect(url_for('login'))
     username = session.get('username', 'Guest')
-    return render_template('workplace.html',  username=username)
     global payload
     # payload 초기화
     payload = {
@@ -168,7 +167,7 @@ def workplace():
     "negative_prompt" : "easynegative"
     }
     print(payload)
-    return render_template('workplace.html')
+    return render_template('workplace.html',  username=username)
 
 @app.route('/voice_login_join_choice')
 def voice_login_join_choice():
@@ -246,27 +245,33 @@ def new_back():
     
     else:
         # GET 요청시 HTML 반환
-        return render_template('new_back.html')
+        username = session.get('username', 'Guest')
+        return render_template('new_back.html', username=username)
 
 @app.route('/new_complete')
 def new_complete():
-    return render_template('new_complete.html')
+    username = session.get('username', 'Guest')
+    return render_template('new_complete.html', username=username)
 
 @app.route('/new_filter')
 def new_filter():
-    return render_template('new_filter.html')
+    username = session.get('username', 'Guest')
+    return render_template('new_filter.html', username=username)
 
 @app.route('/new_no_save')
 def new_no_save():
-    return render_template('new_no_save.html')
+    username = session.get('username', 'Guest')
+    return render_template('new_no_save.html', username=username)
 
 @app.route('/new_object')
 def new_object():
-    return render_template('new_object.html')
+    username = session.get('username', 'Guest')
+    return render_template('new_object.html', username=username)
 
 @app.route('/new_save_success')
 def new_save_success():
-    return render_template('new_save_success.html')
+    username = session.get('username', 'Guest')
+    return render_template('new_save_success.html', username=username)
 
 @app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
@@ -288,7 +293,8 @@ def new_shot():
     
     else:
         # GET 요청시 HTML 반환
-        return render_template('new_shot.html')
+        username = session.get('username', 'Guest')
+        return render_template('new_shot.html', username=username)
 
 @app.route('/new_style', methods=['GET', 'POST'])
 def new_style():
@@ -320,6 +326,7 @@ def new_style():
     
     else:
         # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
         return render_template('new_style.html')
 
 @app.route('/pastel_gallery1')
@@ -336,98 +343,124 @@ def pastel_gallery3():
 
 @app.route('/pro_back')
 def pro_back():
-    return render_template('pro_back.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_back.html', username=username)
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
-    return render_template('pro_back_complete.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_back_complete.html', username=username)
 
 @app.route('/pro_complete')
 def pro_complete():
-    return render_template('pro_complete.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_complete.html', username=username)
 
 @app.route('/pro_edit_obj_check')
 def pro_edit_obj_check():
-    return render_template('pro_edit_obj_check.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_edit_obj_check.html', username=username)
 
 @app.route('/pro_edit_obj_num')
 def pro_edit_obj_num():
-    return render_template('pro_edit_obj_num.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_edit_obj_num.html', username=username)
 @app.route('/pro_edit_object')
 def pro_edit_object():
-    return render_template('pro_edit_object.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_edit_object.html', username=username)
 
 @app.route('/pro_edit_shot_check')
 def pro_edit_shot_check():
-    return render_template('pro_edit_shot_check.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_edit_shot_check.html', username=username)
 
 @app.route('/pro_edit_shot_num')
 def pro_edit_shot_num():
-    return render_template('pro_edit_shot_num.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_edit_shot_num.html', username=username)
 
 @app.route('/pro_filter')
 def pro_filter():
-    return render_template('pro_filter.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_filter.html', username=username)
 
 @app.route('/pro_lora')
 def pro_lora():
-    return render_template('pro_lora.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_lora.html', username=username)
 
 @app.route('/pro_lora_num')
 def pro_lora_num():
-    return render_template('pro_lora_num.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_lora_num.html', username=username)
 
 @app.route('/pro_more_edit_obj')
 def pro_more_edit_obj():
-    return render_template('pro_more_edit_obj.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_more_edit_obj.html', username=username)
 
 @app.route('/pro_more_object')
 def pro_more_object():
-    return render_template('pro_more_object.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_more_object.html', username=username)
 
 @app.route('/pro_more_specify_obj')
 def pro_more_specify_obj():
-    return render_template('pro_more_specify_obj.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_more_specify_obj.html', username=username)
 
 @app.route('/pro_no_save')
 def pro_no_save():
-    return render_template('pro_no_save.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_no_save.html', username=username)
 
 @app.route('/pro_object')
 def pro_object():
-    return render_template('pro_object.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_object.html', username=username)
 
 @app.route('/pro_object_complete')
 def pro_object_complete():
-    return render_template('pro_object_complete.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_object_complete.html', username=username)
 
 @app.route('/pro_save_success')
 def pro_save_success():
-    return render_template('pro_save_success.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_save_success.html', username=username)
 
 @app.route('/pro_specify_obj')
 def pro_specify_obj():
-    return render_template('pro_specify_obj.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_specify_obj.html', username=username)
 
 @app.route('/pro_specify_obj_check')
 def pro_specify_obj_check():
-    return render_template('pro_specify_obj_check.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_specify_obj_check.html', username=username)
 
 @app.route('/pro_specify_obj_check2')
 def pro_specify_obj_check2():
-    return render_template('pro_specify_obj_check2.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_specify_obj_check2.html', username=username)
 
 @app.route('/pro_specify_obj_num')
 def pro_specify_obj_num():
-    return render_template('pro_specify_obj_num.html')
+    username = session.get('username', 'Guest')
+    
+    return render_template('pro_specify_obj_num.html', username=username)
 
 @app.route('/pro_specify_obj_num2')
 def pro_specify_obj_num2():
-    return render_template('pro_specify_obj_num2.html')
+    username = session.get('username', 'Guest')
+    
+    return render_template('pro_specify_obj_num2.html', username=username)
 
 @app.route('/pro_style')
 def pro_style():
-    return render_template('pro_style.html')
+    username = session.get('username', 'Guest')
+    return render_template('pro_style.html', username=username)
 
 @app.route('/voice_join_success')
 def voice_join_success():

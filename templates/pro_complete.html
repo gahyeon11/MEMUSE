@@ -43,7 +43,7 @@
       <img class="line-2-VBP" src="../static/assets/line-2-eb3.png"/>
     </div>
     <div class="item--qFF">
-      <span class="item--qFF-sub-0"><span style="color:#003D75">김밈</span>
+      <span class="item--qFF-sub-0"><span style="color:#003D75">{{ username }}</span>
       <span style="color:black">
        작가님의 작품이 완성됐습니다.
       <br/>
@@ -55,7 +55,7 @@
         <div class="rectangle-9-gob">
         </div>
         <div class="group-3-RWH">
-          <div class="item--wUd">김밈</div>
+          <div class="item--wUd">{{ username }}</div>
           <div class="line-1-SgH">
           </div>
           <form action="{{ url_for('pro_save_success') }}" id="captions-form">
