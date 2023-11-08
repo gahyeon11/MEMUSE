@@ -8,14 +8,12 @@ from sqlalchemy.exc import IntegrityError
 import sqlite3
 import logging
 
-# from models import User
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 import requests
 import io
 import json
 import sqlite3
-import base64
 from PIL import Image, PngImagePlugin
 from datetime import datetime
 
@@ -132,6 +130,8 @@ def login():
                 if user.check_password(password):
                     session['logged_in'] = True
                     session['username'] = username
+                    session['name'] = user.name
+                    session['birthdate'] = user.birthdate
                     return redirect(url_for('workplace'))
                 else:
                     # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
@@ -205,12 +205,14 @@ def live_gallery3():
 
 @app.route('/my_page')
 def my_page():
-    if 'user_id' not in session:
+    if 'username' not in session:
         flash('Please login to view this page.', 'danger')
         return redirect(url_for('login'))
-
-    user = User.query.get(session['user_id'])
-    return render_template('my_page.html', user=user)
+    username = session.get('username', 'Guest')
+    name = session.get('name', 'Guest')
+    birthdate = session.get('birthdate', 'Guest')
+    
+    return render_template('my_page.html', username=username, name = name, birthdate = birthdate)
 
 @app.route('/my_page_my_gallery1')
 def my_page_my_gallery1():
@@ -257,33 +259,6 @@ def new_complete():
 @app.route('/new_filter')
 def new_filter():
     username = session.get('username', 'Guest')
-    # payload 값 참조
-    global payload
-
-    # 이미지 생성 API 요청
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-    print(payload)
-
-    r = response.json()
-
-    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-        # API 요청을 보내 이미지 정보 검색
-        png_payload = {
-            "image": "data:image/png;base64," + i
-        }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-        # PIL 이미지에 메타 데이터 삽입
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
-        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'object/output_t2i{current_time}.png'
-
-        # 이미지 저장
-        image.save(file_name, pnginfo = pnginfo)
-
     return render_template('new_filter.html', username=username)
 
 @app.route('/new_no_save')
@@ -291,12 +266,8 @@ def new_no_save():
     username = session.get('username', 'Guest')
     return render_template('new_no_save.html', username=username)
 
-@app.route('/new_object', methods=['GET', 'POST'])
+@app.route('/new_object')
 def new_object():
-<<<<<<< HEAD
-    username = session.get('username', 'Guest')
-    return render_template('new_object.html', username=username)
-=======
     # payload 값 참조
     global payload
 
@@ -315,8 +286,8 @@ def new_object():
     
     else:
         # GET 요청시 HTML 반환
-        return render_template('new_object.html')
->>>>>>> aa5c27d139d0a1b394ef30ccf7019891f67c65ea
+        username = session.get('username', 'Guest')
+    return render_template('new_object.html', username=username)
 
 @app.route('/new_save_success')
 def new_save_success():
@@ -377,7 +348,7 @@ def new_style():
     else:
         # GET 요청 시 HTML 반환
         username = session.get('username', 'Guest')
-        return render_template('new_style.html')
+        return render_template('new_style.html', username = username)
 
 @app.route('/pastel_gallery1')
 def pastel_gallery1():
@@ -564,11 +535,11 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    #print(app.config['SQLALCHEMY_DATABASE_URI'])
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
     with app.app_context():
-        users = User.query.all()  # 모든 User 레코드를 조회합니다.
-        #for user in users:
-            #print(user.id, user.name, user.birthdate, user.username, user.password)
+        # users = User.query.all()  # 모든 User 레코드를 조회합니다.
+        # for user in users:
+        #     print(user.id, user.name, user.birthdate, user.username)
         if db.engine.url.drivername == "sqlite":
             migrate.init_app(app, db, render_as_batch=True)
         else:
