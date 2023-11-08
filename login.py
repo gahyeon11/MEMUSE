@@ -261,33 +261,7 @@ def new_complete():
 
 @app.route('/new_filter')
 def new_filter():
-    # payload 값 참조
-    global payload
 
-    # 이미지 생성 API 요청
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-    print(payload)
-
-    r = response.json()
-
-    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-        # API 요청을 보내 이미지 정보 검색
-        png_payload = {
-            "image": "data:image/png;base64," + i
-        }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-        # PIL 이미지에 메타 데이터 삽입
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
-        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'object/output_t2i{current_time}.png'
-
-        # 이미지 저장
-        image.save(file_name, pnginfo = pnginfo)
-        
     username = session.get('username', 'Guest')
     return render_template('new_filter.html', username=username)
 
@@ -296,7 +270,7 @@ def new_no_save():
     username = session.get('username', 'Guest')
     return render_template('new_no_save.html', username=username)
 
-@app.route('/new_object')
+@app.route('/new_object', methods=['POST', 'GET'])
 def new_object():
     # payload 값 참조
     global payload
@@ -312,6 +286,30 @@ def new_object():
         payload["negative_prompt"] += data.get('negative', '')
 
         print("payload 확인:", payload)
+
+        # 이미지 생성 API 요청
+        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+        print(payload)
+
+        r = response.json()
+
+        # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+        for i in r['images']:
+            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            # API 요청을 보내 이미지 정보 검색
+            png_payload = {
+                "image": "data:image/png;base64," + i
+            }
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+            # PIL 이미지에 메타 데이터 삽입
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+            # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            file_name = f'object/output_t2i{current_time}.png'
+
+            # 이미지 저장
+            image.save(file_name, pnginfo = pnginfo)
 
         # 다음 페이지 리디렉션 url
         redirect_url = url_for('new_filter')

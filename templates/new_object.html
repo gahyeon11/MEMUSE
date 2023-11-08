@@ -100,6 +100,7 @@
 
         // 클릭된 요소의 데이터 값 가져오기
         var prompt = this.getAttribute('data-prompt');
+        var negativePrompt = this.getAttribute('data-prompt2');
 
         // 서버에 포스트 요청
         fetch('/new_object', {
@@ -107,7 +108,10 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({prompt: prompt})
+          body: JSON.stringify({
+            prompt: prompt,
+            negative: negativePrompt
+          })
         })
         .then(response => response.json())
         .then(data => {
