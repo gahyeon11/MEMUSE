@@ -73,23 +73,6 @@ def index():
 def make_shell_context():
     return {'db': db, 'User': User}
 
-@app.context_processor
-def inject_user():
-    if 'username' in session:
-        return dict(username=session['username'])
-    return dict(username=None)
-class User(db.Model):
-    """ 사용자 테이블 생성 """
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)  # 해시된 비밀번호 저장을 위해 필드 길이 증가
-    email = db.Column(db.String(80), unique=True, nullable=False)
-
-    def __init__(self, username, password, email):
-        self.username = username
-        self.password = generate_password_hash(password)  # 생성자에서 비밀번호를 해시하여 저장
-        self.email = email
-
 # 모델 리스트
 models = [
     "helloflatcute2d_V10.safetensors [5a7204177d]",
@@ -137,23 +120,28 @@ def join():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        print("gerror")
-         # Check if user exists and the password is correct
-        user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):
-            session['logged_in'] = True
-            print("s")
-            session['username'] = username
-            return render_template('workplace.html')
-        elif user is None:
-            flash('Invalid username', 'error')
-            print("Username not found")
-        else:
-            flash('Invalid password', 'error')
-            print("Incorrect password")
+            username = request.form.get('username')
+            password = request.form.get('password')
             
+            # 사용자가 존재하는지 확인
+            user = User.query.filter_by(username=username).first()
+            if user:
+                # 비밀번호가 맞는지 확인
+                if user.check_password(password):
+                    session['logged_in'] = True
+                    session['username'] = username
+                    return render_template('workplace.html')
+                else:
+                    # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
+                    # 해시된 비밀번호와 입력된 비밀번호의 해시를 콘솔에 출력
+                    print(f"Stored hash: {user.password}")
+                    print(f"Entered hash: {generate_password_hash(password)}")
+                    flash('Invalid password', 'error')
+                    print("Incorrect password")
+            else:
+                flash('Invalid username', 'error')
+                print("Username not found")
+                
     return render_template('login.html')
 
 # @app.route('/join_success')
@@ -471,6 +459,9 @@ def intro():
 if __name__ == '__main__':
     print(app.config['SQLALCHEMY_DATABASE_URI'])
     with app.app_context():
+        users = User.query.all()  # 모든 User 레코드를 조회합니다.
+        for user in users:
+            print(user.id, user.name, user.birthdate, user.username, user.password)
         if db.engine.url.drivername == "sqlite":
             migrate.init_app(app, db, render_as_batch=True)
         else:
