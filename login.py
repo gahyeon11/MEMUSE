@@ -130,7 +130,7 @@ def login():
                 if user.check_password(password):
                     session['logged_in'] = True
                     session['username'] = username
-                    return render_template('workplace.html')
+                    return redirect(url_for('workplace'))
                 else:
                     # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
                     # 해시된 비밀번호와 입력된 비밀번호의 해시를 콘솔에 출력
@@ -449,12 +449,11 @@ def intro():
  
     return render_template('intro.html')
 
-
-# @app.route('/logout')
-# def logout():
-#     session.pop('user_id', None)
-#     flash('You have been logged out.', 'success')
-#     return redirect(url_for('index'))
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     print(app.config['SQLALCHEMY_DATABASE_URI'])
