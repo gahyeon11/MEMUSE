@@ -2,18 +2,23 @@ from flask import Flask, request, jsonify, render_template, url_for, redirect, s
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
+from PIL import Image, PngImagePlugin
+from datetime import datetime
+
 import sqlite3
+import os
 import logging
 
+# from models import User
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 import requests
 import io
 import json
 import sqlite3
+import base64
 from PIL import Image, PngImagePlugin
 from datetime import datetime
 
@@ -57,7 +62,6 @@ class User(db.Model):
     birthdate = db.Column(db.String(128), nullable=False)
     username = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
-    
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -120,29 +124,28 @@ def join():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-            username = request.form.get('username')
-            password = request.form.get('password')
+        username = request.form.get('username')
+        password = request.form.get('password')
             
-            # 사용자가 존재하는지 확인
-            user = User.query.filter_by(username=username).first()
-            if user:
-                # 비밀번호가 맞는지 확인
-                if user.check_password(password):
-                    session['logged_in'] = True
-                    session['username'] = username
-                    session['name'] = user.name
-                    session['birthdate'] = user.birthdate
-                    return redirect(url_for('workplace'))
-                else:
-                    # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
-                    # 해시된 비밀번호와 입력된 비밀번호의 해시를 콘솔에 출력
-                    print(f"Stored hash: {user.password}")
-                    print(f"Entered hash: {generate_password_hash(password)}")
-                    flash('Invalid password', 'error')
-                    print("Incorrect password")
+        # 사용자가 존재하는지 확인
+        user = User.query.filter_by(username=username).first()
+        if user:                # 비밀번호가 맞는지 확인
+            if user.check_password(password):
+                session['logged_in'] = True
+                session['username'] = username
+                session['name'] = user.name
+                session['birthdate'] = user.birthdate
+                return redirect(url_for('workplace'))
             else:
-                flash('Invalid username', 'error')
-                print("Username not found")
+                # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
+                # 해시된 비밀번호와 입력된 비밀번호의 해시를 콘솔에 출력
+                print(f"Stored hash: {user.password}")
+                print(f"Entered hash: {generate_password_hash(password)}")
+                flash('Invalid password', 'error')
+                print("Incorrect password")
+        else:
+            flash('Invalid username', 'error')
+            print("Username not found")
                 
     return render_template('login.html')
 
@@ -216,7 +219,7 @@ def my_page():
 
 @app.route('/my_page_my_gallery1')
 def my_page_my_gallery1():
-    
+
     
     return render_template('my_page_my_gallery1.html')
 
@@ -258,6 +261,33 @@ def new_complete():
 
 @app.route('/new_filter')
 def new_filter():
+    # payload 값 참조
+    global payload
+
+    # 이미지 생성 API 요청
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    print(payload)
+
+    r = response.json()
+
+    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    for i in r['images']:
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        # API 요청을 보내 이미지 정보 검색
+        png_payload = {
+            "image": "data:image/png;base64," + i
+        }
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        # PIL 이미지에 메타 데이터 삽입
+        pnginfo = PngImagePlugin.PngInfo()
+        pnginfo.add_text("parameters", response2.json().get("info"))
+        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'object/output_t2i{current_time}.png'
+
+        # 이미지 저장
+        image.save(file_name, pnginfo = pnginfo)
+        
     username = session.get('username', 'Guest')
     return render_template('new_filter.html', username=username)
 
@@ -278,6 +308,9 @@ def new_object():
         # prompt 문자열에 추가
         payload["prompt"] += data.get('prompt', '')
 
+        # negative_prompt 문자열에 추가
+        payload["negative_prompt"] += data.get('negative', '')
+
         print("payload 확인:", payload)
 
         # 다음 페이지 리디렉션 url
@@ -287,7 +320,7 @@ def new_object():
     else:
         # GET 요청시 HTML 반환
         username = session.get('username', 'Guest')
-    return render_template('new_object.html', username=username)
+        return render_template('new_object.html', username=username)
 
 @app.route('/new_save_success')
 def new_save_success():
