@@ -188,9 +188,27 @@ def new_filter():
 def new_no_save():
     return render_template('new_no_save.html')
 
-@app.route('/new_object')
+@app.route('/new_object', methods=['GET', 'POST'])
 def new_object():
-    return render_template('new_object.html')
+    # payload 값 참조
+    global payload
+
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('new_filter')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청시 HTML 반환
+        return render_template('new_object.html')
 
 @app.route('/new_save_success')
 def new_save_success():

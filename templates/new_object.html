@@ -70,19 +70,19 @@
       </div>
       <div class="item--Vnh">그리고 싶은 그림의 사물을 클릭하거나 번호를 말씀해 주세요.</div><br><br>
       <div class="auto-group-mdx7-LHX">
-        <div class="item--3xd">1. </div>
-        <div class="item--PFo">2. </div>
-        <div class="item--uzq">3. </div>
-        <div class="item--EXK">4. </div>
+        <div class="item--3xd">1. 남자</div>
+        <div class="item--PFo">2. 여자</div>
+        <div class="item--uzq">3. 동물</div>
+        <div class="item--EXK">4. X (배경만)</div>
       </div>
       <div class="auto-group-s8yf-a5P">
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-22-hQu">
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-22-hQu" data-prompt="man, male,a boy, guy, handsome man, solo,">
         </div></a>
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-26-SNV">
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-26-SNV" data-prompt="a girl, beautiful face, woman, high detailed skin,">
         </div></a>
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-27-ytD">
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-27-ytD" data-prompt="animal, no humans,">
         </div></a>
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-28-jMb">
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-28-jMb" data-prompt="no humans, landscape,">
         </div></a>
       </div>
       <img class="bi-mic-fill-gGq" src="../static/assets/bi-mic-fill-xDF.png"/>
@@ -92,6 +92,37 @@
   </div>
 </div>
 <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    // 모든 rectangle 요소에 이벤트 리스너 추가
+    document.querySelectorAll('.rectangle-22-hQu, .rectangle-26-SNV, .rectangle-27-ytD, .rectangle-28-jMb').forEach(function(rectangle){
+      rectangle.addEventListener('click', function(event){
+        event.preventDefault(); // 기본 링크 동작 방지
+
+        // 클릭된 요소의 데이터 값 가져오기
+        var prompt = this.getAttribute('data-prompt');
+
+        // 서버에 포스트 요청
+        fetch('/new_object', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({prompt: prompt})
+        })
+        .then(response => response.json())
+        .then(data => {
+          // 서버로부터 리다이렉트 주소를 받아 페이지 이동
+          if(data.redirect){
+            window.location.href = data.redirect;
+          }
+        })
+        .catch(error => {
+          console.error('Error_new_object:', error);
+        });
+      });
+    });
+  });
+
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
