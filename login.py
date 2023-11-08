@@ -28,9 +28,18 @@ c = conn.cursor()
 url = "http://127.0.0.1:7860"
 # Stable Diffusion에 적용될 프롬프트
 payload = {
-    "prompt" : "",
+    "prompt" : "masterpiece, best quality, highres, ",
     "negative_prompt" : "easynegative"
-}
+    }
+
+# 모델 리스트
+models = [
+    "helloflatcute2d_V10.safetensors [5a7204177d]",
+    "pasteldiffusedmix_v22.safetensors [7d21f7acff]",
+    "pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]",
+    "chosenMix_bakedVae.safetensors [52b8ebbd5b]",
+    "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+    ]
 
 # 데이터베이스 설정
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -73,14 +82,6 @@ def index():
 def make_shell_context():
     return {'db': db, 'User': User}
 
-# 모델 리스트
-models = [
-    "helloflatcute2d_V10.safetensors [5a7204177d]",
-    "pasteldiffusedmix_v22.safetensors [7d21f7acff]",
-    "pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]",
-    "chosenMix_bakedVae.safetensors [52b8ebbd5b]",
-    "v1-5-pruned-emaonly.safetensors [6ce0161689]"
-    ]
 
 with app.app_context():
     db.create_all()
@@ -160,6 +161,14 @@ def workplace():
         return redirect(url_for('login'))
     username = session.get('username', 'Guest')
     return render_template('workplace.html',  username=username)
+    global payload
+    # payload 초기화
+    payload = {
+    "prompt" : "",
+    "negative_prompt" : "easynegative"
+    }
+    print(payload)
+    return render_template('workplace.html')
 
 @app.route('/voice_login_join_choice')
 def voice_login_join_choice():
@@ -181,8 +190,6 @@ def cartoon_gallery3():
 @app.route('/guide')
 def guide():
     return render_template('guide.html')
-
-
 
 @app.route('/live_gallery1')
 def live_gallery1():
@@ -219,9 +226,27 @@ def my_page_my_gallery2():
 def my_page_my_gallery3():
     return render_template('my_page_my_gallery3.html')
 
-@app.route('/new_back')
+@app.route('/new_back', methods=['GET', 'POST'])
 def new_back():
-    return render_template('new_back.html')
+    # payload 값 참조
+    global payload
+
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('new_object')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청시 HTML 반환
+        return render_template('new_back.html')
 
 @app.route('/new_complete')
 def new_complete():
