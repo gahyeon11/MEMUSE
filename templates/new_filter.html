@@ -33,7 +33,7 @@
             <div class="workplace-CSm"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
             <div class="museum-iAD"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
             <div class="guide-qVj"><a href="{{ url_for("guide")}}">Guide</a></div>
-            <div class="login-xqF"><a href="{{url_for("login")}}">Login</a></div>
+            <div class="login-xqF"><a href="{{url_for("logout")}}">logout</a></div>
           </div>
           <div class="group-2-Cjb">
             <a href="{{ url_for("my_page")}}"> 
@@ -136,53 +136,52 @@
 
     // 인식된 음성 명령에 따라 URL로 이동
 
-    if (result === '마이페이지') {
-      window.location.href = 'mypage.html'; // mypage.html 페이지로 이동
-    }
-    if (result === '가이드') {
-      window.location.href = 'guide.html'; // guide.html 페이지로 이동
-    }
-    if (result === '1번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '2번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '3번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '4번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '5번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '6번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '7번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '8번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '9번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '10번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '11번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '12번') {
-      window.location.href = 'new_complete.html'; // new_complete.html 페이지로 이동
-    }
-    if (result === '이전으로') {
-      window.location.href = 'new_object.html'; // new_back.html 페이지로 이동
-    }
-    // 다른 명령에 대한 처리도 추가할 수 있습니다.
-  };
+    switch (result) {
+    case '마이페이지':
+      window.location.href = '/mypage'; // 절대 경로 사용
+      break;
+    case '가이드':
+      window.location.href = '/guide'; // 절대 경로 사용
+      break;
+    case '1번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '2번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '3번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '4번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '5번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;  
+    case '6번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '7번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '8번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '9번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '10번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;    
+    case '11번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+    case '12번':
+      window.location.href = '/new_complete'; // 절대 경로 사용
+      break;
+      // 다른 명령에 대한 처리도 추가할 수 있습니다.
+  }
+};
 </script>
 </body>
 </html>

@@ -32,7 +32,7 @@
             <div class="workplace-oWq"><a href="{{ url_for('workplace') }}">Workplace</a></div>
             <div class="museum-v5f"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
             <div class="guide-3RB"><a href="{{ url_for('guide') }}">Guide</a></div>
-            <div class="login-9z1"><a href="{{ url_for('login') }}">Login</a></div>
+            <div class="login-9z1"><a href="{{ url_for('logout') }}">logout</a></div>
           </div>
           <div class="group-2-5sf">
             <a href="{{ url_for('my_page') }}"> 
@@ -95,4 +95,37 @@
   <div class="rectangle-30-KGm">
   </div>
 </div>
+<script>
+  // 음성 인식 API 초기화
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  // 음성 인식 시작
+  recognition.start();
+
+  // 음성 인식 결과 이벤트 리스너
+  recognition.onresult = (event) => {
+  const result = event.results[event.results.length - 1][0].transcript;
+  console.log('음성 인식 결과:', result);
+
+  // 인식된 음성 명령에 따라 URL로 이동
+  switch (result) {
+    case '마이페이지':
+      window.location.href = '/mypage'; // 절대 경로 사용
+      break;
+    case '가이드':
+      window.location.href = '/guide'; // 절대 경로 사용
+      break;
+    case '다시':
+      window.location.href = '/pro_back'; // 절대 경로 사용
+      break;
+    case '다음':
+      window.location.href = '/pro_lora'; // 절대 경로 사용
+      break;
+    // 다른 명령에 대한 처리도 추가할 수 있습니다.
+  }
+};
+</script>
 </body>
+</html>

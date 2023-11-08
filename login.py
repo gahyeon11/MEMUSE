@@ -1,8 +1,16 @@
-from flask import Flask, request, jsonify, render_template, url_for, redirect, session
+from flask import Flask, request, jsonify, render_template, url_for, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from flask_migrate import Migrate
+from sqlalchemy.exc import IntegrityError
+import sqlite3
+import logging
+
+# from models import User
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 import requests
 import io
 import json
@@ -14,6 +22,8 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
+conn = sqlite3.connect('users.db', check_same_thread=False)
+c = conn.cursor()
 # Stable Diffusion의 로컬 주소
 url = "http://127.0.0.1:7860"
 # Stable Diffusion에 적용될 프롬프트
@@ -32,26 +42,45 @@ models = [
     ]
 
 # 데이터베이스 설정
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///translations.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = "123123123"
 db = SQLAlchemy(app)
-@app.context_processor
-def inject_user():
-    if 'username' in session:
-        return dict(username=session['username'])
-    return dict(username=None)
-class User(db.Model):
-    """ 사용자 테이블 생성 """
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)  # 해시된 비밀번호 저장을 위해 필드 길이 증가
-    email = db.Column(db.String(80), unique=True, nullable=False)
+migrate = Migrate(app, db)
 
-    def __init__(self, username, password, email):
+conn.commit()
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    birthdate = db.Column(db.String(128), nullable=False)
+    username = db.Column(db.String(128), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        if password is None:
+            return False
+        return check_password_hash(self.password, password)
+
+    def __init__(self, name, birthdate, username, password):
+        self.name = name
+        self.birthdate = birthdate
         self.username = username
-        self.password = generate_password_hash(password)  # 생성자에서 비밀번호를 해시하여 저장
-        self.email = email
+        self.password = generate_password_hash(password)
+
+@app.route('/')
+def index():
+    return render_template('intro.html')
+
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'User': User}
 
 
 with app.app_context():
@@ -60,42 +89,78 @@ with app.app_context():
 @app.route('/join', methods=['GET', 'POST'])
 def join():
     if request.method == 'POST':
-        username = request.form['username']
-        password = generate_password_hash(request.form['password'])  # 해시된 비밀번호를 저장
-        email = request.form['email']
+        name = request.form.get('name')
+        birthdate = request.form.get('birthdate')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        print("get 저장")
 
-        new_user = User(username=username, password=password, email=email)
-        db.session.add(new_user)
-        db.session.commit()
+        # 뉴유저 생성
+        new_user = User(name=name, birthdate=birthdate, username=username, password=password)
+        print("new 저장")
 
-        return redirect(url_for('login'))
+        # 데베에 뉴유저 추가
+        try:
+            # 데베에 뉴유저 추가
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Successfully signed up! Please login.', 'success')
+            print("데베 저장")
+            return redirect(url_for('login'))
+        except IntegrityError:
+            db.session.rollback()
+            
+            flash('Username already exists. Please choose a different one.', 'error')
+            print("Username already exists. Please choose a different one.")
+            
+            return redirect(url_for('join'))
+
     return render_template('join.html')
+        
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-
-        if user and check_password_hash(user.password, password):
-            # 비밀번호가 일치하는 경우
-            session['logged_in'] = True
-            session['username'] = user.username
-            return redirect(url_for('join_success'))
-        else:
-            return 'Invalid credentials'
+            username = request.form.get('username')
+            password = request.form.get('password')
+            
+            # 사용자가 존재하는지 확인
+            user = User.query.filter_by(username=username).first()
+            if user:
+                # 비밀번호가 맞는지 확인
+                if user.check_password(password):
+                    session['logged_in'] = True
+                    session['username'] = username
+                    return redirect(url_for('workplace'))
+                else:
+                    # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
+                    # 해시된 비밀번호와 입력된 비밀번호의 해시를 콘솔에 출력
+                    print(f"Stored hash: {user.password}")
+                    print(f"Entered hash: {generate_password_hash(password)}")
+                    flash('Invalid password', 'error')
+                    print("Incorrect password")
+            else:
+                flash('Invalid username', 'error')
+                print("Username not found")
+                
     return render_template('login.html')
-@app.route('/join_success')
-def join_success():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    else:
-        # 세션에서 username을 가져와서 dashboard.html에 전달합니다.
-        username = session.get('username')
-        return render_template('join_success.html', username=username)
+
+# @app.route('/join_success')
+# def join_success():
+#     if not session.get('logged_in'):
+#         return redirect(url_for('login'))
+#     else:
+#         # 세션에서 username을 가져와서 dashboard.html에 전달합니다.
+#         username = session.get('username')
+#         return render_template('join_success.html', username=username)
+    
 @app.route('/workplace')
 def workplace():
+    if not session.get('logged_in'):
+        flash('Please login to view this page.', 'error')
+        return redirect(url_for('login'))
+    username = session.get('username', 'Guest')
+    return render_template('workplace.html',  username=username)
     global payload
     # payload 초기화
     payload = {
@@ -140,10 +205,17 @@ def live_gallery3():
 
 @app.route('/my_page')
 def my_page():
-    return render_template('my_page.html')
+    if 'user_id' not in session:
+        flash('Please login to view this page.', 'danger')
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    return render_template('my_page.html', user=user)
 
 @app.route('/my_page_my_gallery1')
 def my_page_my_gallery1():
+    
+    
     return render_template('my_page_my_gallery1.html')
 
 @app.route('/my_page_my_gallery2')
@@ -420,9 +492,26 @@ def intro():
  
     return render_template('intro.html')
 
-@app.route('/')
-def index():
-    return render_template('intro.html')
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
+    with app.app_context():
+        users = User.query.all()  # 모든 User 레코드를 조회합니다.
+        for user in users:
+            print(user.id, user.name, user.birthdate, user.username, user.password)
+        if db.engine.url.drivername == "sqlite":
+            migrate.init_app(app, db, render_as_batch=True)
+        else:
+            migrate.init_app(app, db)
+        db.create_all()
+        # try:
+        #     db.create_all()  # 첫 실행에서만 필요하고 그 다음부터는 주석 처리
+        # except Exception as e:
+        #     print(f"An error occurred while creating tables: {e}")
+
     app.run(debug=True)

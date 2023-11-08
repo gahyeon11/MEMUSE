@@ -32,7 +32,7 @@
             <div class="workplace-aLR"><a href="{{ url_for('workplace') }}">Workplace</a></div>
             <div class="museum-VTP"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
             <div class="guide-cY1"><a href="{{ url_for('guide') }}">Guide</a></div>
-            <div class="login-8mF"><a href="{{ url_for('login') }}">Login</a></div>
+            <div class="login-8mF"><a href="{{ url_for('logout') }}">logout</a></div>
           </div>
           <div class="group-2-sD3">
             <a href="{{ url_for('my_page') }}"> 
@@ -45,7 +45,7 @@
     <div class="auto-group-9pds-6Lh">
       <div class="auto-group-vbxo-DgD">
         <div class="item--7mb">
-          <span class="item--7mb-sub-0">김밈</span>
+          <span class="item--7mb-sub-0">{{ username }}</span>
           <span class="item--7mb-sub-1"> 작가님, 원하는 모드를 클릭 또는 말씀해 주세요.</span>
         </div>
         <div class="auto-group-tl9o-HT7">
@@ -74,21 +74,22 @@
     console.log('음성 인식 결과:', result);
 
     // 인식된 음성 명령에 따라 URL로 이동
-
-    if (result === '마이페이지') {
-      window.location.href = 'mypage.html'; // mypage.html 페이지로 이동
-    }
-    if (result === '가이드') {
-      window.location.href = 'guide.html'; // guide.html 페이지로 이동
-    }
-    if (result === '초보자') {
-      window.location.href = 'new_style.html'; // new_shot.html 페이지로 이동
-    }
-    if (result === '전문가') {
-      window.location.href = 'pro_style.html'; // new_shot.html 페이지로 이동
-    }
+    switch (result) {
+    case '마이페이지':
+      window.location.href = '/mypage'; // 절대 경로 사용
+      break;
+    case '가이드':
+      window.location.href = '/guide'; // 절대 경로 사용
+      break;
+    case '초보자':
+      window.location.href = '/new_style'; // 절대 경로 사용
+      break;
+    case '전문가':
+      window.location.href = '/pro_style'; // 절대 경로 사용
+      break;
     // 다른 명령에 대한 처리도 추가할 수 있습니다.
-  };
+  }
+};
 </script>
 </body>
 </html>
