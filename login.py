@@ -4,7 +4,7 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
-from PIL import Image, PngImagePlugin
+from PIL import Image, PngImagePlugin, ImageEnhance, ImageFilter
 from datetime import datetime
 
 import sqlite3
@@ -73,6 +73,23 @@ class User(db.Model):
         self.username = username
         self.password = generate_password_hash(password)
 
+class ImageModel(db.Model):
+    __tablename__ = 'images'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    model_name = db.Column(db.String(128), nullable=False)
+    file_path = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('images', lazy=True))
+
+    def __init__(self, user_id, model_name, file_path):
+        self.user_id = user_id
+        self.model_name = model_name
+        self.file_path = file_path
+
+
 @app.route('/')
 def index():
     return render_template('intro.html')
@@ -128,6 +145,7 @@ def login():
         if user:                # 비밀번호가 맞는지 확인
             if user.check_password(password):
                 session['logged_in'] = True
+                session['user_id'] = user.id
                 session['username'] = username
                 session['name'] = user.name
                 session['birthdate'] = user.birthdate
@@ -257,48 +275,67 @@ def new_complete():
 
 @app.route('/new_filter')
 def new_filter():
-      # payload 값 참조
-    global payload
-
-    # 이미지 생성 API 요청
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-    print(payload)
-
-    r = response.json()
-
-    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-        # API 요청을 보내 이미지 정보 검색
-        png_payload = {
-            "image": "data:image/png;base64," + i
-        }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-        # PIL 이미지에 메타 데이터 삽입
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
-        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'object/output_t2i{current_time}.png'
-
-        # 이미지 저장
-        image.save(file_name, pnginfo = pnginfo)
-        
     filter_number = request.form['filter']
     image_path = 'object/output_t2i{current_time}.png'
     image = Image.open(image_path)
     if filter_number == '1':
-        # '없음' 필터 적용 로직
         pass
     elif filter_number == '2':
-        # '화사한' 필터 예시: 밝기를 조절합니다.
         image = image.point(lambda p: p * 1.1)
     elif filter_number == '3':
-        # '노을빛' 필터 예시: 컬러를 조절합니다.
         image = image.filter(ImageFilter.Color3DLUT.generate(lambda r, g, b: (r, g*0.9, b*0.6)))
-        
-        
-     # ... 나머지 필터 번호에 대한 조건문 ...
+    elif filter_number == '4':
+        enhancer = ImageEnhance.Brightness(image)
+        image = enhancer.enhance(1.1)  
+    elif filter_number == '5':
+    # '새벽하늘' 필터 예시: 파란색 톤을 강조합니다.
+        r, g, b = image.split()
+        b = b.point(lambda i: i * 1.2)  # 파란색 채널을 강화합니다.
+        image = Image.merge('RGB', (r, g, b))
+    elif filter_number == '6':
+        # '낭만적' 필터 예시: 붉은색 톤을 강조합니다.
+        r, g, b = image.split()
+        r = r.point(lambda i: i * 1.2)  # 빨간색 채널을 강화합니다.
+        image = Image.merge('RGB', (r, g, b))   
+    elif filter_number == '7':
+    # '높은 대비' 필터 예시: 대비를 증가시킵니다.
+        enhancer = ImageEnhance.Contrast(image)
+        image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
+
+    elif filter_number == '8':
+        # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
+        enhancer = ImageEnhance.Color(image)
+        image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
+
+    elif filter_number == '9':
+        # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
+        r, g, b = image.split()
+        r = r.point(lambda i: i * 0.9)
+        g = g.point(lambda i: i * 0.7)
+        b = b.point(lambda i: i * 0.5)
+        image = Image.merge('RGB', (r, g, b))
+        enhancer = ImageEnhance.Contrast(image)
+        image = enhancer.enhance(0.8)
+
+    elif filter_number == '10':
+        # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
+        r, g, b = image.split()
+        r = r.point(lambda i: i * 0.8)
+        g = g.point(lambda i: i * 0.8)
+        b = b.point(lambda i: i * 1.2)
+        image = Image.merge('RGB', (r, g, b))
+        enhancer = ImageEnhance.Brightness(image)
+        image = enhancer.enhance(1.2)
+
+    elif filter_number == '11':
+        # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
+        sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
+        image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
+
+    elif filter_number == '12':
+        # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
+        image = image.convert('L')     
+    
     
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f'object/output_t2i_{filter_number}_{current_time}.png'
@@ -328,39 +365,89 @@ def new_object():
         payload["negative_prompt"] += data.get('negative', '')
 
         print("payload 확인:", payload)
-
+             
+        ######4시7분
         # 이미지 생성 API 요청
         response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-        print(payload)
+        if response.status_code == 200:
+            r = response.json()
 
-        r = response.json()
+            # 이미지 저장 및 데이터베이스에 기록
+            user_id = session.get('user_id')  # 로그인한 사용자 ID 가져오기
+            if user_id is None:
+                return jsonify({'error': 'User not logged in'}), 403
 
-        # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-        for i in r['images']:
-            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-            # API 요청을 보내 이미지 정보 검색
-            png_payload = {
-                "image": "data:image/png;base64," + i
-            }
-            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-            # PIL 이미지에 메타 데이터 삽입
-            pnginfo = PngImagePlugin.PngInfo()
-            pnginfo.add_text("parameters", response2.json().get("info"))
-            # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-            file_name = f'object/output_t2i{current_time}.png'
+            for i, img_data in enumerate(r['images']):
+                # 이미지 데이터를 이진 파일로 변환
+                image = Image.open(io.BytesIO(base64.b64decode(img_data.split(",",1)[1])))
+                # 파일 이름 생성
+                current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+                file_name = f'output_t2i_{current_time}_{i}.png'
+                file_path = os.path.join(app.config['object'], file_name)  # 이미지 저장 경로
+                image.save(file_path)  # 이미지 파일 시스템에 저장
 
-            # 이미지 저장
-            image.save(file_name, pnginfo = pnginfo)
+                # 새 이미지 모델 인스턴스 생성 및 저장
+                new_image = ImageModel(user_id=user_id, model_name='Default', file_path=file_path)
+                db.session.add(new_image)
+            
+            db.session.commit()
 
-        # 다음 페이지 리디렉션 url
-        redirect_url = url_for('new_filter')
-        return jsonify(redirect = redirect_url)
-    
+            # 다음 페이지로 리디렉션
+            return jsonify({'redirect': url_for('new_filter')}), 200
+
+        else:
+            return jsonify({'error': 'Failed to generate image'}), 500
+
     else:
-        # GET 요청시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('new_object.html', username=username)
+
+    #     # 이미지 생성 API 요청
+    #     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    #     print(payload)
+
+    #     r = response.json()
+
+    #     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    #     for i in r['images']:
+    #         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+    #         # API 요청을 보내 이미지 정보 검색
+    #         png_payload = {
+    #             "image": "data:image/png;base64," + i
+    #         }
+    #         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+    #         # PIL 이미지에 메타 데이터 삽입
+    #         pnginfo = PngImagePlugin.PngInfo()
+    #         pnginfo.add_text("parameters", response2.json().get("info"))
+    #         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+    #         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #         file_name = f'object/output_t2i{current_time}.png'
+
+    #         # 이미지 저장
+    #         image.save(file_name, pnginfo = pnginfo)
+    #         images_saved.append(file_path)
+
+            
+    #     file_path = save_image_to_filesystem(image_data)
+    #         # 현재 로그인한 사용자의 ID
+    #     user_id = session.get('user_id')
+
+    #     # 이미지 모델 이름
+    #     model_name = payload.get('model_name')
+
+    #     # 새 이미지 모델 인스턴스 생성
+    #     new_image = ImageModel(user_id=user_id, model_name=model_name, file_path=file_path)
+    #     db.session.add(new_image)
+    #     db.session.commit()
+        
+    #     # 다음 페이지 리디렉션 url
+    #     redirect_url = url_for('new_filter')
+    #     return jsonify(redirect = redirect_url)
+    
+    # else:
+    #     # GET 요청시 HTML 반환
+    #     username = session.get('username', 'Guest')
+    #     return render_template('new_object.html', username=username)
 
 @app.route('/new_save_success')
 def new_save_success():
