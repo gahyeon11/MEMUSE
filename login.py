@@ -296,7 +296,6 @@ def new_filter():
     elif filter_number == '3':
         # '노을빛' 필터 예시: 컬러를 조절합니다.
         image = image.filter(ImageFilter.Color3DLUT.generate(lambda r, g, b: (r, g*0.9, b*0.6)))
-    elif filter_number == '3':
         
         
      # ... 나머지 필터 번호에 대한 조건문 ...
