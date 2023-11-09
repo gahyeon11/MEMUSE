@@ -80,14 +80,18 @@ class ImageModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     model_name = db.Column(db.String(128), nullable=False)
     file_path = db.Column(db.String(128), nullable=False)
+    title = db.Column(db.String(256))  
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    category = db.Column(db.String(50), nullable=False)
 
     user = db.relationship('User', backref=db.backref('images', lazy=True))
 
-    def __init__(self, user_id, model_name, file_path):
+    def __init__(self, user_id, model_name, file_path, title, category):
         self.user_id = user_id
         self.model_name = model_name
         self.file_path = file_path
+        self.title = title
+        self.category = category
 
 
 @app.route('/')
@@ -194,15 +198,30 @@ def voice_login_join_choice():
 
 @app.route('/cartoon_gallery1')
 def cartoon_gallery1():
-    return render_template('cartoon_gallery1.html')
+    username = session.get('username', 'Guest')
+    cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
+    # 이미지 업로드를 처리하는 Flask 라우트에서
+    if request.method == 'POST':
+        # ... 이미지 업로드 로직 ...
+
+        category = request.form.get('category')  # 카테고리 정보를 폼 데이터에서 가져옵니다.
+        new_image = ImageModel(user_id=user_id, model_name=model_name, file_path=file_path, category=category)
+        db.session.add(new_image)
+        db.session.commit()
+
+    return render_template('cartoon_gallery1.html', username=username, images=cartoon_images)
 
 @app.route('/cartoon_gallery2')
 def cartoon_gallery2():
-    return render_template('cartoon_gallery2.html')
+    cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
+
+    return render_template('cartoon_gallery2.html', images=cartoon_images)
 
 @app.route('/cartoon_gallery3')
 def cartoon_gallery3():
-    return render_template('cartoon_gallery3.html')
+    cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
+
+    return render_template('cartoon_gallery3.html', images=cartoon_images)
 
 @app.route('/guide')
 def guide():
@@ -210,15 +229,21 @@ def guide():
 
 @app.route('/live_gallery1')
 def live_gallery1():
-    return render_template('live_gallery1.html')
+    live_images = ImageModel.query.filter_by(category='live').all()
+
+    return render_template('live_gallery1.html', images=live_images)
 
 @app.route('/live_gallery2')
 def live_gallery2():
-    return render_template('live_gallery2.html')
+    live_images = ImageModel.query.filter_by(category='live').all()
+
+    return render_template('live_gallery2.html', images=live_images)
 
 @app.route('/live_gallery3')
 def live_gallery3():
-    return render_template('live_gallery3.html')
+    live_images = ImageModel.query.filter_by(category='live').all()
+
+    return render_template('live_gallery3.html', images=live_images)
 
 @app.route('/my_page')
 def my_page():
@@ -351,56 +376,50 @@ def new_no_save():
 
 @app.route('/new_object', methods=['POST', 'GET'])
 def new_object():
-    # payload 값 참조
-    global payload
-
     if request.method == 'POST':
-        # POST 요청 시 JSON 데이터 파싱
         data = request.json
-
-        # prompt 문자열에 추가
         payload["prompt"] += data.get('prompt', '')
-
-        # negative_prompt 문자열에 추가
         payload["negative_prompt"] += data.get('negative', '')
 
-        print("payload 확인:", payload)
-             
-        ######4시7분
-        # 이미지 생성 API 요청
-        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
         if response.status_code == 200:
             r = response.json()
-
-            # 이미지 저장 및 데이터베이스에 기록
-            user_id = session.get('user_id')  # 로그인한 사용자 ID 가져오기
+            user_id = session.get('user_id')
             if user_id is None:
                 return jsonify({'error': 'User not logged in'}), 403
 
+            # 데이터베이스에 저장할 정보를 요청 데이터에서 가져옵니다.
+            title = data.get('title')  
+            category = data.get('category')  
+
+            # 이미지를 하나씩 처리합니다.
             for i, img_data in enumerate(r['images']):
-                # 이미지 데이터를 이진 파일로 변환
                 image = Image.open(io.BytesIO(base64.b64decode(img_data.split(",",1)[1])))
-                # 파일 이름 생성
                 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                 file_name = f'output_t2i_{current_time}_{i}.png'
-                file_path = os.path.join(app.config['object'], file_name)  # 이미지 저장 경로
-                image.save(file_path)  # 이미지 파일 시스템에 저장
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)  # 올바른 저장 경로 설정
+                image.save(file_path)
 
-                # 새 이미지 모델 인스턴스 생성 및 저장
-                new_image = ImageModel(user_id=user_id, model_name='Default', file_path=file_path)
+                # 이미지 모델 인스턴스 생성 및 데이터베이스에 저장
+                new_image = ImageModel(
+                    user_id=user_id,
+                    model_name='Default',
+                    file_path=file_path,
+                    title=title,
+                    category=category
+                )
                 db.session.add(new_image)
-            
             db.session.commit()
 
-            # 다음 페이지로 리디렉션
             return jsonify({'redirect': url_for('new_filter')}), 200
-
         else:
             return jsonify({'error': 'Failed to generate image'}), 500
 
     else:
+        # GET 요청시 사용자에게 form을 렌더링합니다.
         username = session.get('username', 'Guest')
         return render_template('new_object.html', username=username)
+
 
     #     # 이미지 생성 API 요청
     #     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
@@ -512,15 +531,21 @@ def new_style():
 
 @app.route('/pastel_gallery1')
 def pastel_gallery1():
-    return render_template('pastel_gallery1.html')
+    pastel_images = ImageModel.query.filter_by(category='pastel').all()
+
+    return render_template('pastel_gallery1', images=pastel_images)
 
 @app.route('/pastel_gallery2')
 def pastel_gallery2():
-    return render_template('pastel_gallery2.html')
+    pastel_images = ImageModel.query.filter_by(category='pastel').all()
+
+    return render_template('pastel_gallery2', images=pastel_images)
 
 @app.route('/pastel_gallery3')
 def pastel_gallery3():
-    return render_template('pastel_gallery3.html')
+    pastel_images = ImageModel.query.filter_by(category='pastel').all()
+
+    return render_template('pastel_gallery3', images=pastel_images)
 
 @app.route('/pro_back')
 def pro_back():
@@ -661,15 +686,21 @@ def voice_login():
 
 @app.route('/watercolor_gallery1')
 def watercolor_gallery1():
-    return render_template('watercolor_gallery1.html')
+    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
+
+    return render_template('watercolor_gallery1', images=watercolor_images)
 
 @app.route('/watercolor_gallery2')
 def watercolor_gallery2():
-    return render_template('watercolor_gallery2.html')
+    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
+
+    return render_template('watercolor_gallery2', images=watercolor_images)
 
 @app.route('/watercolor_gallery3')
 def watercolor_gallery3():
-    return render_template('watercolor_gallery3.html')
+    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
+
+    return render_template('watercolor_gallery3', images=watercolor_images)
 
 @app.route('/whole_gallery1')
 def whole_gallery1():
