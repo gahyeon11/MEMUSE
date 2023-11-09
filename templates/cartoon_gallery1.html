@@ -65,10 +65,14 @@
     <div class="auto-group-vk3s-MD3">
       <div class="auto-group-jhgm-Gau">
         <div class="auto-group-uhkv-bt5">
-          <div class="item--WVF">김뮤즈</div>
-          <div class="auto-group-qeed-pF3">
-          </div>
-          <div class="item--w4m">묘한 수족관</div>
+            {% for image in images %}
+              <div class="gallery-item">
+                <div class="item--WVF">{{ image.user.name }}</div>
+                <div class="auto-group-qeed-pF3"></div>
+                <div class="item--w4m">{{ image.title }}</div>
+                <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}">
+              </div>
+            {% endfor %}
         </div>
         <div class="auto-group-jmez-cgh">
           <div class="item--iDw">박뮤즈</div>
