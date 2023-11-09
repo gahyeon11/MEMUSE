@@ -72,18 +72,18 @@
       <div class="auto-group-mdx7-LHX">
         <div class="item--3xd">1. 남자</div>
         <div class="item--PFo">2. 여자</div>
-        <div class="item--uzq">3. 동물</div>
+        <div class="item--uzq">3. 강아지</div>
         <div class="item--EXK">4. X (배경만)</div>
       </div>
       <div class="auto-group-s8yf-a5P">
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-22-hQu" data-prompt="man, male,a boy, guy, handsome man, solo,">
-        </div></a>
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-26-SNV" data-prompt="a girl, beautiful face, woman, high detailed skin,">
-        </div></a>
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-27-ytD" data-prompt="animal, no humans,">
-        </div></a>
-        <a href="{{url_for("new_filter")}}"> <div class="rectangle-28-jMb" data-prompt="no humans, landscape,">
-        </div></a>
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-22-hQu" data-prompt="man, male,a boy, guy, handsome man, solo," 
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"></div></a>
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-26-SNV" data-prompt="a girl, beautiful face, woman, high detailed skin, solo,"
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"></div></a>
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-27-ytD" data-prompt="animal, dog, cute dog,"
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, human,"></div></a>
+        <a href="{{url_for("new_filter")}}"> <div class="rectangle-28-jMb" data-prompt="no humans, landscape,"
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"></div></a>
       </div>
       <img class="bi-mic-fill-gGq" src="../static/assets/bi-mic-fill-xDF.png"/>
     </div>
@@ -100,6 +100,7 @@
 
         // 클릭된 요소의 데이터 값 가져오기
         var prompt = this.getAttribute('data-prompt');
+        var negativePrompt = this.getAttribute('data-prompt2');
 
         // 서버에 포스트 요청
         fetch('/new_object', {
@@ -107,7 +108,10 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({prompt: prompt})
+          body: JSON.stringify({
+            prompt: prompt,
+            negative: negativePrompt
+          })
         })
         .then(response => response.json())
         .then(data => {
