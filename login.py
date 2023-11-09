@@ -7,16 +7,14 @@ from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 import sqlite3
 import logging
-
-
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 import requests
 import io
 import json
 import sqlite3
-from PIL import Image, PngImagePlugin
+from PIL import Image, PngImagePlugin, ImageFilter
 from datetime import datetime
-
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -258,15 +256,63 @@ def new_complete():
 
 @app.route('/new_filter')
 def new_filter():
+      # payload 값 참조
+    global payload
+
+    # 이미지 생성 API 요청
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    print(payload)
+
+    r = response.json()
+
+    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    for i in r['images']:
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        # API 요청을 보내 이미지 정보 검색
+        png_payload = {
+            "image": "data:image/png;base64," + i
+        }
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        # PIL 이미지에 메타 데이터 삽입
+        pnginfo = PngImagePlugin.PngInfo()
+        pnginfo.add_text("parameters", response2.json().get("info"))
+        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'object/output_t2i{current_time}.png'
+
+        # 이미지 저장
+        image.save(file_name, pnginfo = pnginfo)
+        
+    filter_number = request.form['filter']
+    image_path = 'object/output_t2i{current_time}.png'
+    image = Image.open(image_path)
+    if filter_number == '1':
+        # '없음' 필터 적용 로직
+        pass
+    elif filter_number == '2':
+        # '화사한' 필터 예시: 밝기를 조절합니다.
+        image = image.point(lambda p: p * 1.1)
+    elif filter_number == '3':
+        # '노을빛' 필터 예시: 컬러를 조절합니다.
+        image = image.filter(ImageFilter.Color3DLUT.generate(lambda r, g, b: (r, g*0.9, b*0.6)))
+    elif filter_number == '3':
+        
+        
+     # ... 나머지 필터 번호에 대한 조건문 ...
+    
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f'object/output_t2i_{filter_number}_{current_time}.png'
+    image.save(file_name)
+
     username = session.get('username', 'Guest')
-    return render_template('new_filter.html', username=username)
+    return render_template('new_filter.html', username=username, filename=file_name)
 
 @app.route('/new_no_save')
 def new_no_save():
     username = session.get('username', 'Guest')
     return render_template('new_no_save.html', username=username)
 
-@app.route('/new_object')
+@app.route('/new_object', methods=['POST', 'GET'])
 def new_object():
     # payload 값 참조
     global payload
