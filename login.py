@@ -153,7 +153,7 @@ def login():
         if user:                # 비밀번호가 맞는지 확인
             if user.check_password(password):
                 session['logged_in'] = True
-                session['user_id'] = user.id
+                session['user_id'] = user.username
                 session['username'] = username
                 session['name'] = user.name
                 session['birthdate'] = user.birthdate
@@ -293,11 +293,7 @@ def new_complete():
         return redirect(url_for('login'))
     username = session.get('username', 'Guest')
     form = MyForm()  # 폼 객체를 생성하세요
-    if form.validate_on_submit():  # 폼이 제출되고 유효성 검사를 통과한 경우
-        # 폼 데이터를 추출합니다.
-        title = form.title.data
-        caption = form.caption.data
-        return redirect(url_for('new_save_success'))
+
     return render_template('new_complete.html', username=username, form=form)
 
 @app.route('/new_filter', methods=['GET', 'POST'])
@@ -318,7 +314,8 @@ def new_filter():
         elif filter_number == '2':
             image = image.point(lambda p: p * 1.1)
         elif filter_number == '3':
-            image = image.filter(ImageFilter.Color3DLUT.generate(lambda r, g, b: (r, g*0.9, b*0.6)))
+            lut_size = 8
+            image = image.filter(ImageFilter.Color3DLUT.generate(lut_size, lambda r, g, b: (r, g*0.9, b*0.6)))
         elif filter_number == '4':
             enhancer = ImageEnhance.Brightness(image)
             image = enhancer.enhance(1.1)  
@@ -373,6 +370,7 @@ def new_filter():
         
         
         file_name = f'object/output_t2i_{filter_number}_{current_time}.png'
+        session['file_path'] = file_name
         image.save(file_name)
         username = session.get('username', 'Guest')
         return redirect(url_for('new_complete'))
@@ -410,7 +408,7 @@ def new_object():
             # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             file_name = f'object/output_t2i{current_time}.png'
-            session['file_path'] = file_name
+            
             # 이미지 저장
             image.save(file_name, pnginfo = pnginfo)
 
@@ -428,13 +426,15 @@ def new_save_success():
         return redirect(url_for('login'))
 
     form = MyForm()  # 폼 객체를 생성하세요
+    print('save')
     if form.validate_on_submit():
         # 폼 데이터를 추출합니다.
         title = form.title.data
         caption = form.caption.data
+        print(title, caption)
         user_id = session.get('user_id')
         file_path = session.get('file_path')
-        image_style = session.get('image_style')  # image_style 값을 세션에서 가져옵니다.
+        image_style = session.get('image_style', 'default_style')  # image_style 값을 세션에서 가져옵니다.
         
         # 데이터베이스에 이미지 정보 저장
         new_image = ImageModel(
@@ -487,7 +487,8 @@ def new_style():
         option_payload = {
             "sd_model_checkpoint" : selected_model
         }
-
+        print(selected_model)
+        session['image_style'] = selected_model
         # checkpoint 모델 변경
         response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
 
@@ -503,7 +504,7 @@ def new_style():
         
         # 다음 페이지 리디렉션 url
         redirect_url = url_for('new_shot', _external=True)
-        session['image_style'] = selected_model
+        
         return jsonify(redirect = redirect_url)
     
     else:
@@ -713,10 +714,10 @@ if __name__ == '__main__':
         users = User.query.all()  # 모든 User 레코드를 조회합니다.
         for user in users:
             print(user.id, user.name, user.birthdate, user.username)
-        images = ImageModel.query.all()
+        images = ImageModel.query.all()  # ImageModel의 모든 인스턴스를 조회
         for image in images:
             print(f'ID: {image.id}, User ID: {image.user_id}, File Path: {image.file_path}, Title: {image.title}, Created At: {image.created_at}, Category: {image.category}, Caption: {image.caption}')
-        
+
         if db.engine.url.drivername == "sqlite":
             migrate.init_app(app, db, render_as_batch=True)
         else:

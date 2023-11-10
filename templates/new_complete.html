@@ -58,8 +58,8 @@
           <div class="item--vEV">{{ username }}</div>
           <div class="line-1-DzH">
           </div>
-          <form action="{{ url_for("new_save_success") }}" id="captions-form" method="post">
-            {{ form.hidden_tag() }} {# CSRF 토큰 렌더링 #}
+          <form action="{{ url_for('new_save_success') }}" id="captions-form" method="post">
+            {{ form.hidden_tag() }} <!-- CSRF 토큰 렌더링 -->
             <div class="group-26-ZYM">
                 <!-- 작품 제목 입력 필드 -->
                 {{ form.title.label }}
@@ -70,10 +70,12 @@
                 {{ form.caption.label }}
                 {{ form.caption(rows=7, placeholder="작품 설명") }}
             </div>
-            <!-- 저장 버튼 추가 -->
-            <button id="save-button" type="submit" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
-        </form>
-          
+            <div class="group-58-Bzy">
+              <!-- 저장 버튼 추가 -->
+              <button id="save-button" type="submit" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
+            </div>
+          </form>
+
         </div>
       </div>
       <div class="item--hwP">
@@ -85,16 +87,11 @@
         <br/>
         * 저장하지 않으면 작품은 사라집니다.
       </div>
-      <div class="auto-group-n9ms-Gd7">
-        <!-- 저장 버튼의 id 추가 -->
-        <form action="{{url_for("new_save_success")}}" id="save-button-form">
-          <div class="group-58-Bzy">
-            <!-- 저장 버튼 추가 -->
-            <button id="save-button" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
-          </div>
-        </form>
-        <div class="group-59-dry"><a href="{{url_for("new_no_save")}}" style="color:white">아니오</a></div>
-      </div>
+      <!-- <div class="auto-group-n9ms-Gd7"> -->
+      
+        <!-- <div class="group-59-dry"><a href="{{url_for('new_no_save')}}" style="color:white">아니오</a></div>
+          
+      </div> -->
       <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/>
     </div>
   </div>
@@ -171,7 +168,7 @@ recognition.onresult = (event) => {
 // 저장 버튼 클릭 시 작품 저장 페이지로 이동
 document.getElementById('save-button').addEventListener('click', () => {
   const form = document.getElementById('captions-form');
-  form.action = 'new_save_success.html'; // 저장 페이지로 변경
+  form.action = "{{ url_for('new_save_success') }}"; // 저장 페이지로 변경
   form.submit();
 });
 
