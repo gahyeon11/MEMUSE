@@ -447,12 +447,17 @@ def new_save_success():
  
         db.session.add(new_image)
         db.session.commit()
-    
+                # 이미지 제목과 설명을 세션에 저장
+        session['title'] = title
+        session['caption'] = caption
         flash('작품이 저장되었습니다!', 'success')
         return redirect(url_for('new_save_success'))
 
     username = session.get('username', 'Guest')
-    return render_template('new_save_success.html', username=username, form=form)
+    title = session.get('title')
+    caption = session.get('caption')
+
+    return render_template('new_save_success.html', username=username, form=form, title=title, caption = caption)
 
 @app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
@@ -684,11 +689,13 @@ def watercolor_gallery3():
     watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
 
     return render_template('watercolor_gallery3', images=watercolor_images)
-
 @app.route('/whole_gallery1')
 def whole_gallery1():
-    return render_template('whole_gallery1.html')
+    # ImageModel의 모든 인스턴스를 가져옵니다.
+    images = ImageModel.query.all()
 
+    # 수정된 리스트를 템플릿에 전달합니다.
+    return render_template('whole_gallery1.html', images=images)
 @app.route('/whole_gallery2')
 def whole_gallery2():
     return render_template('whole_gallery2.html')
