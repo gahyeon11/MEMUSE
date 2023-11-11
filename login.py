@@ -23,6 +23,39 @@ from wtforms.validators import DataRequired
 app = Flask(__name__)
 CORS(app)
 
+# db_path = 'translations.db'
+
+# 절대 경로로 변환
+# absolute_path = os.path.abspath(db_path)
+
+# 데이터베이스 연결
+
+# conn = sqlite3.connect('translations.db', check_same_thread=False)
+# c = conn.cursor()
+
+# # translations 테이블 생성 쿼리
+# c.execute('''
+#     CREATE TABLE IF NOT EXISTS translations (
+#         id INTEGER PRIMARY KEY AUTOINCREMENT,
+#         original_text TEXT,
+#         translated_text TEXT
+#     )
+# ''')
+
+# # 변경 내용 저장
+# conn.commit()
+
+# # 연결 종료
+# # conn.close()
+
+# # 전역 변수로 번역된 텍스트를 저장
+# translated_text = ""
+
+
+# conn = sqlite3.connect('users.db', check_same_thread=False)
+# c = conn.cursor()
+
+
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
 bcrypt = Bcrypt()
@@ -53,7 +86,26 @@ app.config['SECRET_KEY'] = "123123123"
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
+
+db_path = 'translations.db'
+absolute_path = os.path.abspath(db_path)
+conn = sqlite3.connect(absolute_path, check_same_thread=False)
+c = conn.cursor()
+
+c.execute('''
+    CREATE TABLE IF NOT EXISTS translations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        original_text TEXT,
+        translated_text TEXT
+    )
+''')
 conn.commit()
+
+def close_connection(exception):
+    if conn:
+        conn.close()
+
 app.config['SQLALCHEMY_POOL_SIZE'] = 50  # 최대 연결 수
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 60  # 연결 타임아웃 (초)
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600  # 연결 재사용 주기 (초)
@@ -116,6 +168,82 @@ def make_shell_context():
 
 with app.app_context():
     db.create_all()
+
+@app.route('/translate', methods=['POST'])
+def translate():
+    try:
+        data = request.json
+        text = data.get('text')
+        # print(text)
+
+        if not text:
+            raise ValueError("No text provided")
+
+        client_id = 'fIfMjFH9VJ1GjQPim7j5'
+        client_secret = 'iue1sb53T7'
+
+        url = 'https://openapi.naver.com/v1/papago/n2mt'
+        headers = {
+            'Content-Type': 'application/json',  # JSON 형식으로 설정
+            'X-Naver-Client-Id': client_id,
+            'X-Naver-Client-Secret': client_secret,
+        }
+        data = {
+            'source': 'ko',
+            'target': 'en',
+            'text': text
+        }
+       
+        response = requests.post(url, headers=headers, json=data)  # JSON 데이터로 요청
+
+        if response.status_code != 200:
+            raise Exception("Translation API request failed")
+
+        translated_text = response.json().get('message', {}).get('result', {}).get('translatedText', "")
+        
+        c.execute("INSERT INTO translations (original_text, translated_text) VALUES (?, ?)", (text, translated_text))
+        conn.commit()
+
+        # g 객체를 사용하여 전역 변수 대신 저장
+        g.translated_text = translated_text
+
+        return jsonify(status="success", message="서버 저장 성공",translated_text=translated_text)
+
+    except ValueError as e:
+        logging.error(f"ValueError: {e}")
+        return jsonify(status="failure", error=str(e), message="서버 저장 실패"), 400
+    except Exception as e:
+        logging.error(f"Exception: {e}")
+        return jsonify(status="failure", error=str(e), message="서버 저장 실패"), 500
+
+
+@app.route('/save_results', methods=['POST'])
+def save_results():
+    try:
+        data = request.json
+        original_text = data.get('originalText')
+        translated_text = data.get('translatedText')
+
+        # 데이터베이스에 저장
+        c.execute("INSERT INTO translations (original_text, translated_text) VALUES (?, ?)", (original_text, translated_text))
+        conn.commit()
+
+        return jsonify(status="success", message="Result saved successfully")
+    except Exception as e:
+        logging.error(f"Exception: {e}")
+        return jsonify(status="failure", error=str(e), message="Failed to save result"), 500
+
+
+@app.route('/get_translation', methods=['GET'])
+def get_translation():
+    # g 객체를 사용하여 저장된 번역된 텍스트를 가져옴
+    translated_text = getattr(g, 'translated_text', None)
+    
+    if translated_text:
+        return jsonify(status="success", translated_text=translated_text)
+    else:
+        return jsonify(status="failure", message="저장된 번역이 없음"), 404
+
 
 @app.route('/join', methods=['GET', 'POST'])
 def join():
@@ -893,4 +1021,7 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"An error occurred while creating tables: {e}")
 
-    app.run(debug=False)
+    app.run(debug=True)
+
+
+
