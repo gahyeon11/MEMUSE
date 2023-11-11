@@ -125,6 +125,7 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
+  recognition.lang = 'ko-KR'; // 한국어로 설정
 
   // 음성 인식 시작
   recognition.start();
@@ -156,7 +157,7 @@
       break;
     // 다른 명령에 대한 처리도 추가할 수 있습니다.
     };
-  });
+  }});
 </script>
 </body>
 </html>

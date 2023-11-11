@@ -79,6 +79,7 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
+  recognition.lang = 'ko-KR'; // 한국어로 설정
 
   // 음성 인식 시작
   recognition.start();

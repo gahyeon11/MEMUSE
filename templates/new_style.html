@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
   <meta charset="utf-8" />
   <link rel="icon" href="/favicon.ico" />
@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anybody%3A700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500%2C600"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../static/styles/new_style.css"/>
 </head>
 <body>
@@ -96,13 +96,11 @@
   </div>
 </div>
 <script>
-  // 선택지 선택 시 값 서버 전달
+  let options;
+
   function submitStyle(styleNumber) {
-    // styleNumber 값에 따라 payload 생성
-    let options;
-    switch (styleNumber){
+    switch (styleNumber) {
       case 1:
-        //helloflatcute2d_V10
         options = {
           "sampler_index": "Euler a",
           "steps": 30,
@@ -111,7 +109,6 @@
         };
         break;
       case 2:
-        // chosen-mix
         options = {
           "sampler_index": "DPM++ 2M Karras",
           "steps": 32,
@@ -120,19 +117,17 @@
         };
         break;
       case 3:
-        // pastel-Mix[Anime]
         options = {
           "sampler_index": "DPM++ 2M Karras",
-          "steps" : 20,
+          "steps": 20,
           "cfg_scale": 7,
           "denoising_strength": 0.6
         };
         break;
       case 4:
-        // pasteldiffusedmiox
         options = {
           "sampler_index": "DPM++ 2M Karras",
-          "steps" : 20,
+          "steps": 20,
           "cfg_scale": 7,
           "denoising_strength": 0.6
         };
@@ -140,68 +135,64 @@
       default:
         options = {
           "sampler_index": "DPM++ 2M Karras",
-          "steps" : 20,
+          "steps": 20,
           "cfg_scale": 7,
           "denoising_strength": 0.6
         };
     }
 
-    // options와 styleNumber 서버 전송
     fetch('/new_style', {
       method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
+      headers: {
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({style: styleNumber, options: options})
+      body: JSON.stringify({ style: styleNumber, options: options }),
     })
-    .then(response => response.json())
-    .then(data => {
-      // 서버에서 전달 받은 URL로 리디렉션
-      window.lacation.href = data.redirect;
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.href = data.redirect;
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 
-  // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-
-  // 한국어로 음성 인식 설정
   recognition.lang = 'ko-KR';
-
-  // 음성 인식 시작
   recognition.start();
 
-  // 음성 인식 결과 이벤트 리스너
   recognition.onresult = (event) => {
-  const result = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-  console.log('음성 인식 결과:', result);
+    const result = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+    console.log('음성 인식 결과:', result);
 
-  // 인식된 음성 명령에 따라 URL로 이동
-  switch (result) {
-    case '마이페이지':
-      window.location.href = '/mypage';
-      break;
-    case '가이드':
-      window.location.href = '/guide';
-      break;
-    case '이전으로':
-      window.location.href = '/workplace';
-      break;
-    default:
-      // "1번"에서 "4번"까지의 결과를 처리
-      const match = result.match(/(\d)번/);
-      if (match && match[1]) {
-        // 추출한 숫자를 인수로 submitStyle 함수 호출
-        submitStyle(parseInt(match[1], 10));
-      }
-      break;
-  }
-
-};
+    switch (result) {
+      case '마이페이지':
+        window.location.href = '/mypage';
+        break;
+      case '가이드':
+        window.location.href = '/guide';
+        break;
+      case '이전으로':
+        window.location.href = '/workplace';
+        break;
+      case '1번':
+        styleNumber = 1;
+        submitStyle(1);
+        break;
+      case '2번':
+        styleNumber = 2;
+        submitStyle(2);
+        break;
+      case '3번':
+        submitStyle(3);
+        break;
+      case '4번':
+        submitStyle(4);
+        break;
+    }
+  };
 </script>
 </body>
 </html>
