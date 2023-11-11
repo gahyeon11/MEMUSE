@@ -62,37 +62,37 @@
             <a href="{{ url_for('live_gallery1') }}"><span>실사</a><span><br/>
       </div>
       </div>
-    <div class="auto-group-vk3s-MD3">
-      <div class="auto-group-jhgm-Gau">
+      <div class="gallery-container">
         {% for image in images %}
-        <div class="auto-group-fhih-U6d"></div>
-            {% if image.user %}
-            
-                <div class="item--nt1">{{ image.user.username }}</div>
-            {% else %}
-                <div class="item--nt1">알 수 없는 사용자</div>
+            <div class="image-container item--9V3">
+                <!-- 사용자 정보 -->
+                {% if image.user %}
+                    <div class="user-info item--nt1">{{ image.user.username }}</div>
+                {% else %}
+                    <div class="user-info item--nt1">알 수 없는 사용자</div>
+                {% endif %}
+    
+                <!-- 이미지 표시 -->
+                <div class="image-block auto-group-fhih-U6d">
+                    <!-- 이미지 소스 -->
+                    <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="item--fS1">
+                    <!-- 이미지 제목 -->
+                    <div class="image-title item--nt1">{{ image.title }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    
+        <!-- 페이지네이션 컨트롤 -->
+        <div class="pagination auto-group-ju3f-KTw">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('watercolor_gallery1', page=pagination.prev_num) }}" class="group-29-dUd">이전</a>
             {% endif %}
-            <div class="line-8-iWm"></div>
-            <div class="item--fS1">{{ image.title }}</div>
-        
-    {% endfor %}
-
+            {% if pagination.has_next %}
+                <a href="{{ url_for('watercolor_gallery1', page=pagination.next_num) }}" class="group-30-cLZ">다음</a>
+            {% endif %}
+        </div>
     </div>
     
-    
-      <div class="auto-group-ju3f-KTw">
-        <div class="group-29-dUd">
-          <div class="group-28-mKw"><a href="{{ url_for('whole_gallery1') }}">1</a></div>
-        </div>
-        <div class="group-30-cLZ">
-          <div class="group-28-9LV"><a href="{{ url_for('whole_gallery2') }}">2</a></div>
-        </div>
-        <div class="group-31-R37">
-          <div class="group-28-Lfs"><a href="{{ url_for('whole_gallery3') }}">3</a></div>
-        </div>
-        <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
-      </div>
-    </div>
   </div>
   <div class="rectangle-30-wff">
   </div>

@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify, render_template, url_for, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 from PIL import Image, PngImagePlugin, ImageEnhance, ImageFilter
 from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField,  SubmitFieldimport sqlite3
+from wtforms import StringField, TextAreaField,  SubmitField 
 import os
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -19,6 +18,8 @@ from PIL import Image, PngImagePlugin, ImageFilter
 from datetime import datetime
 import base64
 from flask_bcrypt import Bcrypt
+from wtforms.validators import DataRequired
+
 app = Flask(__name__)
 CORS(app)
 
@@ -87,8 +88,8 @@ class ImageModel(db.Model):
     file_path = db.Column(db.String(128), nullable=False)
     title = db.Column(db.String(256), nullable=False)  # Updated to be required
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    category = db.Column(db.String(50), nullable=False)
-     caption = db.Column(db.String(512))  # You can modify the length as needed
+    category = db.Column(db.String(128), nullable=False)
+    caption = db.Column(db.String(512))  # You can modify the length as needed
 
 
     user = db.relationship('User', backref=db.backref('images', lazy=True))
@@ -826,22 +827,21 @@ def voice_login():
 
 @app.route('/watercolor_gallery1')
 def watercolor_gallery1():
-    page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
-    per_page = 3  # 한 페이지당 표시할 이미지 수
-    return render_template('watercolor_gallery1', images=watercolor_images)
-
-@app.route('/watercolor_gallery2')
-def watercolor_gallery2():
-    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
+    page = request.args.get('page', 1, type=int) 
+    per_page = 3  
     # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
     pagination = ImageModel.query.filter_by(category="pasteldiffusedmix_v22.safetensors [7d21f7acff]").paginate(page=page, per_page=per_page, error_out=False)
     images = pagination.items  # 현재 페이지의 이미지들
     return render_template('watercolor_gallery1.html', images=images, pagination=pagination)
-@app.route('/watercolor_gallery3')
-def watercolor_gallery3():
-    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
 
-    return render_template('watercolor_gallery3', images=watercolor_images)
+# @app.route('/watercolor_gallery2')
+# def watercolor_gallery2():
+#     return render_template('watercolor_gallery2.html', images=images, pagination=pagination)
+# @app.route('/watercolor_gallery3')
+# def watercolor_gallery3():
+#     watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
+
+#     return render_template('watercolor_gallery3', images=watercolor_images)
 @app.route('/whole_gallery1')
 def whole_gallery1():
     page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1

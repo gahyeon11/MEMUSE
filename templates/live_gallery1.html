@@ -62,60 +62,37 @@
             <a href="{{ url_for("live_gallery1")}}"><span>실사</a><span><br/>
       </div>
       </div>
-    <div class="auto-group-vk3s-MD3">
-      <div class="auto-group-jhgm-Gau">
-        <div class="auto-group-uhkv-bt5">
-          <div class="item--WVF">김뮤즈</div>
-          <div class="auto-group-qeed-pF3">
-          </div>
-          <div class="item--w4m">묘한 수족관</div>
+      <div class="gallery-container">
+        {% for image in images %}
+            <div class="image-container item--9V3">
+                <!-- 사용자 정보 -->
+                {% if image.user %}
+                    <div class="user-info item--nt1">{{ image.user.username }}</div>
+                {% else %}
+                    <div class="user-info item--nt1">알 수 없는 사용자</div>
+                {% endif %}
+    
+                <!-- 이미지 표시 -->
+                <div class="image-block auto-group-fhih-U6d">
+                    <!-- 이미지 소스 -->
+                    <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="item--fS1">
+                    <!-- 이미지 제목 -->
+                    <div class="image-title item--nt1">{{ image.title }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    
+        <!-- 페이지네이션 컨트롤 -->
+        <div class="pagination auto-group-ju3f-KTw">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('watercolor_gallery1', page=pagination.prev_num) }}" class="group-29-dUd">이전</a>
+            {% endif %}
+            {% if pagination.has_next %}
+                <a href="{{ url_for('watercolor_gallery1', page=pagination.next_num) }}" class="group-30-cLZ">다음</a>
+            {% endif %}
         </div>
-        <div class="auto-group-jmez-cgh">
-          <div class="item--iDw">박뮤즈</div>
-          <div class="line-7-RPF">
-          </div>
-          <div class="item--ZVT">아이의 바다</div>
-        </div>
-        <div class="auto-group-fhih-U6d">
-          <div class="item--nt1">이뮤즈</div>
-          <div class="line-8-iWm">
-          </div>
-          <div class="item--fS1">숲속 산책</div>
-        </div>
-      </div>
-      <div class="auto-group-afow-NbK">
-        <div class="auto-group-j5y5-tpZ">
-          <div class="item--pTK">송뮤즈</div>
-          <div class="auto-group-jytm-LgZ">
-          </div>
-          <div class="item--TmB">수상한 공간</div>
-        </div>
-        <div class="auto-group-x7jf-mWy">
-          <div class="item--VC5">강뮤즈</div>
-          <div class="auto-group-wfqs-1RK">
-          </div>
-          <div class="item--LTb">바닷속 나무</div>
-        </div>
-        <div class="auto-group-dnau-F4m">
-          <div class="item--MtV">하뮤즈</div>
-          <div class="auto-group-w8ps-HGM">
-          </div>
-          <div class="item--Cu7">생존의 숲</div>
-        </div>
-      </div>
-      <div class="auto-group-ju3f-KTw">
-        <div class="group-29-dUd">
-          <div class="group-28-mKw"><a href="{{ url_for("live_gallery1")}}">1</a></div>
-        </div>
-        <div class="group-30-cLZ">
-          <div class="group-28-9LV"><a href="{{ url_for("live_gallery2")}}">2</a></div>
-        </div>
-        <div class="group-31-R37">
-          <div class="group-28-Lfs"><a href="{{ url_for("live_gallery3")}}">3</a></div>
-        </div>
-        <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
-      </div>
     </div>
+    
   </div>
   <div class="rectangle-30-wff">
   </div>
