@@ -566,26 +566,26 @@ def pro_back():
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-    print(payload)
-    r = response.json()
-    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-        # API 요청을 보내 이미지 정보 검색
-        png_payload = {
-            "image": "data:image/png;base64," + i
-        }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-        # PIL 이미지에 메타 데이터 삽입
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
-        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'object/output_t2i{current_time}.png'
+    # response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    # print(payload)
+    # r = response.json()
+    # # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    # for i in r['images']:
+    #     image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+    #     # API 요청을 보내 이미지 정보 검색
+    #     png_payload = {
+    #         "image": "data:image/png;base64," + i
+    #     }
+    #     response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+    #     # PIL 이미지에 메타 데이터 삽입
+    #     pnginfo = PngImagePlugin.PngInfo()
+    #     pnginfo.add_text("parameters", response2.json().get("info"))
+    #     # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+    #     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #     file_name = f'object/output_t2i{current_time}.png'
         
-        # 이미지 저장
-        image.save(file_name, pnginfo = pnginfo)
+    #     # 이미지 저장
+    #     image.save(file_name, pnginfo = pnginfo)
     
     username = session.get('username', 'Guest')
     return render_template('pro_back_complete.html', username=username)
@@ -696,10 +696,36 @@ def pro_no_save():
     username = session.get('username', 'Guest')
     return render_template('pro_no_save.html', username=username)
 
-@app.route('/pro_object')
+@app.route('/pro_object', methods=['GET', 'POST'])
 def pro_object():
-    username = session.get('username', 'Guest')
-    return render_template('pro_object.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        user_input = data['prompt']
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += user_input + ", "
+        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
+
+        print("payload 확인:", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_object_complete')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # prompt 초기화
+        payload["prompt"] = "masterpiece, best quality, highres, "
+        payload["negative_prompt"] = "easynegative, "
+        
+        print(payload)
+        
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_object.html', username=username)
 
 @app.route('/pro_object_complete')
 def pro_object_complete():
