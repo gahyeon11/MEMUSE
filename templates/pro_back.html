@@ -75,8 +75,10 @@
       <div class="item--9ds">
         <span class="item--9ds-sub-0">어떤 배경을 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
       </div>
-      <form action="{{ url_for('pro_lora') }}" method="#" id="mood" style="width:850px">
-      <div class="auto-group-ct25-WWM"><textarea id="background" required autofocus placeholder="예) 저녁 시간대, 공원, 로우 앵글" cols="30" rows="7"></textarea></div>
+      <form action="{{ url_for('pro_lora') }}" method="post" id="mood" style="width:850px">
+      <div class="auto-group-ct25-WWM">
+        <textarea id="background" required autofocus placeholder="예) 저녁 시간대, 공원, 로우 앵글" cols="30" rows="7"></textarea>
+      </div>
       <br>
       <div class="item--8Xj" style="transform:translate(43%,0)">
         <span class="item--8Xj-sub-0">재시도를 하고 싶다면
@@ -96,6 +98,35 @@
   </div>
 </div>
 <script>
+  document.getElementById('mood').addEventListener('submit', function(event){
+    event.preventDefault();
+    // 폼 데이터 가져오기
+    var promptValue = document.getElementById('background').value;
+
+    var data = {
+      prompt: promptValue
+    };
+
+    // 서버에 포스트 요청
+    fetch('/pro_back', {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 서버로부터 받은 리디렉션 주소로 페이지 이동
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      }
+    })
+    .catch(error => {
+      console.error('Error_pro_back:', error);
+    });
+});
+
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;

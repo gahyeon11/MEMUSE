@@ -31,7 +31,7 @@ url = "http://127.0.0.1:7860"
 # Stable Diffusion에 적용될 프롬프트
 payload = {
     "prompt" : "masterpiece, best quality, highres, ",
-    "negative_prompt" : "easynegative"
+    "negative_prompt" : "easynegative, "
     }
 
 # 모델 리스트
@@ -535,10 +535,34 @@ def pastel_gallery3():
 
     return render_template('pastel_gallery3', images=pastel_images)
 
-@app.route('/pro_back')
+@app.route('/pro_back', methods=['GET', 'POST'])
 def pro_back():
-    username = session.get('username', 'Guest')
-    return render_template('pro_back.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        user_input = data['prompt']
+
+        # prompt 문자열에 추가
+        payload["prompt"] += "landscape, no human, " + user_input + ", "
+        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_lora')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # prompt 초기화
+        payload["prompt"] = "masterpiece, best quality, highres, "
+        payload["negative_prompt"] = "easynegative, "
+        
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_back.html', username = username)
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
@@ -579,15 +603,57 @@ def pro_filter():
     username = session.get('username', 'Guest')
     return render_template('pro_filter.html', username=username)
 
-@app.route('/pro_lora')
+@app.route('/pro_lora', methods=['GET', 'POST'])
 def pro_lora():
-    username = session.get('username', 'Guest')
-    return render_template('pro_lora.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+        
+        print("payload 확인:", payload)
+        
+        # 클라이언트에 응답
+        return jsonify(success = True)
+    
+    else:
+        # GET 요청시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_lora.html', username=username)
 
-@app.route('/pro_lora_num')
+@app.route('/pro_lora_num', methods=['GET', 'POST'])
 def pro_lora_num():
-    username = session.get('username', 'Guest')
-    return render_template('pro_lora_num.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        lora_num_data = data.get('prompt', '')
+        
+        # 받은 데이터를 숫자로 변환 후 계산
+        try:
+            num_value = float(lora_num_data)
+            lora_num = num_value / 100
+        except ValueError:
+            # 데이터가 숫자로 변환되지 않는 경우
+            return jsonify(success = False, message = "Invalid numeric value")
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += str(lora_num) + ">"
+
+        print("최종 prompt 확인:", payload)
+        # 클라이언트에 응답
+        return jsonify(success = True)
+    
+    else:
+        # GET 요청시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_lora_num.html', username=username)
 
 @app.route('/pro_more_edit_obj')
 def pro_more_edit_obj():
