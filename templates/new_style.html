@@ -191,16 +191,18 @@
     case '이전으로':
       window.location.href = '/workplace';
       break;
-    default:
-      // "1번"에서 "4번"까지의 결과를 처리
-      const match = result.match(/(\d)번/);
-      if (match && match[1]) {
-        // 추출한 숫자를 인수로 submitStyle 함수 호출
-        submitStyle(parseInt(match[1], 10));
-      }
+    case '일본':
+      submitStyle(1);
       break;
+    case '이번':
+      submitStyle(2);
+      break;
+    case '삼번':
+      submitStyle(3);
+      break;
+    case '사번':
+      submitStyle(4);
   }
-
 };
 </script>
 </body>
