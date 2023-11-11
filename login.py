@@ -651,10 +651,39 @@ def pro_specify_obj_num2():
     
     return render_template('pro_specify_obj_num2.html', username=username)
 
-@app.route('/pro_style')
+@app.route('/pro_style', methods=['GET', 'POST'])
 def pro_style():
-    username = session.get('username', 'Guest')
-    return render_template('pro_style.html', username=username)
+    if request.method == 'POST':
+        # POST 요청 시 JSON 처리
+        data = request.json
+        style_number = data['style']
+        selected_model = models[style_number - 1]
+        option_payload = {
+            "sd_model_checkpoint" : selected_model
+        }
+        print(selected_model)
+        session['image_style'] = selected_model
+        # checkpoint 모델 변경
+        response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
+        # payload 옵션 추가
+        options = data.get('options', {})
+        if 'styleNumber' in options:
+            del options['styleNumber'] #styleNumber 키 제거
+        # payload 딕셔너리에 options 값 추가
+        for key, value in options.items():
+            payload[key] = value
+        
+        print("payload = ", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_back', _external=True)
+        
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_style.html', username = username)
 
 @app.route('/voice_join_success')
 def voice_join_success():

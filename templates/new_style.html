@@ -96,11 +96,14 @@
   </div>
 </div>
 <script>
+  // 선택지 선택 시 값 서버 전달
   let options;
 
   function submitStyle(styleNumber) {
+    // styleNumber 값에 따라 payload 생성
     switch (styleNumber) {
       case 1:
+      //helloflatcute2d_V10
         options = {
           "sampler_index": "Euler a",
           "steps": 30,
@@ -109,6 +112,7 @@
         };
         break;
       case 2:
+      // chosen-mix
         options = {
           "sampler_index": "DPM++ 2M Karras",
           "steps": 32,
@@ -117,6 +121,7 @@
         };
         break;
       case 3:
+      // pastel-Mix[Anime]
         options = {
           "sampler_index": "DPM++ 2M Karras",
           "steps": 20,
@@ -125,6 +130,7 @@
         };
         break;
       case 4:
+      // pasteldiffusedmiox
         options = {
           "sampler_index": "DPM++ 2M Karras",
           "steps": 20,
@@ -186,9 +192,11 @@
         submitStyle(2);
         break;
       case '3번':
+        styleNumber = 3;
         submitStyle(3);
         break;
       case '4번':
+        styleNumber = 4;
         submitStyle(4);
         break;
     }
