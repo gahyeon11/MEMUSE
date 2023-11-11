@@ -73,10 +73,12 @@
         </div>
       </div>
       <div class="item--9ds">
-        <span class="item--9ds-sub-0">어떤 오브젝트를 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
+        <span class="item--9ds-sub-0">그리고 싶은 오브젝트의 프롬프트를 입력 또는 말씀해 주세요.</span>
       </div>
-      <form action="{{ url_for('pro_object_complete') }}" method="#" id="mood" style="width:850px">
-      <div class="auto-group-ct25-WWM"><textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea></div>
+      <form action="{{ url_for('pro_object_complete') }}" method="post" id="mood" style="width:850px">
+      <div class="auto-group-ct25-WWM">
+        <textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea>
+      </div>
       <br>
       <div class="item--8Xj" style="transform:translate(43%,0)">
         <span class="item--8Xj-sub-0">재시도를 하고 싶다면
@@ -95,4 +97,32 @@
   <div class="rectangle-30-KGm">
   </div>
 </div>
+<script>
+  document.getElementById('mood').addEventListener('submit', function(event){
+    event.preventDefault();
+    // 폼 데이터 가져오기
+    var promptValue = document.getElementById('background').value;
+
+    var data = {prompt: promptValue};
+
+    // 서버에 포스트 요창
+    fetch('/pro_object', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 서버로부터 받은 리디렉션 주소로 페이지 이동
+      if (data.redirect){
+        window.location.href = data.redirect;
+      }
+    })
+    .catch(error => {
+      console.error('Error_pro_object:', error);
+    });
+  });
+</script>
 </body>

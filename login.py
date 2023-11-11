@@ -63,7 +63,7 @@ url = "http://127.0.0.1:7860"
 # Stable Diffusion에 적용될 프롬프트
 payload = {
     "prompt" : "masterpiece, best quality, highres, ",
-    "negative_prompt" : "easynegative"
+    "negative_prompt" : "easynegative, "
     }
 
 # 모델 리스트
@@ -661,13 +661,58 @@ def pastel_gallery3():
 
     return render_template('pastel_gallery3', images=pastel_images)
 
-@app.route('/pro_back')
+@app.route('/pro_back', methods=['GET', 'POST'])
 def pro_back():
-    username = session.get('username', 'Guest')
-    return render_template('pro_back.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        user_input = data['prompt']
+
+        # prompt 문자열에 추가
+        payload["prompt"] += "landscape, no human, " + user_input + ", "
+        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_lora')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # prompt 초기화
+        payload["prompt"] = "masterpiece, best quality, highres, "
+        payload["negative_prompt"] = "easynegative, "
+        
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_back.html', username = username)
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
+    # response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    # print(payload)
+    # r = response.json()
+    # # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    # for i in r['images']:
+    #     image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+    #     # API 요청을 보내 이미지 정보 검색
+    #     png_payload = {
+    #         "image": "data:image/png;base64," + i
+    #     }
+    #     response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+    #     # PIL 이미지에 메타 데이터 삽입
+    #     pnginfo = PngImagePlugin.PngInfo()
+    #     pnginfo.add_text("parameters", response2.json().get("info"))
+    #     # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+    #     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #     file_name = f'object/output_t2i{current_time}.png'
+        
+    #     # 이미지 저장
+    #     image.save(file_name, pnginfo = pnginfo)
+    
     username = session.get('username', 'Guest')
     return render_template('pro_back_complete.html', username=username)
 
@@ -705,15 +750,57 @@ def pro_filter():
     username = session.get('username', 'Guest')
     return render_template('pro_filter.html', username=username)
 
-@app.route('/pro_lora')
+@app.route('/pro_lora', methods=['GET', 'POST'])
 def pro_lora():
-    username = session.get('username', 'Guest')
-    return render_template('pro_lora.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+        
+        print("payload 확인:", payload)
+        
+        # 클라이언트에 응답
+        return jsonify(success = True)
+    
+    else:
+        # GET 요청시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_lora.html', username=username)
 
-@app.route('/pro_lora_num')
+@app.route('/pro_lora_num', methods=['GET', 'POST'])
 def pro_lora_num():
-    username = session.get('username', 'Guest')
-    return render_template('pro_lora_num.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        lora_num_data = data.get('prompt', '')
+        
+        # 받은 데이터를 숫자로 변환 후 계산
+        try:
+            num_value = float(lora_num_data)
+            lora_num = num_value / 100
+        except ValueError:
+            # 데이터가 숫자로 변환되지 않는 경우
+            return jsonify(success = False, message = "Invalid numeric value")
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += str(lora_num) + ">"
+
+        print("최종 prompt 확인:", payload)
+        # 클라이언트에 응답
+        return jsonify(success = True)
+    
+    else:
+        # GET 요청시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_lora_num.html', username=username)
 
 @app.route('/pro_more_edit_obj')
 def pro_more_edit_obj():
@@ -735,10 +822,36 @@ def pro_no_save():
     username = session.get('username', 'Guest')
     return render_template('pro_no_save.html', username=username)
 
-@app.route('/pro_object')
+@app.route('/pro_object', methods=['GET', 'POST'])
 def pro_object():
-    username = session.get('username', 'Guest')
-    return render_template('pro_object.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        user_input = data['prompt']
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += user_input + ", "
+        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
+
+        print("payload 확인:", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_object_complete')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # prompt 초기화
+        payload["prompt"] = "masterpiece, best quality, highres, "
+        payload["negative_prompt"] = "easynegative, "
+        
+        print(payload)
+        
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_object.html', username=username)
 
 @app.route('/pro_object_complete')
 def pro_object_complete():
@@ -777,10 +890,39 @@ def pro_specify_obj_num2():
     
     return render_template('pro_specify_obj_num2.html', username=username)
 
-@app.route('/pro_style')
+@app.route('/pro_style', methods=['GET', 'POST'])
 def pro_style():
-    username = session.get('username', 'Guest')
-    return render_template('pro_style.html', username=username)
+    if request.method == 'POST':
+        # POST 요청 시 JSON 처리
+        data = request.json
+        style_number = data['style']
+        selected_model = models[style_number - 1]
+        option_payload = {
+            "sd_model_checkpoint" : selected_model
+        }
+        print(selected_model)
+        session['image_style'] = selected_model
+        # checkpoint 모델 변경
+        response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
+        # payload 옵션 추가
+        options = data.get('options', {})
+        if 'styleNumber' in options:
+            del options['styleNumber'] #styleNumber 키 제거
+        # payload 딕셔너리에 options 값 추가
+        for key, value in options.items():
+            payload[key] = value
+        
+        print("payload = ", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_back', _external=True)
+        
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_style.html', username = username)
 
 @app.route('/voice_join_success')
 def voice_join_success():
