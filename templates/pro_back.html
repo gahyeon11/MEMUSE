@@ -1,131 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
+
 <head>
   <meta charset="utf-8" />
   <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <title>작업실/전문가2</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo+Black%3A400"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C600%2C700"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anybody%3A700"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500%2C600%2C700"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo+Black%3A400" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C600%2C700" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anybody%3A700" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500%2C600%2C700" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../static/styles/pro_back.css"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/styles/pro_back.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 </head>
+
 <body>
-<div class="item-1-LC1">
-  <a href="{{ url_for('pro_style') }}">   
-  <img class="auto-group-ejmt-EoB" src="../static/assets/auto-group-ejmt.png"/></a>
-  <div class="auto-group-5ndw-m2R">
-    <div class="group-61-5J1">
-      <div class="auto-group-hcmx-ERo">
-        <div class="group-62-x6u">
-          <a href="{{ url_for('intro') }}">  
-          <img class="group-11-szZ" src="../static/assets/group-11-zWd.png"/></a>
-          <div class="me-muse-pQ1">ME:MUSE</div>
-        </div>
-        <div class="group-10-vC9">
-          <div class="group-1-5Kw">
-            <div class="workplace-oWq"><a href="{{ url_for('workplace') }}">Workplace</a></div>
-            <div class="museum-v5f"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
-            <div class="guide-3RB"><a href="{{ url_for('guide') }}">Guide</a></div>
-            <div class="login-9z1"><a href="{{ url_for('logout') }}">logout</a></div>
+  <div class="item-1-LC1">
+    <a href="{{ url_for('pro_style') }}">
+      <img class="auto-group-ejmt-EoB" src="../static/assets/auto-group-ejmt.png" />
+    </a>
+    <div class="auto-group-5ndw-m2R">
+      <div class="group-61-5J1">
+        <div class="auto-group-hcmx-ERo">
+          <div class="group-62-x6u">
+            <a href="{{ url_for('intro') }}">
+              <img class="group-11-szZ" src="../static/assets/group-11-zWd.png" />
+            </a>
+            <div class="me-muse-pQ1">ME:MUSE</div>
           </div>
-          <div class="group-2-5sf">
-            <a href="{{ url_for('my_page') }}"> 
-            <img class="icons8-user1-1-qrq" src="../static/assets/icons8-user1-1-Gv5.png"/></a>
+          <div class="group-10-vC9">
+            <div class="group-1-5Kw">
+              <div class="workplace-oWq"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+              <div class="museum-v5f"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+              <div class="guide-3RB"><a href="{{ url_for('guide') }}">Guide</a></div>
+              <div class="login-9z1"><a href="{{ url_for('logout') }}">logout</a></div>
+            </div>
+            <div class="group-2-5sf">
+              <a href="{{ url_for('my_page') }}">
+                <img class="icons8-user1-1-qrq" src="../static/assets/icons8-user1-1-Gv5.png" />
+              </a>
+            </div>
           </div>
         </div>
+        <img class="line-2-mkV" src="../static/assets/line-2-eTj.png" />
       </div>
-      <img class="line-2-mkV" src="../static/assets/line-2-eTj.png"/>
+      <div class="auto-group-fcot-v7b">
+        <div class="group-14-Ee5">
+          <div class="item--aC9">
+            <span class="item--aC9-sub-0">{{ username }}&nbsp;</span>
+            <span class="item--aC9-sub-1"> 작가님의 작업</span>
+          </div>
+          <div class="auto-group-cw8m-e5X">
+            <div class="line-4-AZf"></div>
+            <div class="ellipse-1-u1T"></div>
+            <div class="item--QD7">스타일</div>
+            <div class="ellipse-2-VkM"></div>
+            <div class="item--QcR">배경</div>
+            <div class="ellipse-3-gZw"></div>
+            <div class="item--bgu">오브젝트</div>
+            <div class="ellipse-4-VXP"></div>
+            <div class="item--RA9">배치</div>
+            <div class="ellipse-5-v6u"></div>
+            <div class="item--2vd">세부 배치</div>
+            <div class="ellipse-6-Keq"></div>
+            <div class="item--FYV">필터</div>
+          </div>
+        </div>
+        <div class="item--9ds">
+          <span class="item--9ds-sub-0">어떤 배경을 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
+        </div>
+        <form action="{{ url_for('translate') }}" method="POST" id="mood" style="width:850px">
+
+        <!-- <form action="{{ url_for('pro_lora') }}" method="POST" id="mood" style="width:850px"> -->
+          <div class="auto-group-ct25-WWM">
+            <textarea id="background" name="background" required autofocus placeholder="예) 저녁 시간대, 공원, 로우 앵글" cols="30" rows="7"></textarea>
+          </div>
+          <br>
+          <div class="item--8Xj" style="transform:translate(43%,0)">
+            <span class="item--8Xj-sub-0">
+              재시도를 하고 싶다면
+              <span style="color:#1400ff; font-weight:bold">‘다시’</span>
+              라고 말씀해 주세요.
+              <br />
+              다음 단계로 넘어가고 싶다면 클릭 또는
+              <span style="color:#1400ff; font-weight:bold">‘다음’</span>
+              이라고 말씀해 주세요.
+            </span>
+          </div>
+          <div class="group-32-x2u">
+            <button id="startRecognition" style="background:#003D75; color:white">음성 인식 시작/일시 중지</button>
+            <input type="submit" value="다음" style="background:#003D75; color:white">
+          </div>
+        </form>
+        <button id="sendResults" style="background:#003D75; color:white">번역 시작</button>
+        <button id="saveResults" style="background:#003D75; color:white">번역 결과 저장</button>
+        <img class="bi-mic-fill-yyb" src="../static/assets/bi-mic-fill-TEH.png" />
+      </div>    
     </div>
-    <div class="auto-group-fcot-v7b">
-      <div class="group-14-Ee5">
-        <div class="item--aC9">
-          <span class="item--aC9-sub-0">{{ username }}&nbsp;
-          </span>
-          <span class="item--aC9-sub-1"> 작가님의 작업</span>
-        </div>
-        <div class="auto-group-cw8m-e5X">
-          <div class="line-4-AZf">
-          </div>
-          <div class="ellipse-1-u1T">
-          </div>
-          <div class="item--QD7">스타일</div>
-          <div class="ellipse-2-VkM">
-          </div>
-          <div class="item--QcR">배경</div>
-          <div class="ellipse-3-gZw">
-          </div>
-          <div class="item--bgu">오브젝트</div>
-          <div class="ellipse-4-VXP">
-          </div>
-          <div class="item--RA9">배치</div>
-          <div class="ellipse-5-v6u">
-          </div>
-          <div class="item--2vd">세부 배치</div>
-          <div class="ellipse-6-Keq">
-          </div>
-          <div class="item--FYV">필터</div>
-        </div>
-      </div>
-      <div class="item--9ds">
-        <span class="item--9ds-sub-0">어떤 배경을 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
-      </div>
-      <form action="{{ url_for('pro_lora') }}" method="#" id="mood" style="width:850px">
-      <div class="auto-group-ct25-WWM"><textarea id="background" required autofocus placeholder="예) 저녁 시간대, 공원, 로우 앵글" cols="30" rows="7"></textarea></div>
-      <br>
-      <div class="item--8Xj" style="transform:translate(43%,0)">
-        <span class="item--8Xj-sub-0">재시도를 하고 싶다면
-        <span style="color:#1400ff; font-weight:bold">‘다시’</span>
-        라고 말씀해 주세요.
-        <br/>
-        다음 단계로 넘어가고 싶다면 클릭 또는 
-        <span style="color:#1400ff; font-weight:bold">‘다음’</span>
-        이라고 말씀해 주세요.</span>
-      </div>
-      <div class="group-32-x2u"><input type="submit" value="다음" style="background:#003D75; color:white"></div>
-      </form>
-      <img class="bi-mic-fill-yyb" src="../static/assets/bi-mic-fill-TEH.png"/>
-    </div>
+    <div class="rectangle-30-KGm"></div>
   </div>
-  <div class="rectangle-30-KGm">
-  </div>
-</div>
-<script>
-  // 음성 인식 API 초기화
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
 
-  // 음성 인식 시작
-  recognition.start();
+  <script>
+    if (annyang) {
+      annyang.setLanguage('ko');
+      var final_transcripts = [];
+      var result_save = false;
 
-  // 음성 인식 결과 이벤트 리스너
-  recognition.onresult = (event) => {
-  const result = event.results[event.results.length - 1][0].transcript;
-  console.log('음성 인식 결과:', result);
+      annyang.addCallback('result', function (phrases) {
+        console.log('음성 인식 결과:', phrases);
+        if (phrases[0].trim() == "음성 시작") {
+          result_save = true;
+        } else if (phrases[0].trim() == "음성 중지") {
+          result_save = false;
+        }
+        if (result_save) {
+          var final_transcript = phrases.map(p => p.trim()).join(' ');
+          final_transcripts.push(final_transcript);
+          document.getElementById('background').value = final_transcript;
+        }
+      });
 
-  // 인식된 음성 명령에 따라 URL로 이동
-  switch (result) {
-    case '마이페이지':
-      window.location.href = '/mypage'; // 절대 경로 사용
-      break;
-    case '가이드':
-      window.location.href = '/guide'; // 절대 경로 사용
-      break;
-    case '다시':
-      window.location.href = '/pro_back'; // 절대 경로 사용
-      break;
-    case '다음':
-      window.location.href = '/pro_lora'; // 절대 경로 사용
-      break;
-    // 다른 명령에 대한 처리도 추가할 수 있습니다.
+      // 시작 버튼 이벤트 리스너 설정
+      const startButton = document.getElementById('startRecognition');
+      startButton.addEventListener('click', function () {
+        if (result_save) {
+          result_save = false;
+          this.textContent = '음성 인식 시작';
+        } else {
+          result_save = true;
+          this.textContent = '음성 인식 일시 중지';
+        }
+      });
+
+      // 번역 시작 버튼 이벤트 리스너 설정
+      document.getElementById('sendResults').addEventListener('click', function () {
+        translateText(final_transcripts);
+        
+      });
+
+      // 결과 저장 버튼 이벤트 리스너 설정
+      document.getElementById('saveResults').addEventListener('click', function () {
+        saveTranslationResults(final_transcripts);
+      });
+
+      // annyang 시작
+      annyang.start({ autoRestart: false, continuous: true });
+
+    } else {
+      alert('Sorry, your browser does not support speech recognition.');
+    }
+
+    const translateURL = "{{ url_for('translate') }}";
+
+function translateText() {
+  const sentence = document.getElementById('background').value;
+  fetch(translateURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text: sentence })
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      translated_text = data.translated_text; // 번역 결과를 전역 변수에 할당
+      console.log("7777777777777777777");
+      console.log(translated_text);
+      document.getElementById('translatedResults').innerText = '번역된 프롬프트: ' + translated_text + "\n";
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+
+async function saveTranslationResults() {
+  const sentence = document.getElementById('background').value;
+  try {
+    // 이미 translateText 함수에서 번역 결과를 전역 변수에 저장했으므로 해당 변수를 사용
+    const saveResponse = await fetch("{{ url_for('save_results') }}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        originalText: sentence,
+        translatedText: translated_text // 전역 변수 사용
+      })
+    });
+
+    if (!saveResponse.ok) {
+      throw new Error(`Server responded with ${saveResponse.status}`);
+    }
+
+    const saveData = await saveResponse.json();
+
+    if (saveData.status === "success") {
+      console.log('Result saved:', saveData);
+    } else {
+      console.error('Error saving result:', saveData.error);
+    }
+
+  } catch (error) {
+    console.error('Error during save:', error);
   }
-};
+}
+
 </script>
 </body>
 </html>
