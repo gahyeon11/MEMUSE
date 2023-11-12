@@ -166,6 +166,7 @@
       console.error('Error:', error);
     });
   }
+
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
@@ -188,16 +189,16 @@
       window.location.href = '/guide'; // 절대 경로 사용
       break;
     case '1번':
-      window.location.href = '/pro_back'; // 절대 경로 사용
+      submitStyle(1);
       break;
     case '2번':
-      window.location.href = '/pro_back'; // 절대 경로 사용
+      submitStyle(2);
       break;
     case '3번':
-      window.location.href = '/pro_back'; // 절대 경로 사용
+      submitStyle(3);
       break;
     case '4번':
-      window.location.href = '/pro_back'; // 절대 경로 사용
+      ubmitStyle(4);
       break;
     case '이전으로':
       window.location.href = '/workplace'; // 절대 경로 사용
