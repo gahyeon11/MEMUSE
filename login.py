@@ -23,6 +23,9 @@ import base64
 from flask_bcrypt import Bcrypt
 from wtforms.validators import DataRequired
 import pymysql
+import shutil
+from pro_edit_object import process_edit_object
+
 pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
@@ -123,6 +126,11 @@ class ImageInfoForm(FlaskForm):
     caption = TextAreaField('Caption')
     submit = SubmitField('저장')
 
+class ProImages(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    background_image_path = db.Column(db.String(255))  # 배경 이미지 파일 경로
+    object_image_paths = db.Column(db.String(255))  # 오브젝트 이미지 파일 경로들
+    user_id = db.Column(db.Integer)  # 사용자 ID
 
 @app.route('/')
 def index():
@@ -685,40 +693,43 @@ def pro_back():
         # GET 요청 시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('pro_back.html', username = username)
-
 @app.route('/pro_back_complete')
 def pro_back_complete():
-    background_images = []
     background_folder = 'static/background'
-        # 'background' 폴더 내의 모든 파일 나열
-    for filename in os.listdir(background_folder):
-        if filename.endswith(".png"):  # PNG 파일만 필터링
-            image_path = os.path.join(background_folder, filename)
-            background_images.append(image_path)
-
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    
+    # 'background' 폴더 내의 모든 파일 나열
+    background_images = [filename for filename in os.listdir(background_folder) if filename.endswith(".png")]
+    
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
     print(payload)
     r = response.json()
+    
     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
     for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
         # API 요청을 보내 이미지 정보 검색
         png_payload = {
             "image": "data:image/png;base64," + i
         }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
         # PIL 이미지에 메타 데이터 삽입
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'static/background/output_t2i{current_time}.png'
+        file_name = os.path.join(background_folder, f'output_t2i{current_time}.png')  # 경로 수정
         
         # 이미지 저장
-        image.save(file_name, pnginfo = pnginfo)
+        image.save(file_name, pnginfo=pnginfo)
+    
+    # 가장 최근에 저장된 이미지 파일 경로 찾기
+    latest_image_path = None
+    if background_images:
+        latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
+        latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
     
     username = session.get('username', 'Guest')
-    return render_template('pro_back_complete.html', username=username, background_images=background_images)
+    return render_template('pro_back_complete.html', username=username, latest_image_path=latest_image_path)
 
 @app.route('/pro_complete')
 def pro_complete():
@@ -734,10 +745,11 @@ def pro_edit_obj_check():
 def pro_edit_obj_num():
     username = session.get('username', 'Guest')
     return render_template('pro_edit_obj_num.html', username=username)
+
+# 라우트 함수
 @app.route('/pro_edit_object')
-def pro_edit_object():
-    username = session.get('username', 'Guest')
-    return render_template('pro_edit_object.html', username=username)
+def pro_edit_object_route():
+    return process_edit_object()
 
 @app.route('/pro_edit_shot_check')
 def pro_edit_shot_check():
@@ -856,32 +868,42 @@ def pro_object():
         # GET 요청 시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('pro_object.html', username=username)
-
 @app.route('/pro_object_complete')
 def pro_object_complete():
-# 이미지 생성 코드
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    # 이미지 생성 코드
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
     print(payload)
     r = response.json()
+    
     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
     for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
         # API 요청을 보내 이미지 정보 검색
         png_payload = {
             "image": "data:image/png;base64," + i
         }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
         # PIL 이미지에 메타 데이터 삽입
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'object/output_t2i{current_time}.png'
+        file_name = f'static/pro_object/output_t2i{current_time}.png'
         
         # 이미지 저장
-        image.save(file_name, pnginfo = pnginfo)
+        image.save(file_name, pnginfo=pnginfo)
+    
+    # 가장 최근에 저장된 이미지 파일 경로 찾기
+    latest_image_path = None
+    pro_object_folder = 'static/pro_object'
+    pro_object_images = [filename for filename in os.listdir(pro_object_folder) if filename.endswith(".png")]
+    
+    if pro_object_images:
+        latest_image_path = os.path.join('pro_object', pro_object_images[-1])  # 경로 수정
+        latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+    
     username = session.get('username', 'Guest')
-    return render_template('pro_object_complete.html', username=username)
+    return render_template('pro_object_complete.html', username=username, latest_image_path=latest_image_path)
 
 @app.route('/pro_save_success')
 def pro_save_success():
@@ -1017,16 +1039,56 @@ def logout():
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db.session.remove()
+
+@app.route('/delete_image', methods=['POST'])
+def delete_image():
+    background_folder = 'static/background'
+    
+    # 'background' 폴더의 모든 이미지 삭제
+    for filename in os.listdir(background_folder):
+        print("삭제")
+        file_path = os.path.join(background_folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    return jsonify({'message': 'All images deleted successfully'}), 200
+@app.route('/delete_object_image', methods=['POST'])
+def delete_object_image():
+    background_folder = 'static/pro_object'
+
+    # 폴더 내의 모든 파일 목록을 얻고, 가장 최근에 수정된 파일 찾기
+    try:
+        files = [os.path.join(background_folder, f) for f in os.listdir(background_folder)]
+        if not files:
+            return jsonify({'message': 'No files to delete'}), 404
+
+        latest_file = max(files, key=os.path.getmtime)
+        print(f"삭제할 파일: {latest_file}")
+
+        # 가장 최근 파일 삭제
+        if os.path.isfile(latest_file) or os.path.islink(latest_file):
+            os.unlink(latest_file)
+        elif os.path.isdir(latest_file):
+            shutil.rmtree(latest_file)
+
+        return jsonify({'message': f'File {latest_file} deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 if __name__ == '__main__':
     print(app.config['SQLALCHEMY_DATABASE_URI'])
     with app.app_context():
         db.session.begin()
         users = User.query.all()  # 모든 User 레코드를 조회합니다.
-        for user in users:
-            print(user.id, user.name, user.birthdate, user.username, user.pwd)
-        images = ImageModel.query.all()  # ImageModel의 모든 인스턴스를 조회
-        for image in images:
-            print(f'ID: {image.id}, User ID: {image.user_id}, File Path: {image.file_path}, Title: {image.title}, Created At: {image.created_at}, Category: {image.category}, Caption: {image.caption}')
+        # for user in users:
+        #     print(user.id, user.name, user.birthdate, user.username, user.pwd)
+        # images = ImageModel.query.all()  # ImageModel의 모든 인스턴스를 조회
+        # for image in images:
+        #     print(f'ID: {image.id}, User ID: {image.user_id}, File Path: {image.file_path}, Title: {image.title}, Created At: {image.created_at}, Category: {image.category}, Caption: {image.caption}')
 
         if db.engine.url.drivername == "sqlite":
             migrate.init_app(app, db, render_as_batch=True)

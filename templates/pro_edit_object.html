@@ -43,10 +43,7 @@
       <img class="line-2-oM3" src="../static/assets/line-2-3PX.png"/>
     </div>
     <div class="auto-group-ck7s-kGH">
-      {% for image_path in background_images %}
-      <img class="item--J2u" src="{{ url_for('static', filename=image_path) }}" />
-  {% endfor %}
-      <div class="item--J2u">작가님의 그림이에요!</div>
+      <div class="item--J2u" >작가님의 그림이에요!</div>
       <img class="bi-mic-fill-jtu" src="../static/assets/bi-mic-fill-sVB.png"/>
       <div class="item--4wB">
       오브젝트의 위치를 변경하고 싶은가요?
@@ -56,8 +53,13 @@
       <div class="auto-group-6ved-gxZ">
         <div class="group-42-RQM"><a href="{{ url_for('pro_edit_obj_num') }}" style="color:white">예</a></div>
         <div class="auto-group-etut-tHw"><a href="{{ url_for('pro_filter') }}" style="color:white">아니오</a></div>
-      </div>
+      </div>{% if background_image %}
       <div class="rectangle-9-kL9">
+        <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
+        {% endif %}
+        {% if object_image %}
+            <img src="{{ url_for('static', filename=object_image) }}" alt="Object Image">
+        {% endif %}
       </div>
       <div class="group-14-sff">
         <div class="item--CC9">
@@ -93,3 +95,7 @@
   </div>
 </div>
 </body>
+<script>
+    
+
+</script>
