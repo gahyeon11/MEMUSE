@@ -71,7 +71,8 @@
                   <div class="auto-group-fhih-U6d">
                       <!-- Image Insertion -->
                       <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="image-display">
-                      <div class="item--nt1">{{ image.user.username if image.user else 'Unknown User' }}</div>
+  
+                      <div class="item--nt1">{{ image.user_id if image else 'Unknown User' }}</div>
                       <div class="line-8-iWm"></div>
                       <div class="item--fS1">{{ image.title }}</div>
                   </div>
@@ -79,19 +80,22 @@
           </div>
       </div>
       
-      <!-- 페이지네이션 링크 -->
-
-      <div class="auto-group-ju3f-KTw">      
-        <div>
-        {% for page_num in pagination.iter_pages() %}
-          <a href="{{ url_for('whole_gallery1', page=page_num) }}" style="font-size: 20px; margin-right: 5px;">{{ page_num }}</a>
-        {% endfor %}
-      </div>
-        <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
+        
+  
+        <!-- 페이지네이션 링크 -->
+        <div class="auto-group-ju3f-KTw">      
+          <div>
+          {% for page_num in pagination.iter_pages() %}
+            <a href="{{ url_for('whole_gallery1', page=page_num) }}" style="font-size: 20px; margin-right: 5px;">{{ page_num }}</a>
+          {% endfor %}
+        </div>
+          <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
+  
+  
+        </div>
       </div>
     </div>
+    <div class="rectangle-30-wff">
+    </div>
   </div>
-  <div class="rectangle-30-wff">
-  </div>
-</div>
-</body>
+  </body>
