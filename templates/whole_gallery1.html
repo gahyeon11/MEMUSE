@@ -65,7 +65,17 @@
       <div class="gallery-container">
         {% for image in images %}
             <div class="image-container item--9V3">
-                <!-- 사용자 정보 -->
+              <div class="auto-group-c7p7-7Ah">
+                <div class="rectangle-22-deq" data-prompt="low angle, knee shot, from below,"> <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" >
+                </a>
+                {% if image.user %}
+                <div class="user-info item--nt1">{{ image.user.username }}</div>
+                {% else %}
+                <div class="user-info item--nt1">알 수 없는 사용자</div>
+                 {% endif %}
+                
+              </div>
+                <!-- 사용자 정보
                 {% if image.user %}
                     <div class="user-info item--nt1">{{ image.user.username }}</div>
                 {% else %}
@@ -73,13 +83,13 @@
                 {% endif %}
     
                 <!-- 이미지 표시 -->
-                <div class="image-block auto-group-fhih-U6d">
+                <!-- <div class="image-block auto-group-fhih-U6d">
                     <!-- 이미지 소스 -->
-                    <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="item--fS1">
+                    <!-- <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="item--fS1">
                     <!-- 이미지 제목 -->
-                    <div class="image-title item--nt1">{{ image.title }}</div>
-                </div>
-            </div>
+                    <!-- <div class="image-title item--nt1">{{ image.title }}</div> -->
+                <!-- </div>  -->
+            
         {% endfor %}
     
         <!-- 페이지네이션 컨트롤 -->

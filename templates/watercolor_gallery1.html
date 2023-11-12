@@ -65,6 +65,7 @@
       <div class="gallery-container">
         {% for image in images %}
             <div class="image-container item--9V3">
+              <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="item--fS1">
                 <!-- 사용자 정보 -->
                 {% if image.user %}
                     <div class="user-info item--nt1">{{ image.user.username }}</div>
@@ -75,7 +76,7 @@
                 <!-- 이미지 표시 -->
                 <div class="image-block auto-group-fhih-U6d">
                     <!-- 이미지 소스 -->
-                    <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="item--fS1">
+                    
                     <!-- 이미지 제목 -->
                     <div class="image-title item--nt1">{{ image.title }}</div>
                 </div>
