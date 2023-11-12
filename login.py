@@ -21,7 +21,6 @@ from PIL import Image, PngImagePlugin, ImageFilter
 from datetime import datetime
 import base64
 from flask_bcrypt import Bcrypt
-<<<<<<< Updated upstream
 from wtforms.validators import DataRequired
 
 app = Flask(__name__)
@@ -62,12 +61,6 @@ CORS(app)
 
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
-=======
-
-
-app = Flask(__name__)
-CORS(app)
->>>>>>> Stashed changes
 bcrypt = Bcrypt()
 # conn = sqlite3.connect('users.db', check_same_thread=False)
 # c = conn.cursor()
