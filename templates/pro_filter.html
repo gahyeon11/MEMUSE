@@ -85,17 +85,17 @@
         </div>
       </div>
       <a href="{{ url_for('pro_complete') }}"> <div class="auto-group-s1v3-w2h">
-        <div class="rectangle-9-TWq">
+        <div class="rectangle-9-TWq" onclick="sendFilter('1')">
         </div>
-        <div class="rectangle-11-Tv9">
+        <div class="rectangle-11-Tv9" onclick="sendFilter('2')">
         </div>
-        <div class="rectangle-12-c2M">
+        <div class="rectangle-12-c2M" onclick="sendFilter('3')">
         </div>
-        <div class="rectangle-13-Lyw">
+        <div class="rectangle-13-Lyw" onclick="sendFilter('4')">
         </div>
-        <div class="rectangle-14-siy">
+        <div class="rectangle-14-siy" onclick="sendFilter('5')">
         </div>
-        <div class="rectangle-15-cgZ">
+        <div class="rectangle-15-cgZ" onclick="sendFilter('6')">
         </div>
       </div></a>
       <div class="auto-group-qyym-xkR">
@@ -107,17 +107,17 @@
         <div class="item--4qP">6. 낭만적</div>
       </div>
       <a href="{{ url_for('pro_complete') }}"> <div class="auto-group-jxlu-Pcm">
-        <div class="rectangle-16-7Ym">
+        <div class="rectangle-16-7Ym" onclick="sendFilter('7')">
         </div>
-        <div class="rectangle-20-rmF">
+        <div class="rectangle-20-rmF" onclick="sendFilter('8')">
         </div>
-        <div class="rectangle-21-QGy">
+        <div class="rectangle-21-QGy" onclick="sendFilter('9')">
         </div>
-        <div class="rectangle-18-Y8H">
+        <div class="rectangle-18-Y8H" onclick="sendFilter('10')">
         </div>
-        <div class="rectangle-19-V3X">
+        <div class="rectangle-19-V3X" onclick="sendFilter('11')">
         </div>
-        <div class="rectangle-17-Rxm">
+        <div class="rectangle-17-Rxm" onclick="sendFilter('12')">
         </div>
       </div></a>
       <div class="auto-group-prkz-PPo">
@@ -134,6 +134,31 @@
   </div>
 </div>
 <script>
+  function sendFilter(filterNumber) {
+    // JavaScript를 사용하여 서버에 POST 요청을 보내는 로직
+    fetch('{{ url_for("pro_filter") }}', {
+      method: 'POST',
+      // 서버가 이해할 수 있는 형식으로 헤더를 설정합니다.
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      // CSRF 토큰이 필요한 경우 여기에 추가해야 합니다.
+      body: 'filter=' + filterNumber
+    })
+    .then(response => {
+      if (response.ok) {
+        // 필터 적용이 성공적으로 완료되면, 사용자를 완료 페이지로 리다이렉트합니다.
+        window.location.href = '{{ url_for("pro_complete") }}';
+      } else {
+        // 에러 처리
+        alert('서버에서 문제가 발생했습니다.');
+      }
+    })
+    .catch(error => {
+      console.error('에러:', error);
+    });
+  }
+
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
@@ -148,53 +173,50 @@
     console.log('음성 인식 결과:', result);
 
     // 인식된 음성 명령에 따라 URL로 이동
-
-    if (result === '마이페이지') {
-      window.location.href = 'mypage.html'; // mypage.html 페이지로 이동
+    switch (result) {
+      case '마이페이지':
+        window.location.href = '/mypage';
+        break;
+      case '가이드':
+        window.location.href = '/guide';
+        breka;
+      case '1번':
+        sendFilter(1);
+        break;
+      case '2번':
+        sendFilter(2);
+        break;
+      case '3번':
+        sendFilter(3);
+        break;
+      case '4번':
+        sendFilter(4);
+        break;
+      case '5번':
+        sendFilter(5);
+        break;
+      case '6번':
+        sendFilter(6);
+        break;
+      case '7번':
+        sendFilter(7);
+        break;
+      case '8번':
+        sendFilter(8);
+        break;
+      case '9번':
+        sendFilter(9);
+        break;
+      case '10번':
+        sendFilter(10);
+        break;
+      case '11번':
+        sendFilter(1);
+        break;
+      case '12번':
+        sendFilter(1);
+        break;
     }
-    if (result === '가이드') {
-      window.location.href = 'guide.html'; // guide.html 페이지로 이동
-    }
-    if (result === '1번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '2번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '3번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '4번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '5번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '6번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '7번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '8번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '9번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '10번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '11번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '12번') {
-      window.location.href = 'pro_complete.html'; // pro_complete.html 페이지로 이동
-    }
-    if (result === '이전으로') {
-      window.location.href = 'pro_specify_obj.html'; // pro_specify_obj.html 페이지로 이동
-    }
-    // 다른 명령에 대한 처리도 추가할 수 있습니다.
   };
 </script>
 </body>
