@@ -1,3 +1,12 @@
-Flask==2.1.0
-SQLAlchemy==1.4.30
-cryptography==3.4.8
+Flask
+Flask-SQLAlchemy
+Flask-Cors
+Flask-Migrate
+flask_wtf
+SQLAlchemy
+Pillow
+WTForms
+pyscrypt
+requests
+Flask-Bcrypt
+pymysql
