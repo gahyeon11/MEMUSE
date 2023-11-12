@@ -53,13 +53,17 @@
       <div class="auto-group-6ved-gxZ">
         <div class="group-42-RQM"><a href="{{ url_for('pro_edit_obj_num') }}" style="color:white">예</a></div>
         <div class="auto-group-etut-tHw"><a href="{{ url_for('pro_filter') }}" style="color:white">아니오</a></div>
-      </div>{% if background_image %}
+      </div>
       <div class="rectangle-9-kL9">
-        <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
-        {% endif %}
-        {% if object_image %}
-            <img src="{{ url_for('static', filename=object_image) }}" alt="Object Image">
-        {% endif %}
+        <div class="image-container">
+          {% if background_image %}
+              <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
+          {% endif %}
+          <div id="file-list">
+
+        </div>
+        </div>
+        
       </div>
       <div class="group-14-sff">
         <div class="item--CC9">
@@ -95,7 +99,34 @@
   </div>
 </div>
 </body>
+<!-- JavaScript 코드 -->
+<!-- JavaScript 코드 -->
 <script>
-    
+// Flask 애플리케이션의 /list_processed_images 엔드포인트 호출
+// Flask 애플리케이션의 /list_processed_images 엔드포인트 호출
+$.ajax({
+    url: '/list_processed_images',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        // data에는 이미지 파일 목록이 포함됩니다.
+        if (data.length > 0) {
+            // 이미지 파일 목록을 화면에 표시
+            var fileListElement = document.getElementById('file-list');
+            var fileListHTML = '<ul>';
+            data.forEach(function(filename) {
+                fileListHTML += '<li>' + filename + '</li>';
+            });
+            fileListHTML += '</ul>';
+            fileListElement.innerHTML = fileListHTML;
+        } else {
+            console.log('No processed images available.');
+        }
+    },
+    error: function(error) {
+        console.log('Error:', error);
+    }
+});
 
 </script>
+

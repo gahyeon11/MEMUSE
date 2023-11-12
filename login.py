@@ -32,6 +32,8 @@ pymysql.install_as_MySQLdb()
 app = Flask(__name__)
 CORS(app)
 
+app.secret_key = '0000'
+
 db_path = 'translations.db'
 
 # 절대 경로로 변환
@@ -196,7 +198,7 @@ class ImageModel(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(128), nullable=False)
     caption = db.Column(db.String(512))
-
+    user = db.relationship('User', foreign_keys=[user_id], backref='images')
     def __init__(self, user_id, file_path, title, category, caption=None):
         self.user_id = user_id
         
@@ -503,7 +505,6 @@ def new_filter():
             flash('Image file not found.', 'error')
             return redirect(url_for('new_object'))
         image = Image.open(full_file_path)
-
         print(file_path)
         print(filter_number)
         if filter_number == '1':
@@ -530,12 +531,10 @@ def new_filter():
         # '높은 대비' 필터 예시: 대비를 증가시킵니다.
             enhancer = ImageEnhance.Contrast(image)
             image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
-
         elif filter_number == '8':
             # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
             enhancer = ImageEnhance.Color(image)
             image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
-
         elif filter_number == '9':
             # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
             r, g, b = image.split()
@@ -545,7 +544,6 @@ def new_filter():
             image = Image.merge('RGB', (r, g, b))
             enhancer = ImageEnhance.Contrast(image)
             image = enhancer.enhance(0.8)
-
         elif filter_number == '10':
             # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
             r, g, b = image.split()
@@ -555,29 +553,25 @@ def new_filter():
             image = Image.merge('RGB', (r, g, b))
             enhancer = ImageEnhance.Brightness(image)
             image = enhancer.enhance(1.2)
-
         elif filter_number == '11':
             # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
             sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
             image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
-
         elif filter_number == '12':
             # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
             image = image.convert('L')     
         
         
-        file_name = f'object/output_t2i_{filter_number}_{current_time}.png'
-        image.save(os.path.join(app.static_folder, file_name))
-
-        session['file_path'] = file_name
-
+        filter_file_name = f'fin/output_t2i_{filter_number}_{current_time}.png'
+        image.save(os.path.join(app.static_folder, filter_file_name))
+        session['file_path'] = filter_file_name
+        print(filter_file_name)
         # 이미지 저장(db x)
         # image.save(file_name, pnginfo = pnginfo)
         
         return redirect(url_for('new_complete'))
     username = session.get('username', 'Guest')
     return render_template('new_filter.html', username=username)
-
 @app.route('/new_no_save')
 def new_no_save():
     username = session.get('username', 'Guest')
@@ -606,12 +600,10 @@ def new_object():
             # PIL 이미지에 메타 데이터 삽입
             pnginfo = PngImagePlugin.PngInfo()
             pnginfo.add_text("parameters", response2.json().get("info"))
-            # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             file_name = f'object/output_t2i_{current_time}.png'
             image.save(os.path.join(app.static_folder, file_name))
             session['file_path'] = file_name
-
             # 이미지 저장(db x)
             # image.save(file_name, pnginfo = pnginfo)
         # 다음 페이지 리디렉션 url
@@ -638,6 +630,7 @@ def new_save_success():
                 return redirect(url_for('login'))
 
             file_path = session.get('file_path')
+            print(file_path)
             image_style = session.get('image_style', 'default_style')
             print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
             new_image = ImageModel(user_id=user_id, file_path=file_path, title=title, category=image_style, caption=caption)
@@ -749,7 +742,7 @@ def pro_back():
     if request.method == 'POST':
         # POST 요청 시 JSON 데이터 파싱
         data = request.json
-        user_input = data['prompt']
+        user_input = data['translatedText']
 
         # prompt 문자열에 추가
         payload["prompt"] += "landscape, no human, " + user_input + ", "
@@ -822,11 +815,20 @@ def pro_edit_obj_num():
     username = session.get('username', 'Guest')
     return render_template('pro_edit_obj_num.html', username=username)
 
-# 라우트 함수
 @app.route('/pro_edit_object')
-def pro_edit_object_route():
+def pro_edit_object():
     return process_edit_object()
 
+@app.route('/list_processed_images')
+def list_processed_images():
+    pro_object_folder = 'static/processed'  # 수정된 폴더 경로
+
+    # 처리된 이미지 파일 목록 가져오기
+    processed_image_files = os.listdir(pro_object_folder)
+
+    # JSON 형식으로 반환
+    return jsonify(processed_image_files)
+    
 @app.route('/pro_edit_shot_check')
 def pro_edit_shot_check():
     username = session.get('username', 'Guest')
@@ -836,12 +838,102 @@ def pro_edit_shot_check():
 def pro_edit_shot_num():
     username = session.get('username', 'Guest')
     return render_template('pro_edit_shot_num.html', username=username)
-
-@app.route('/pro_filter')
+@app.route('/pro_filter', methods=['GET', 'POST'])
 def pro_filter():
+    if request.method == 'POST':
+        if not session.get('file_path'):
+            flash('Image file is missing.', 'error')
+            return redirect(url_for('pro_filter'))
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filter_number = request.form.get('filter')
+        if not filter_number:
+            # 적절한 오류 메시지를 표시하거나 기본 값을 설정
+            flash('Filter number is required.', 'error')
+            return redirect(url_for('pro_filter')) 
+        file_path = session.get('file_path') 
+        if not file_path:
+            flash('Image file is missing.', 'error')
+            return redirect(url_for('pro_filter'))
+        full_file_path = os.path.join(app.static_folder, file_path)
+        print("Attempting to open:", full_file_path)
+                # 파일 존재 여부 확인
+        if not os.path.exists(full_file_path):
+            flash('Image file not found.', 'error')
+            return redirect(url_for('pro_filter'))
+        image = Image.open(full_file_path)
+
+        print(file_path)
+        print(filter_number)
+        if filter_number == '1':
+            pass
+        elif filter_number == '2':
+            image = image.point(lambda p: p * 1.1)
+        elif filter_number == '3':
+            lut_size = 8
+            image = image.filter(ImageFilter.Color3DLUT.generate(lut_size, lambda r, g, b: (r, g*0.9, b*0.6)))
+        elif filter_number == '4':
+            enhancer = ImageEnhance.Brightness(image)
+            image = enhancer.enhance(1.1)  
+        elif filter_number == '5':
+        # '새벽하늘' 필터 예시: 파란색 톤을 강조합니다.
+            r, g, b = image.split()
+            b = b.point(lambda i: i * 1.2)  # 파란색 채널을 강화합니다.
+            image = Image.merge('RGB', (r, g, b))
+        elif filter_number == '6':
+            # '낭만적' 필터 예시: 붉은색 톤을 강조합니다.
+            r, g, b = image.split()
+            r = r.point(lambda i: i * 1.2)  # 빨간색 채널을 강화합니다.
+            image = Image.merge('RGB', (r, g, b))   
+        elif filter_number == '7':
+        # '높은 대비' 필터 예시: 대비를 증가시킵니다.
+            enhancer = ImageEnhance.Contrast(image)
+            image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
+
+        elif filter_number == '8':
+            # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
+            enhancer = ImageEnhance.Color(image)
+            image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
+
+        elif filter_number == '9':
+            # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
+            r, g, b = image.split()
+            r = r.point(lambda i: i * 0.9)
+            g = g.point(lambda i: i * 0.7)
+            b = b.point(lambda i: i * 0.5)
+            image = Image.merge('RGB', (r, g, b))
+            enhancer = ImageEnhance.Contrast(image)
+            image = enhancer.enhance(0.8)
+
+        elif filter_number == '10':
+            # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
+            r, g, b = image.split()
+            r = r.point(lambda i: i * 0.8)
+            g = g.point(lambda i: i * 0.8)
+            b = b.point(lambda i: i * 1.2)
+            image = Image.merge('RGB', (r, g, b))
+            enhancer = ImageEnhance.Brightness(image)
+            image = enhancer.enhance(1.2)
+
+        elif filter_number == '11':
+            # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
+            sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
+            image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
+
+        elif filter_number == '12':
+            # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
+            image = image.convert('L')     
+        
+        
+        file_name = f'pro_object/output_t2i_{filter_number}_{current_time}.png'
+        image.save(os.path.join(app.static_folder, file_name))
+
+        session['file_path'] = file_name
+        
+        return redirect(url_for('pro_complete'))
+    
+    # GET 요청
     username = session.get('username', 'Guest')
     return render_template('pro_filter.html', username=username)
-
 @app.route('/pro_lora', methods=['GET', 'POST'])
 def pro_lora():
     # payload 값 참조

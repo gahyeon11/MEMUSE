@@ -526,3 +526,12 @@ body {
   background-color: #003c74;
   flex-shrink: 0;
 }
+.image-container {
+  position: relative;
+}
+#object-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* 객체 이미지를 배경 이미지 위로 겹치도록 설정 */
+}

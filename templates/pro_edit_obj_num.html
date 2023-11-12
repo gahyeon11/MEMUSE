@@ -53,8 +53,24 @@
         <span class="item--ZUM-sub-3">을 클릭 또는 말씀해 주세요.</span>
       </div>
       <div class="group-63-rVP"><a href="{{ url_for('pro_filter') }}" style="color:white">이동 안함</a></div>
-      <a href="{{ url_for('pro_edit_obj_check') }}"> <div class="rectangle-9-uiZ">
-      </div></a>
+      <a href="{{ url_for('pro_edit_obj_check') }}">
+      <div class="rectangle-9-uiZ">
+        {% if background_image %}
+              <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
+          {% endif %}
+        <div id="object-container"></div>
+      </div>      
+      
+    </a>
+      <a href="{{ url_for('pro_edit_obj_check') }}">
+        <div class="rectangle-9-uiZ">
+          {% if background_image %}
+                <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
+            {% endif %}
+          <div id="object-container"></div>
+        </div>      
+        
+      </a>
       <div class="group-14-SyP">
         <div class="item--aph">
           <span class="item--aph-sub-0">{{ username }}&nbsp;</span>
@@ -89,3 +105,48 @@
   </div>
 </div>
 </body>
+<!-- JavaScript 코드 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+window.addEventListener('load', function() {
+    $.ajax({
+        url: '/get_processed_image_paths',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // data에는 처리된 이미지 경로 목록이 포함됩니다.
+            // 여기에서 랜덤한 이미지를 선택하고 화면에 표시할 수 있습니다.
+            if (data.length > 0) {
+                // 랜덤한 이미지 경로 선택
+                var randomImagePath = data[Math.floor(Math.random() * data.length)];
+                // 이미지 엘리먼트를 생성하고 표시
+                var objectImage = new Image();
+                objectImage.src = randomImagePath;
+                objectImage.alt = 'Object Image';
+                // 이미지가 로드된 후 실행되는 이벤트 리스너 추가
+                objectImage.onload = function() {
+                    // 배경 이미지 요소 가져오기
+                    var backgroundImage = document.querySelector('.rectangle-9-kL9 img');
+                    var backgroundImageWidth = backgroundImage.width;
+                    var backgroundImageHeight = backgroundImage.height;
+                    // 랜덤한 위치 계산
+                    var randomLeft = Math.floor(Math.random() * (backgroundImageWidth - objectImage.width));
+                    var randomTop = Math.floor(Math.random() * (backgroundImageHeight - objectImage.height));
+                    // 객체 이미지 위치 설정
+                    objectImage.style.position = 'absolute';
+                    objectImage.style.left = randomLeft + 'px';
+                    objectImage.style.top = randomTop + 'px';
+                    // 객체 이미지를 컨테이너에 추가
+                    var objectContainer = document.getElementById('object-container');
+                    objectContainer.appendChild(objectImage);
+                };
+            } else {
+                console.log('No processed images available.');
+            }
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
+});
+</script>
