@@ -2,7 +2,11 @@ import logging
 from logging.config import fileConfig
 
 from flask import current_app
-
+from login import User
+from login import db
+import os
+import sys
+sys.path.append(os.getcwd())  # 현재 작업 디렉토리를 sys.path에 추가
 from alembic import context
 
 # this is the Alembic Config object, which provides
@@ -13,8 +17,10 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 logger = logging.getLogger('alembic.env')
+target_metadata = User.metadata
 
-
+config.set_main_option('sqlalchemy.url', current_app.config.get('SQLALCHEMY_DATABASE_URI'))
+target_metadata = db.metadata
 def get_engine():
     try:
         # this works with Flask-SQLAlchemy<3 and Alchemical

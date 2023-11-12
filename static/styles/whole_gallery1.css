@@ -498,7 +498,7 @@ white-space: nowrap;
   flex-shrink: 0;
 }
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-afow-NbK .auto-group-dnau-F4m {
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
   padding: 17rem 3.1rem 3.6rem 19.7rem;
   width: 37.8rem;
   height: 100%;
@@ -644,44 +644,4 @@ white-space: nowrap;
   height: 108rem;
   background-color: #003c74;
   flex-shrink: 0;
-}
-/* 사용자 이름 스타일 */
-.user-info {
-  font-size: 1.7rem; /* 글씨 크기 조정 */
-  font-weight: 500; /* 글씨 굵기 */
-  color: #000000; /* 글씨 색상 */
-  font-family: 'Hahmlet', Inter, serif; /* 글씨체 */
-  text-align: right; /* 텍스트 정렬 */
-  margin-bottom: 0.7rem; /* 여백 */
-}
-
-/* 이미지 제목 스타일 */
-.image-title {
-  font-size: 1.7rem; /* 글씨 크기 조정 */
-  font-weight: 500; /* 글씨 굵기 */
-  color: #000000; /* 글씨 색상 */
-  font-family: 'Hahmlet', Inter, serif; /* 글씨체 */
-  text-align: right; /* 텍스트 정렬 */
-  margin-bottom: 0.7rem; /* 여백 */
-}
-
-/* 이미지 컨테이너 스타일 */
-.image-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end; /* 요소들을 오른쪽 정렬 */
-  margin-bottom: 2rem; /* 컨테이너 하단의 여백 */
-}
-
-/* 페이지네이션 스타일 */
-.pagination {
-  display: flex;
-  justify-content: center; /* 페이지네이션 버튼 중앙 정렬 */
-  margin-top: 2rem; /* 페이지네이션 상단 여백 */
-}
-
-.pagination a {
-  font-size: 1.7rem;
-  color: #003c74;
-  margin: 0 1rem; /* 좌우 여백 */
 }

@@ -115,53 +115,53 @@
         }
 
         async function saveTranslationResults(sentences) {
-    for (const sentence of sentences) {
-        try {
-            // 번역 결과 저장을 위해 서버에 요청
-            const translateResponse = await fetch('/translate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text: sentence })
-            });
+            for (const sentence of sentences) {
+                try {
+                    // 번역을 시도합니다.
+                    const translateResponse = await fetch('/translate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: sentence })
+                    });
 
-            if (!translateResponse.ok) {
-                throw new Error(`Server responded with ${translateResponse.status}`);
+                    if (!translateResponse.ok) {
+                        throw new Error(`Server responded with ${translateResponse.status}`);
+                    }
+
+                    const translationData = await translateResponse.json();
+
+                    // 결과를 저장합니다.
+                    const saveResponse = await fetch('/save-results', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            originalText: sentence,
+                            translatedText: translationData.translated_text
+                        })
+                    });
+
+                    if (!saveResponse.ok) {
+                        throw new Error(`Server responded with ${saveResponse.status}`);
+                    }
+
+                    const saveData = await saveResponse.json();
+                    
+                    // 성공 여부에 따라 콘솔에 로그를 남깁니다.
+                    if (saveData.status === "success") {
+                        console.log('Result saved:', saveData);
+                    } else {
+                        console.error('Error saving result:', saveData.error);
+                    }
+                } catch (error) {
+                    // 에러 발생시 콘솔에 에러를 남깁니다.
+                    console.error('Error during translation or save:', error);
+                }
             }
-
-            const translationData = await translateResponse.json();
-
-            // 서버에 번역 결과 및 원본 텍스트 저장
-            const saveResponse = await fetch('/save_results', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    originalText: sentence,
-                    translatedText: translationData.translated_text
-                })
-            });
-
-            if (!saveResponse.ok) {
-                throw new Error(`Server responded with ${saveResponse.status}`);
-            }
-
-            const saveData = await saveResponse.json();
-
-            // 성공 여부에 따라 콘솔에 로그를 출력
-            if (saveData.status === "success") {
-                console.log('Result saved:', saveData);
-            } else {
-                console.error('Error saving result:', saveData.error);
-            }
-        } catch (error) {
-            // 에러 발생 시 콘솔에 에러를 출력
-            console.error('Error during translation or save:', error);
         }
-    }
-}
 
 
     </script>

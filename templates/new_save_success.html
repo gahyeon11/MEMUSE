@@ -59,9 +59,9 @@
           <div class="item--keD">{{ username }}</div>
           <div class="line-1-TYd">
           </div>
-          <div class="group-26-Cm7"><textarea id="title" autofocus placeholder="작품 제목" cols="30">{{ title }}</textarea></div>
+          <div class="group-26-Cm7"><textarea id="title" autofocus placeholder="작품 제목" cols="30"></textarea></div>
           <div class="item-2023-Rtm">2023</div>
-          <div class="auto-group-4txy-LVw"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7">{{ caption }}</textarea></div>
+          <div class="auto-group-4txy-LVw"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7"></textarea></div>
         </div>
       </div>
       <div class="group-23-Yk9">
@@ -79,7 +79,6 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
 
   // 음성 인식 시작
   recognition.start();

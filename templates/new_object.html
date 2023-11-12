@@ -77,17 +77,13 @@
       </div>
       <div class="auto-group-s8yf-a5P">
         <a href="{{url_for("new_filter")}}"> <div class="rectangle-22-hQu" data-prompt="man, male,a boy, guy, handsome man, solo," 
-          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"> <img src="../static/assets/object_men.png">
-        </div></a>
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"></div></a>
         <a href="{{url_for("new_filter")}}"> <div class="rectangle-26-SNV" data-prompt="a girl, beautiful face, woman, high detailed skin, solo,"
-          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"> <img src="../static/assets/object_girl.png">
-        </div></a>
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"></div></a>
         <a href="{{url_for("new_filter")}}"> <div class="rectangle-27-ytD" data-prompt="animal, dog, cute dog,"
-          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, human,"> <img src="../static/assets/object_dog.png">
-        </div></a>
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, human,"></div></a>
         <a href="{{url_for("new_filter")}}"> <div class="rectangle-28-jMb" data-prompt="no humans, landscape,"
-          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"> <img src="../static/assets/object_none.png">
-        </div></a>
+          data-prompt2="nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs,"></div></a>
       </div>
       <img class="bi-mic-fill-gGq" src="../static/assets/bi-mic-fill-xDF.png"/>
     </div>
@@ -135,7 +131,6 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
 
   // 음성 인식 시작
   recognition.start();
@@ -154,20 +149,16 @@
       window.location.href = '/guide'; // 절대 경로 사용
       break;
     case '1번':
-      // 첫 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-22-hQu').click();
+      window.location.href = '/new_filter'; // 절대 경로 사용
       break;
     case '2번':
-      // 두 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-26-SNV').click();
+      window.location.href = '/new_filter'; // 절대 경로 사용
       break;
     case '3번':
-      // 세 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-27-ytD').click();
+      window.location.href = '/new_filter'; // 절대 경로 사용
       break;
     case '4번':
-      // 네 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-28-jMb').click();
+      window.location.href = '/new_filter'; // 절대 경로 사용
       break;
     // 다른 명령에 대한 처리도 추가할 수 있습니다.
   }

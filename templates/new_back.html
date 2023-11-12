@@ -75,13 +75,13 @@
         <div class="item--KTP">4. 우주</div>
       </div>
       <div class="auto-group-r5hs-F69">
-        <a href="{{url_for("new_object")}}"> <div class="rectangle-22-m4V" data-prompt="outdoors, mountains, nature, meadow, forest,"> <img src="../static/assets/back_mountain.png">
+        <a href="{{url_for("new_object")}}"> <div class="rectangle-22-m4V" data-prompt="outdoors, mountains, nature, meadow, forest,">
         </div></a>
-        <a href="{{url_for("new_object")}}"> <div class="rectangle-26-hyj" data-prompt="outdoors, fresh scent of the ocean, blue sky, blue sea, sand beach,"> <img src="../static/assets/back_ocean.png">
+        <a href="{{url_for("new_object")}}"> <div class="rectangle-26-hyj" data-prompt="outdoors, fresh scent of the ocean, blue sky, blue sea, sand beach,">
         </div></a>
-        <a href="{{url_for("new_object")}}"> <div class="rectangle-27-rrd" data-prompt="outdoors, city, building, alley, street,"> <img src="../static/assets/back_street.png">
+        <a href="{{url_for("new_object")}}"> <div class="rectangle-27-rrd" data-prompt="outdoors, city, building, alley, street,">
         </div></a>
-        <a href="{{url_for("new_object")}}"> <div class="rectangle-28-1Ud" data-prompt="space, milky way, galaxy, fantasy background,"> <img src="../static/assets/back_space.png">
+        <a href="{{url_for("new_object")}}"> <div class="rectangle-28-1Ud" data-prompt="space, milky way, galaxy, fantasy background,">
         </div></a>
       </div>
       <img class="bi-mic-fill-MYV" src="../static/assets/bi-mic-fill-sbF.png"/>
@@ -127,7 +127,7 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
+
   // 음성 인식 시작
   recognition.start();
 
@@ -147,22 +147,15 @@
       break;
     case '1번':
       window.location.href = '/new_object'; // 절대 경로 사용
-      break;      
-    //case '1번':
-      // 첫 번째 rectangle 요소 클릭 시뮬레이션
-      //document.querySelector('.rectangle-22-m4V').click();
-      //break;
+      break;
     case '2번':
-      // 두 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-26-hyj').click();
+      window.location.href = '/new_object'; // 절대 경로 사용
       break;
     case '3번':
-      // 세 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-27-rrd').click();
+      window.location.href = '/new_object'; // 절대 경로 사용
       break;
     case '4번':
-      // 네 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-28-1Ud').click();
+      window.location.href = '/new_object'; // 절대 경로 사용
       break;
     // 다른 명령에 대한 처리도 추가할 수 있습니다.
   }

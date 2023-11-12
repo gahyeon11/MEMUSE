@@ -54,28 +54,22 @@
       <div class="auto-group-gtkd-LGH">
         <div class="rectangle-9-U7b">
         </div>
-        <div class="group-3-17X" style = "">
+        <div class="group-3-17X" style="">
           <div class="item--vEV">{{ username }}</div>
           <div class="line-1-DzH">
           </div>
-          <form action="{{ url_for('new_save_success') }}" id="captions-form" method="post">
-            {{ form.hidden_tag() }} <!-- CSRF 토큰 렌더링 -->
+          <!-- 수정된 부분: 작품 제목 입력 필드와 작품 설명 입력 필드에 id 추가 -->
+          <form action="{{url_for("pro_save_success")}}" id="captions-form">
             <div class="group-26-ZYM">
-                <!-- 작품 제목 입력 필드 -->
-                {{ form.title.label }}
-                {{ form.title(placeholder="작품 제목") }}
+              <!-- 작품 제목 입력 필드 -->
+              <input id="title" type="text" required autofocus placeholder="작품 제목" cols="30">
             </div>
+            <div class="item-2023-QJ5">2023</div>
             <div class="auto-group-bzhs-iJm">
-                <!-- 작품 설명 입력 필드 -->
-                {{ form.caption.label }}
-                {{ form.caption(rows=7, placeholder="작품 설명") }}
-            </div>
-            <div class="group-58-Bzy">
-              <!-- 저장 버튼 추가 -->
-              <button id="save-button" type="submit" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
+              <!-- 작품 설명 입력 필드 -->
+              <textarea id="captions" placeholder="작품 설명" cols="30" rows="7"></textarea>
             </div>
           </form>
-
         </div>
       </div>
       <div class="item--hwP">
@@ -87,11 +81,16 @@
         <br/>
         * 저장하지 않으면 작품은 사라집니다.
       </div>
-      <!-- <div class="auto-group-n9ms-Gd7"> -->
-      
-        <!-- <div class="group-59-dry"><a href="{{url_for('new_no_save')}}" style="color:white">아니오</a></div>
-          
-      </div> -->
+      <div class="auto-group-n9ms-Gd7">
+        <!-- 저장 버튼의 id 추가 -->
+        <form action="{{url_for("new_save_success")}}" id="save-button-form">
+          <div class="group-58-Bzy">
+            <!-- 저장 버튼 추가 -->
+            <button id="save-button" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
+          </div>
+        </form>
+        <div class="group-59-dry"><a href="{{url_for("new_no_save")}}" style="color:white">아니오</a></div>
+      </div>
       <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/>
     </div>
   </div>
@@ -103,7 +102,6 @@
 const recognition = new webkitSpeechRecognition();
 recognition.continuous = true;
 recognition.interimResults = true;
-recognition.lang = 'ko-KR'; // 한국어로 설정
 
 // 작품 제목과 작품 설명을 저장할 변수
 let title = '';
@@ -140,23 +138,18 @@ recognition.onresult = (event) => {
     // 작품 제목 입력 상태에서 "완료"를 말하면 작품 설명 입력 상태로 변경
     if (result.includes('완료')) {
       isTitleComplete = true;
-      document.getElementById('title').value = title.trim();
       document.getElementById('title').disabled = true; // 제목 입력 비활성화
       document.getElementById('captions').focus(); // 설명 입력 활성화
     } else {
       // 작품 제목을 입력받는 상태
       title += result + ' '; // 작품 제목을 누적
+      document.getElementById('title').value = title;
     }
   } else {
     // 작품 설명을 입력받는 상태
     captions += result + ' '; // 설명을 누적
-    if (result.includes('저장')) {
-      document.getElementById('caption').value = captions.trim(); // 설명을 폼에 설정
-      const form = document.getElementById('captions-form');
-      form.action = "{{ url_for('new_save_success') }}"; // Flask 라우트로 변경
-      form.submit(); // 폼 제출
-    }
- 
+    document.getElementById('captions').value = captions;
+
     // "저장" 음성이 인식되면 작품 저장 페이지로 이동
     // if (result.includes('저장')) {
     //   const form = document.getElementById('captions-form');
@@ -169,7 +162,7 @@ recognition.onresult = (event) => {
 // 저장 버튼 클릭 시 작품 저장 페이지로 이동
 document.getElementById('save-button').addEventListener('click', () => {
   const form = document.getElementById('captions-form');
-  form.action = "{{ url_for('new_save_success') }}"; // 저장 페이지로 변경
+  form.action = 'new_save_success.html'; // 저장 페이지로 변경
   form.submit();
 });
 

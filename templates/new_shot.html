@@ -78,11 +78,11 @@
           풀 샷(full shot)</div>
       </div>
       <div class="auto-group-c7p7-7Ah">
-        <a href="{{url_for("new_back")}}" class="rectangle-22-deq" data-prompt="low angle, knee shot, from below,"> <img src="../static/assets/angle_low.png">
+        <a href="{{url_for("new_back")}}" class="rectangle-22-deq" data-prompt="low angle, knee shot, from below,">
         </a>
-        <a href="{{url_for("new_back")}}" class="rectangle-26-nGq" data-prompt="eye-level angle, medium shot,"> <img src="../static/assets/angle_middle.png">
+        <a href="{{url_for("new_back")}}" class="rectangle-26-nGq" data-prompt="eye-level angle, medium shot,">
         </a>
-        <a href="{{url_for("new_back")}}" class="rectangle-27-jSy" data-prompt="eye-level angle, full shot,"> <img src="../static/assets/angle_full.png">
+        <a href="{{url_for("new_back")}}" class="rectangle-27-jSy" data-prompt="eye-level angle, full shot,">
         </a>
       </div>
       <img class="bi-mic-fill-Dsw" src="../static/assets/bi-mic-fill-sAq.png"/>
@@ -125,13 +125,12 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
 
   // 음성 인식 시작
   recognition.start();
 
   // 음성 인식 결과 이벤트 리스너
-  recognition.onresult = (event) => {
+recognition.onresult = (event) => {
   const result = event.results[event.results.length - 1][0].transcript;
   console.log('음성 인식 결과:', result);
 
@@ -144,20 +143,17 @@
       window.location.href = '/guide'; // 절대 경로 사용
       break;
     case '1번':
-      // 첫 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-22-deq').click();
+      window.location.href = '/new_back'; // 절대 경로 사용
       break;
     case '2번':
-      // 두 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-26-nGq').click();
+      window.location.href = '/new_back'; // 절대 경로 사용
       break;
     case '3번':
-      // 세 번째 rectangle 요소 클릭 시뮬레이션
-      document.querySelector('.rectangle-27-jSy').click();
+      window.location.href = '/new_back'; // 절대 경로 사용
       break;
     // 다른 명령에 대한 처리도 추가할 수 있습니다.
-    };
-  }});
+    }};
+  });
 </script>
 </body>
 </html>

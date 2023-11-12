@@ -1214,7 +1214,6 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
-
 =======
         # db.session.query(ImageModel).delete()  # 모든 ImageModel 데이터 삭제
         # db.session.commit()

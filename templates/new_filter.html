@@ -79,17 +79,17 @@
         <div class="item--LGh">6. 낭만적</div>
       </div>
       <div class="auto-group-fbdk-rkq">
-        <div class="rectangle-9-bCd" onclick="sendFilter('1')">
+        <a href="{{url_for("new_complete")}}"><div class="rectangle-9-bCd"onclick="sendFilter('1')">
         </div></a>
-        <div class="rectangle-11-LAD"onclick="sendFilter('2')">
+        <a href="{{url_for("new_complete")}}"><div class="rectangle-11-LAD"onclick="sendFilter('2')">
         </div></a>
-        <div class="rectangle-12-sA9"onclick="sendFilter('3')">
+        <a href="{{url_for("new_complete")}}"><div class="rectangle-12-sA9"onclick="sendFilter('3')">
         </div></a>
-         <div class="rectangle-13-p5P"onclick="sendFilter('4')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-13-p5P"onclick="sendFilter('4')">
         </div></a>
-         <div class="rectangle-14-Mb7"onclick="sendFilter('5')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-14-Mb7"onclick="sendFilter('5')">
         </div></a>
-         <div class="rectangle-15-JWM"onclick="sendFilter('6')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-15-JWM"onclick="sendFilter('6')">
         </div></a>
       </div>
       <div class="auto-group-d2tq-2hF">
@@ -101,17 +101,17 @@
         <div class="item--MFf">12. 흑백</div>
       </div>
       <div class="auto-group-rwz7-GtR">
-         <div class="rectangle-16-oNZ"onclick="sendFilter('7')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-16-oNZ"onclick="sendFilter('7')">
         </div></a>
-         <div class="rectangle-20-LNV"onclick="sendFilter('8')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-20-LNV"onclick="sendFilter('8')">
         </div></a>
-         <div class="rectangle-21-5ay"onclick="sendFilter('9')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-21-5ay"onclick="sendFilter('9')">
         </div></a>
-         <div class="rectangle-18-pYZ"onclick="sendFilter('10')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-18-pYZ"onclick="sendFilter('10')">
         </div></a>
-         <div class="rectangle-19-Na5"onclick="sendFilter('11')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-19-Na5"onclick="sendFilter('11')">
         </div></a>
-         <div class="rectangle-17-XC5"onclick="sendFilter('12')">
+        <a href="{{url_for("new_complete")}}"> <div class="rectangle-17-XC5"onclick="sendFilter('12')">
         </div></a>
       </div>
       <img class="bi-mic-fill-U7K" src="../static/assets/bi-mic-fill-jXw.png"/>
@@ -125,7 +125,6 @@
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
 
   // 음성 인식 시작
   recognition.start();
@@ -184,18 +183,22 @@
   }
 };
 function sendFilter(filterNumber) {
+  // JavaScript를 사용하여 서버에 POST 요청을 보내는 로직
   fetch('{{ url_for("new_filter") }}', {
     method: 'POST',
+    // 서버가 이해할 수 있는 형식으로 헤더를 설정합니다.
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `filter=${filterNumber}`
+    // CSRF 토큰이 필요한 경우 여기에 추가해야 합니다.
+    body: 'filter=' + filterNumber
   })
   .then(response => {
     if (response.ok) {
-      // 필터 적용이 성공적으로 완료되면, 사용자를 new_complete 페이지로 리다이렉트합니다.
-      window.location.href = `{{ url_for('new_complete') }}`;
+      // 필터 적용이 성공적으로 완료되면, 사용자를 완료 페이지로 리다이렉트합니다.
+      window.location.href = '{{ url_for("new_complete") }}';
     } else {
+      // 에러 처리
       alert('서버에서 문제가 발생했습니다.');
     }
   })
