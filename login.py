@@ -22,6 +22,8 @@ from datetime import datetime
 import base64
 from flask_bcrypt import Bcrypt
 from wtforms.validators import DataRequired
+import pymysql
+pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
 CORS(app)
