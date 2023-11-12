@@ -83,8 +83,9 @@ models = [
     "v1-5-pruned-emaonly.safetensors [6ce0161689]"
     ]
 
-
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://myuser:0000@localhost/mydatabase"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://myuser:mypassword@localhost/mydatabase'
+
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "123123123"
