@@ -160,7 +160,7 @@
     .then(response => response.json())
     .then(data => {
       // 서버에서 전달 받은 URL로 리디렉션
-      window.lacation.href = data.redirect;
+      window.location.href = data.redirect;
     })
     .catch((error) => {
       console.error('Error:', error);

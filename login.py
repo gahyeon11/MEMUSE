@@ -537,6 +537,9 @@ def new_filter():
         image.save(os.path.join(app.static_folder, file_name))
 
         session['file_path'] = file_name
+
+        # 이미지 저장(db x)
+        # image.save(file_name, pnginfo = pnginfo)
         
         return redirect(url_for('new_complete'))
     username = session.get('username', 'Guest')
@@ -576,6 +579,8 @@ def new_object():
             image.save(os.path.join(app.static_folder, file_name))
             session['file_path'] = file_name
 
+            # 이미지 저장(db x)
+            # image.save(file_name, pnginfo = pnginfo)
         # 다음 페이지 리디렉션 url
         return jsonify(redirect=url_for('new_filter'))
     else:
