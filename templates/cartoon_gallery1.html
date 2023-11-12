@@ -72,7 +72,7 @@
                       <!-- Image Insertion -->
                       <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="image-display">
   
-                      <div class="item--nt1">{{ image.user_id if image else 'Unknown User' }}</div>
+                      <div class="item--nt1">{{image.user.username if image.user else 'Unknown User'}}</div>
                       <div class="line-8-iWm"></div>
                       <div class="item--fS1">{{ image.title }}</div>
                   </div>

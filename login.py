@@ -28,47 +28,10 @@ pymysql.install_as_MySQLdb()
 app = Flask(__name__)
 CORS(app)
 
-# db_path = 'translations.db'
-
-# 절대 경로로 변환
-# absolute_path = os.path.abspath(db_path)
-
-# 데이터베이스 연결
-
-# conn = sqlite3.connect('translations.db', check_same_thread=False)
-# c = conn.cursor()
-
-# # translations 테이블 생성 쿼리
-# c.execute('''
-#     CREATE TABLE IF NOT EXISTS translations (
-#         id INTEGER PRIMARY KEY AUTOINCREMENT,
-#         original_text TEXT,
-#         translated_text TEXT
-#     )
-# ''')
-
-# # 변경 내용 저장
-# conn.commit()
-
-# # 연결 종료
-# # conn.close()
-
-# # 전역 변수로 번역된 텍스트를 저장
-# translated_text = ""
-
-
-# conn = sqlite3.connect('users.db', check_same_thread=False)
-# c = conn.cursor()
-
-
-conn = sqlite3.connect('users.db', check_same_thread=False)
-c = conn.cursor()
 bcrypt = Bcrypt()
-# conn = sqlite3.connect('users.db', check_same_thread=False)
-# c = conn.cursor()
-# Stable Diffusion의 로컬 주소
+
 url = "http://127.0.0.1:7860"
-# Stable Diffusion에 적용될 프롬프트
+
 payload = {
     "prompt" : "masterpiece, best quality, highres, ",
     "negative_prompt" : "easynegative, "
@@ -83,16 +46,13 @@ models = [
     "v1-5-pruned-emaonly.safetensors [6ce0161689]"
     ]
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://myuser:0000@localhost/mydatabase"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://myuser:mypassword@localhost/mydatabase'
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "123123123"
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-
 
 db_path = 'translations.db'
 absolute_path = os.path.abspath(db_path)
@@ -110,22 +70,13 @@ conn.commit()
 app.config['SQLALCHEMY_POOL_SIZE'] = 50  # 최대 연결 수
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 60  # 연결 타임아웃 (초)
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600  # 연결 재사용 주기 (초)
-# @staticmethod
-# def generate_salt(length=16):
-#     return os.urandom(length).hex()
-# # conn.commit()
+
 
 def close_connection(exception):
     if conn:
         conn.close()
 
-app.config['SQLALCHEMY_POOL_SIZE'] = 50  # 최대 연결 수
-app.config['SQLALCHEMY_POOL_TIMEOUT'] = 60  # 연결 타임아웃 (초)
-app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600  # 연결 재사용 주기 (초)
-# @staticmethod
-# def generate_salt(length=16):
-#     return os.urandom(length).hex()
-# # conn.commit()
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -134,16 +85,18 @@ class User(db.Model):
     birthdate = db.Column(db.String(128), nullable=False)
     username = db.Column(db.String(128), unique=True, nullable=False)
     pwd = db.Column(db.String(512), nullable=False)
-    
+
     def set_pwd(self, pwd):
         self.pwd = pwd
+    
     def check_pwd(self, pwd):
         return self.pwd == pwd
+    
     def __init__(self, name, birthdate, username, pwd):
         self.name = name
         self.birthdate = birthdate
         self.username = username
-        self.pwd = pwd  # 여기를 수정했습니다
+        self.pwd = pwd
 
 class ImageModel(db.Model):
     __tablename__ = 'images'
@@ -151,24 +104,25 @@ class ImageModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     file_path = db.Column(db.String(128), nullable=False)
-    title = db.Column(db.String(256), nullable=False)  # Updated to be required
+    title = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(128), nullable=False)
-    caption = db.Column(db.String(512))  # You can modify the length as needed
-
-
-    user = db.relationship('User', backref=db.backref('images', lazy=True))
+    caption = db.Column(db.String(512))
 
     def __init__(self, user_id, file_path, title, category, caption=None):
         self.user_id = user_id
+        
         self.file_path = file_path
         self.title = title
         self.category = category
         self.caption = caption
+
+
 class ImageInfoForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     caption = TextAreaField('Caption')
     submit = SubmitField('저장')
+
 
 @app.route('/')
 def index():
@@ -293,7 +247,8 @@ def login():
         if user and user.check_pwd(pwd):
             # 로그인 성공 처리
             session['logged_in'] = True
-            session['user_id'] = user.id  # 고유 ID 사용 권장
+            # session['user'] = user.username 
+            session['user_id'] = user.id 
             session['username'] = username
             return redirect(url_for('workplace'))
         else:
@@ -339,13 +294,6 @@ def cartoon_gallery1():
     images = pagination.items  # 현재 페이지의 이미지들
     username = session.get('username', 'Guest')
     return render_template('cartoon_gallery1.html', images=images, pagination=pagination)
-
-    # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
-    pagination = ImageModel.query.filter_by(category="helloflatcute2d_V10.safetensors [5a7204177d]").paginate(page=page, per_page=per_page, error_out=False)
-    images = pagination.items  # 현재 페이지의 이미지들
-
-    return render_template('cartoon_gallery1.html', images=images, pagination=pagination)
-
 
 # @app.route('/cartoon_gallery2')
 # def cartoon_gallery2():
@@ -588,7 +536,6 @@ def new_object():
         # GET 요청시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('new_object.html', username=username)
-    
 @app.route('/new_save_success', methods=['GET', 'POST'])
 def new_save_success():
     if not session.get('logged_in'):
@@ -600,7 +547,12 @@ def new_save_success():
             db.session.begin_nested()
             title = form.title.data
             caption = form.caption.data
-            user_id = session.get('user_id')
+            user_id = session.get('user_id')  # 세션에서 사용자 ID를 가져옴
+
+            if user_id is None:
+                flash('사용자 ID가 없습니다. 다시 로그인하십시오.', 'error')
+                return redirect(url_for('login'))
+
             file_path = session.get('file_path')
             image_style = session.get('image_style', 'default_style')
             print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
@@ -616,12 +568,14 @@ def new_save_success():
             flash('오류가 발생했습니다.', 'error')
         finally:
             db.session.close()  # 데이터베이스 세션을 명시적으로 닫음
-        return redirect(url_for('new_save_success'))  # 리디렉션할 함수를 지정하세요
+
+        return redirect(url_for('new_save_success'))
 
     username = session.get('username', 'Guest')
     title = session.get('title', '')
     caption = session.get('caption', '')
     return render_template('new_save_success.html', username=username, form=form, title=title, caption=caption)
+
 @app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
     # payload 값 참조
@@ -734,6 +688,14 @@ def pro_back():
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
+    background_images = []
+    background_folder = 'static/background'
+        # 'background' 폴더 내의 모든 파일 나열
+    for filename in os.listdir(background_folder):
+        if filename.endswith(".png"):  # PNG 파일만 필터링
+            image_path = os.path.join(background_folder, filename)
+            background_images.append(image_path)
+
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
     print(payload)
     r = response.json()
@@ -750,13 +712,13 @@ def pro_back_complete():
         pnginfo.add_text("parameters", response2.json().get("info"))
         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'object/output_t2i{current_time}.png'
+        file_name = f'static/background/output_t2i{current_time}.png'
         
         # 이미지 저장
         image.save(file_name, pnginfo = pnginfo)
     
     username = session.get('username', 'Guest')
-    return render_template('pro_back_complete.html', username=username)
+    return render_template('pro_back_complete.html', username=username, background_images=background_images)
 
 @app.route('/pro_complete')
 def pro_complete():
@@ -1033,8 +995,7 @@ def whole_gallery1():
 def whole_gallery2():
     return render_template('whole_gallery2.html')
 
-    return render_template('whole_gallery1.html', images=images, pagination=pagination)
-
+    
 # @app.route('/whole_gallery2')
 # def whole_gallery2():
 #     return render_template('whole_gallery2.html')

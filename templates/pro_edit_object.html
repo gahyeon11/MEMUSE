@@ -43,6 +43,9 @@
       <img class="line-2-oM3" src="../static/assets/line-2-3PX.png"/>
     </div>
     <div class="auto-group-ck7s-kGH">
+      {% for image_path in background_images %}
+      <img class="item--J2u" src="{{ url_for('static', filename=image_path) }}" />
+  {% endfor %}
       <div class="item--J2u">작가님의 그림이에요!</div>
       <img class="bi-mic-fill-jtu" src="../static/assets/bi-mic-fill-sVB.png"/>
       <div class="item--4wB">

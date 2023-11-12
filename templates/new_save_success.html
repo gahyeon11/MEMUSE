@@ -59,9 +59,9 @@
           <div class="item--keD">{{ username }}</div>
           <div class="line-1-TYd">
           </div>
-          <div class="group-26-Cm7"><textarea id="title" autofocus placeholder="작품 제목" cols="30"></textarea></div>
+          <div class="group-26-Cm7"><textarea id="title" autofocus placeholder="작품 제목" cols="30">{{ title }}</textarea></div>
           <div class="item-2023-Rtm">2023</div>
-          <div class="auto-group-4txy-LVw"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7"></textarea></div>
+          <div class="auto-group-4txy-LVw"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7">{{ caption }}</textarea></div>
         </div>
       </div>
       <div class="group-23-Yk9">
@@ -75,23 +75,22 @@
   </div>
 </div>
 <script>
-  // 음성 인식 API 초기화
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
+// 음성 인식 API 초기화
+const recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = 'ko-KR'; // 한국어로 설정
 
-  // 음성 인식 시작
-  recognition.start();
+// 음성 인식 시작
+recognition.start();
 
-  // 음성 인식 결과 이벤트 리스너
-  recognition.onresult = (event) => {
-    const result = event.results[event.results.length - 1][0].transcript;
-    console.log('음성 인식 결과:', result);
+// 음성 인식 결과 이벤트 리스너
+recognition.onresult = (event) => {
+  const result = event.results[event.results.length - 1][0].transcript;
+  console.log('음성 인식 결과:', result);
 
-    // 인식된 음성 명령에 따라 URL로 이동
-
-    switch (result) {
+  // 인식된 음성 명령에 따라 URL로 이동
+  switch (result) {
     case '마이페이지':
       window.location.href = '/mypage'; // 절대 경로 사용
       break;
@@ -107,6 +106,7 @@
     // 다른 명령에 대한 처리도 추가할 수 있습니다.
   }
 };
+
 </script>
 </body>
 </html>
