@@ -336,23 +336,39 @@ white-space: nowrap;
   flex-shrink: 0;
 }
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-jhgm-Gau .auto-group-fhih-U6d {
-  box-sizing: border-box;
-  padding: 17rem 3.1rem 3.6rem 19.7rem;
+  /* box-sizing: border-box; */
+  /* padding: 17rem 3.1rem 3.6rem 19.7rem;
   width: 37.8rem;
   height: 100%;
   align-items: flex-end;
   display: flex;
   flex-direction: column;
   background-color: #d9d9d9;
-  flex-shrink: 0;
+  flex-shrink: 0; */
 }
+.image-display {
+  width: 30rem; /* 이미지의 너비를 고정 */
+  height: 30rem; /* 이미지의 높이를 고정 */
+  object-fit: cover; /* 이미지가 박스 안에 꽉 차도록 조정 */
+}
+.item--nt1, .item--fS1 {
+  font-size: 1.4rem; /* 텍스트의 크기를 고정 */
+  line-height: 1.6; /* 줄 간격 설정 */
+  margin-bottom: 0.5rem; /* 아래쪽 여백 설정 */
+}
+.auto-group-fhih-U6d {
+  margin-bottom: 1rem; /* 아래쪽 여백 설정 */
+  padding: 1rem; /* 내부 여백 설정 */
+}
+
+
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-jhgm-Gau .auto-group-fhih-U6d .item--nt1 {
   margin-bottom: 0.7rem;
   text-align: right;
   display: flex;
   font-size: 1.7rem;
   font-weight: 500;
-  line-height: 1.2125;
+  line-height: 1;
   color: #000000;
   /* font-family: Inter, 'Source Sans Pro'; */
   font-family: 'Hahmlet', Inter, serif;
@@ -361,7 +377,7 @@ white-space: nowrap;
   flex-shrink: 0;
 }
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-jhgm-Gau .auto-group-fhih-U6d .line-8-iWm {
-  margin-bottom: 0.6rem;
+  margin-bottom: 1rem;
   width: 100%;
   height: 0.1rem;
   background-color: #000000;
@@ -380,6 +396,7 @@ white-space: nowrap;
   white-space: nowrap;
   flex-shrink: 0;
 }
+
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-afow-NbK {
   margin: 0rem 1rem 1.9rem 0rem;
   height: 26.2rem;
@@ -527,11 +544,14 @@ white-space: nowrap;
   flex-shrink: 0;
 }
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-ju3f-KTw {
-  margin: 0rem 22.15rem 0rem 54.3rem;
+  margin-top: 5rem; /* Increase top margin for more space above this section */
+  margin-left: auto; /* Align to the right */
+  margin-right: 22.15rem; /* Adjust right margin as needed */
   width: calc(100% - 76.45rem);
   height: 3.9rem;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Distributes space evenly between children */
   flex-shrink: 0;
 }
 .item--9V3 .auto-group-aqwf-pr5 .auto-group-vk3s-MD3 .auto-group-ju3f-KTw .group-29-dUd {
@@ -616,6 +636,8 @@ white-space: nowrap;
   object-fit: contain;
   vertical-align: top;
   flex-shrink: 0;
+
+  
 }
 .item--9V3 .rectangle-30-wff {
   width: 25.8rem;
