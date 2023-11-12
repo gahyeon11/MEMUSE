@@ -75,7 +75,7 @@
       <div class="item--9ds" style="margin: -10rem 1.3rem 2.15rem 0rem;">
         <span class="item--9ds-sub-0" style="text-align:center">배경 보정 수치값(0~100)을 입력하거나 말씀해 주세요.<br></span>
       </div>
-      <form action="{{ url_for('pro_back_complete') }}">
+      <form id = "brushedForm" action="{{ url_for('pro_back_complete') }}">
       <!-- <div class="auto-group-ct25-WWM">0&nbsp;&nbsp;<input type="range" min="0" max="100" value="50" steps="1">&nbsp;&nbsp;100</div> -->
       <div class="auto-group-ct25-WWM"><input type="text" name="brushed" maxlength="3" required placeholder="50" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:40px; text-align:center"></div>
       </form>
@@ -94,6 +94,32 @@
   </div>
 </div>
 <script>
+  document.getElementById('brushedForm').addEventListener('submit', function(event){
+    // 기본 링크 동작 방지
+    event.preventDefault();
+    // 입력된 데이터 가져오기
+    var brushedValue = this.elements.brushed.value;
+    // 서버에 포스트 요청
+    fetch('/pro_lora_num', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prompt: brushedValue })
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = '/pro_back_complete';
+      }
+      else {
+        throw new Error('pro_lora_num 서버 처리 실패');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+  
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;

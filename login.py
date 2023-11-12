@@ -22,6 +22,8 @@ from datetime import datetime
 import base64
 from flask_bcrypt import Bcrypt
 from wtforms.validators import DataRequired
+import pymysql
+pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
 CORS(app)
@@ -536,6 +538,9 @@ def new_filter():
         image.save(os.path.join(app.static_folder, file_name))
 
         session['file_path'] = file_name
+
+        # 이미지 저장(db x)
+        # image.save(file_name, pnginfo = pnginfo)
         
         return redirect(url_for('new_complete'))
     username = session.get('username', 'Guest')
@@ -575,6 +580,8 @@ def new_object():
             image.save(os.path.join(app.static_folder, file_name))
             session['file_path'] = file_name
 
+            # 이미지 저장(db x)
+            # image.save(file_name, pnginfo = pnginfo)
         # 다음 페이지 리디렉션 url
         return jsonify(redirect=url_for('new_filter'))
     else:
@@ -727,26 +734,26 @@ def pro_back():
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
-    # response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-    # print(payload)
-    # r = response.json()
-    # # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    # for i in r['images']:
-    #     image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-    #     # API 요청을 보내 이미지 정보 검색
-    #     png_payload = {
-    #         "image": "data:image/png;base64," + i
-    #     }
-    #     response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-    #     # PIL 이미지에 메타 데이터 삽입
-    #     pnginfo = PngImagePlugin.PngInfo()
-    #     pnginfo.add_text("parameters", response2.json().get("info"))
-    #     # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-    #     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    #     file_name = f'object/output_t2i{current_time}.png'
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    print(payload)
+    r = response.json()
+    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    for i in r['images']:
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        # API 요청을 보내 이미지 정보 검색
+        png_payload = {
+            "image": "data:image/png;base64," + i
+        }
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        # PIL 이미지에 메타 데이터 삽입
+        pnginfo = PngImagePlugin.PngInfo()
+        pnginfo.add_text("parameters", response2.json().get("info"))
+        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'object/output_t2i{current_time}.png'
         
-    #     # 이미지 저장
-    #     image.save(file_name, pnginfo = pnginfo)
+        # 이미지 저장
+        image.save(file_name, pnginfo = pnginfo)
     
     username = session.get('username', 'Guest')
     return render_template('pro_back_complete.html', username=username)
@@ -890,6 +897,27 @@ def pro_object():
 
 @app.route('/pro_object_complete')
 def pro_object_complete():
+# 이미지 생성 코드
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    print(payload)
+    r = response.json()
+    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    for i in r['images']:
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        # API 요청을 보내 이미지 정보 검색
+        png_payload = {
+            "image": "data:image/png;base64," + i
+        }
+        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+        # PIL 이미지에 메타 데이터 삽입
+        pnginfo = PngImagePlugin.PngInfo()
+        pnginfo.add_text("parameters", response2.json().get("info"))
+        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'object/output_t2i{current_time}.png'
+        
+        # 이미지 저장
+        image.save(file_name, pnginfo = pnginfo)
     username = session.get('username', 'Guest')
     return render_template('pro_object_complete.html', username=username)
 
