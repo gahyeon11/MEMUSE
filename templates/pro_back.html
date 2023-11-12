@@ -108,6 +108,32 @@
 </div>
 <script>
 
+document.getElementById('mood').addEventListener('submit', function(event){
+    event.preventDefault();
+    // 폼 데이터 가져오기
+    var promptValue = document.getElementById('background').value;
+    var data = {
+      prompt: promptValue
+    };
+    // 서버에 포스트 요청
+    fetch('/pro_back', {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 서버로부터 받은 리디렉션 주소로 페이지 이동
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      }
+    })
+    .catch(error => {
+      console.error('Error_pro_back:', error);
+    });
+});
 
 if (annyang) {
     annyang.setLanguage('ko');

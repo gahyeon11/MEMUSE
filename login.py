@@ -25,7 +25,7 @@ from flask_bcrypt import Bcrypt
 from wtforms.validators import DataRequired
 import pymysql
 import shutil
-from pro_edit_object import process_edit_object
+
 
 pymysql.install_as_MySQLdb()
 
@@ -929,6 +929,10 @@ def pro_object():
         payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
 
         print("payload 확인:", payload)
+        translatedText = data.get('translatedText', '')
+
+        # 서버 로그에 출력
+        app.logger.info(f'Translated Text: {translatedText}')
         
         # 다음 페이지 리디렉션 url
         redirect_url = url_for('pro_object_complete')
@@ -942,8 +946,10 @@ def pro_object():
         print(payload)
         
         # GET 요청 시 HTML 반환
+        print(translate_text)
         username = session.get('username', 'Guest')
         return render_template('pro_object.html', username=username)
+    
 @app.route('/pro_object_complete')
 def pro_object_complete():
     # 이미지 생성 코드

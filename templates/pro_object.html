@@ -101,7 +101,36 @@
   </div>
 </div>
 <script>
+  // 번역된 텍스트를 저장할 변수
+  var translatedTextGlobal = '';
 
+  document.getElementById('mood').addEventListener('submit', function(event){
+    event.preventDefault();
+    // 폼 데이터 가져오기
+    var promptValue = document.getElementById('background').value;
+    var data = {
+      prompt: promptValue,
+      translatedText: translatedTextGlobal  // 번역된 텍스트 추가
+    };
+    // 서버에 포스트 요청
+    fetch('/pro_object', {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 서버로부터 받은 리디렉션 주소로 페이지 이동
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      }
+    })
+    .catch(error => {
+      console.error('Error_pro_back:', error);
+    });
+});
 
   if (annyang) {
       annyang.setLanguage('ko');
@@ -150,43 +179,34 @@
       alert('Sorry, your browser does not support speech recognition.');
     }
     
-      // "다음" 버튼 이벤트 리스너 설정
     const nextButton = document.getElementById('nextButton');
     nextButton.addEventListener('click', function () {
-      // 현재 입력된 텍스트 가져오기
       var textToTranslate = document.getElementById('background').value;
-      
-      // 번역 요청 함수 호출
       sendTranslationRequest(textToTranslate);
     });
-  
-    // 서버로 번역된 결과를 웹 콘솔에 출력하는 함수
-  function displayTranslationResult(translatedText) {
-    console.log('번역된 결과:', translatedText);
+
+    function displayTranslationResult(translatedText) {
+      console.log('번역된 결과:', translatedText);
+    }
+    
+    function sendTranslationRequest(textToTranslate) {
+      fetch('/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 'text': textToTranslate }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        translatedTextGlobal = data.translatedText;  // 전역 변수에 저장
+        displayTranslationResult(translatedTextGlobal);
+      })
+      .catch(error => {
+        console.error('Translation API request failed:', error);
+      });
   }
-  
-  function sendTranslationRequest(textToTranslate) {
-    // 서버로 번역 요청 보내기
-    fetch('/translate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 'text': textToTranslate }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      // 서버에서 번역된 결과를 받아옴
-      var translatedText = data.translatedText;
-  
-      // 서버에서 받아온 번역 결과를 웹 콘솔에 출력
-      displayTranslationResult(translatedText);
-    })
-    .catch(error => {
-      console.error('Translation API request failed:', error);
-    });
-  }
-  
+
   // "완료" 버튼 이벤트 리스너 설정
   const completeButton = document.getElementById('completeButton');
   completeButton.addEventListener('click', function () {
@@ -198,64 +218,4 @@
   </script>
   </body>
   </html>
-<script>
-  document.getElementById('mood').addEventListener('submit', function(event){
-    event.preventDefault();
-    // 폼 데이터 가져오기
-    var promptValue = document.getElementById('background').value;
-    var data = {
-      prompt: promptValue
-    };
-    // 서버에 포스트 요청
-    fetch('/pro_object', {
-      method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      // 서버로부터 받은 리디렉션 주소로 페이지 이동
-      if (data.redirect) {
-        window.location.href = data.redirect;
-      }
-    })
-    .catch(error => {
-      console.error('Error_pro_back:', error);
-    });
-});
-
-  // 음성 인식 API 초기화
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-
-  // 음성 인식 시작
-  recognition.start();
-
-  // 음성 인식 결과 이벤트 리스너
-  recognition.onresult = (event) => {
-  const result = event.results[event.results.length - 1][0].transcript;
-  console.log('음성 인식 결과:', result);
-
-  // 인식된 음성 명령에 따라 URL로 이동
-  switch (result) {
-    case '마이페이지':
-      window.location.href = '/mypage'; // 절대 경로 사용
-      break;
-    case '가이드':
-      window.location.href = '/guide'; // 절대 경로 사용
-      break;
-    case '다시':
-      window.location.href = '/pro_back'; // 절대 경로 사용
-      break;
-    case '다음':
-      window.location.href = '/pro_lora'; // 절대 경로 사용
-      break;
-    // 다른 명령에 대한 처리도 추가할 수 있습니다.
-  }
-};
-</script>
-</body>
-</html>
+  
