@@ -762,6 +762,7 @@ def pro_back():
         # GET 요청 시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('pro_back.html', username = username)
+    
 @app.route('/pro_back_complete')
 def pro_back_complete():
     background_folder = 'static/background'
@@ -1014,7 +1015,7 @@ def pro_object():
     if request.method == 'POST':
         # POST 요청 시 JSON 데이터 파싱
         data = request.json
-        user_input = data['prompt']
+        user_input = data['translatedText']
         
         # prompt 문자열에 추가
         payload["prompt"] += user_input + ", "

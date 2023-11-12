@@ -207,15 +207,28 @@
       });
   }
 
-  // "완료" 버튼 이벤트 리스너 설정
-  const completeButton = document.getElementById('completeButton');
-  completeButton.addEventListener('click', function () {
-    // 여기서 '/pro_object_complete' 페이지로 이동하도록 처리
-    window.location.href = '/pro_object_complete';
+// "완료" 버튼 이벤트 리스너 설정
+const completeButton = document.getElementById('completeButton');
+completeButton.addEventListener('click', function () {
+  fetch('/pro_back', {
+    method: 'POST',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ translatedText: translatedTextGlobal })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.redirect) {
+      window.location.href = data.redirect;
+    }
+  })
+  .catch(error => {
+    console.error('Error_pro_back:', error);
   });
-  
-  
-  </script>
-  </body>
-  </html>
+});
+
+</script>
+</body>
+</html>
   
