@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify, render_template, url_for, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 from PIL import Image, PngImagePlugin, ImageEnhance, ImageFilter
 from datetime import datetime
-
-import sqlite3
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField,  SubmitField 
 import os
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -18,18 +17,56 @@ import sqlite3
 from PIL import Image, PngImagePlugin, ImageFilter
 from datetime import datetime
 import base64
+from flask_bcrypt import Bcrypt
+from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 CORS(app)
 
+# db_path = 'translations.db'
+
+# 절대 경로로 변환
+# absolute_path = os.path.abspath(db_path)
+
+# 데이터베이스 연결
+
+# conn = sqlite3.connect('translations.db', check_same_thread=False)
+# c = conn.cursor()
+
+# # translations 테이블 생성 쿼리
+# c.execute('''
+#     CREATE TABLE IF NOT EXISTS translations (
+#         id INTEGER PRIMARY KEY AUTOINCREMENT,
+#         original_text TEXT,
+#         translated_text TEXT
+#     )
+# ''')
+
+# # 변경 내용 저장
+# conn.commit()
+
+# # 연결 종료
+# # conn.close()
+
+# # 전역 변수로 번역된 텍스트를 저장
+# translated_text = ""
+
+
+# conn = sqlite3.connect('users.db', check_same_thread=False)
+# c = conn.cursor()
+
+
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
+bcrypt = Bcrypt()
+# conn = sqlite3.connect('users.db', check_same_thread=False)
+# c = conn.cursor()
 # Stable Diffusion의 로컬 주소
 url = "http://127.0.0.1:7860"
 # Stable Diffusion에 적용될 프롬프트
 payload = {
     "prompt" : "masterpiece, best quality, highres, ",
-    "negative_prompt" : "easynegative"
+    "negative_prompt" : "easynegative, "
     }
 
 # 모델 리스트
@@ -41,15 +78,41 @@ models = [
     "v1-5-pruned-emaonly.safetensors [6ce0161689]"
     ]
 
-# 데이터베이스 설정
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://myuser:mypassword@localhost/mydatabase'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "123123123"
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
+
+db_path = 'translations.db'
+absolute_path = os.path.abspath(db_path)
+conn = sqlite3.connect(absolute_path, check_same_thread=False)
+c = conn.cursor()
+
+c.execute('''
+    CREATE TABLE IF NOT EXISTS translations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        original_text TEXT,
+        translated_text TEXT
+    )
+''')
 conn.commit()
 
+def close_connection(exception):
+    if conn:
+        conn.close()
+
+app.config['SQLALCHEMY_POOL_SIZE'] = 50  # 최대 연결 수
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 60  # 연결 타임아웃 (초)
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600  # 연결 재사용 주기 (초)
+# @staticmethod
+# def generate_salt(length=16):
+#     return os.urandom(length).hex()
+# # conn.commit()
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -57,42 +120,42 @@ class User(db.Model):
     name = db.Column(db.String(128), nullable=False)
     birthdate = db.Column(db.String(128), nullable=False)
     username = db.Column(db.String(128), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-        if password is None:
-            return False
-        return check_password_hash(self.password, password)
-
-    def __init__(self, name, birthdate, username, password):
+    pwd = db.Column(db.String(512), nullable=False)
+    
+    def set_pwd(self, pwd):
+        self.pwd = pwd
+    def check_pwd(self, pwd):
+        return self.pwd == pwd
+    def __init__(self, name, birthdate, username, pwd):
         self.name = name
         self.birthdate = birthdate
         self.username = username
-        self.password = generate_password_hash(password)
+        self.pwd = pwd  # 여기를 수정했습니다
 
 class ImageModel(db.Model):
     __tablename__ = 'images'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    model_name = db.Column(db.String(128), nullable=False)
     file_path = db.Column(db.String(128), nullable=False)
-    title = db.Column(db.String(256))  
+    title = db.Column(db.String(256), nullable=False)  # Updated to be required
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    category = db.Column(db.String(50), nullable=False)
+    category = db.Column(db.String(128), nullable=False)
+    caption = db.Column(db.String(512))  # You can modify the length as needed
+
 
     user = db.relationship('User', backref=db.backref('images', lazy=True))
 
-    def __init__(self, user_id, model_name, file_path, title, category):
+    def __init__(self, user_id, file_path, title, category, caption=None):
         self.user_id = user_id
-        self.model_name = model_name
         self.file_path = file_path
         self.title = title
         self.category = category
-
+        self.caption = caption
+class ImageInfoForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    caption = TextAreaField('Caption')
+    submit = SubmitField('저장')
 
 @app.route('/')
 def index():
@@ -106,64 +169,125 @@ def make_shell_context():
 with app.app_context():
     db.create_all()
 
+@app.route('/translate', methods=['POST'])
+def translate():
+    try:
+        data = request.json
+        text = data.get('text')
+        # print(text)
+
+        if not text:
+            raise ValueError("No text provided")
+
+        client_id = 'fIfMjFH9VJ1GjQPim7j5'
+        client_secret = 'iue1sb53T7'
+
+        url = 'https://openapi.naver.com/v1/papago/n2mt'
+        headers = {
+            'Content-Type': 'application/json',  # JSON 형식으로 설정
+            'X-Naver-Client-Id': client_id,
+            'X-Naver-Client-Secret': client_secret,
+        }
+        data = {
+            'source': 'ko',
+            'target': 'en',
+            'text': text
+        }
+       
+        response = requests.post(url, headers=headers, json=data)  # JSON 데이터로 요청
+
+        if response.status_code != 200:
+            raise Exception("Translation API request failed")
+
+        translated_text = response.json().get('message', {}).get('result', {}).get('translatedText', "")
+        
+        c.execute("INSERT INTO translations (original_text, translated_text) VALUES (?, ?)", (text, translated_text))
+        conn.commit()
+
+        # g 객체를 사용하여 전역 변수 대신 저장
+        g.translated_text = translated_text
+
+        return jsonify(status="success", message="서버 저장 성공",translated_text=translated_text)
+
+    except ValueError as e:
+        logging.error(f"ValueError: {e}")
+        return jsonify(status="failure", error=str(e), message="서버 저장 실패"), 400
+    except Exception as e:
+        logging.error(f"Exception: {e}")
+        return jsonify(status="failure", error=str(e), message="서버 저장 실패"), 500
+
+
+@app.route('/save_results', methods=['POST'])
+def save_results():
+    try:
+        data = request.json
+        original_text = data.get('originalText')
+        translated_text = data.get('translatedText')
+
+        # 데이터베이스에 저장
+        c.execute("INSERT INTO translations (original_text, translated_text) VALUES (?, ?)", (original_text, translated_text))
+        conn.commit()
+
+        return jsonify(status="success", message="Result saved successfully")
+    except Exception as e:
+        logging.error(f"Exception: {e}")
+        return jsonify(status="failure", error=str(e), message="Failed to save result"), 500
+
+
+@app.route('/get_translation', methods=['GET'])
+def get_translation():
+    # g 객체를 사용하여 저장된 번역된 텍스트를 가져옴
+    translated_text = getattr(g, 'translated_text', None)
+    
+    if translated_text:
+        return jsonify(status="success", translated_text=translated_text)
+    else:
+        return jsonify(status="failure", message="저장된 번역이 없음"), 404
+
+
 @app.route('/join', methods=['GET', 'POST'])
 def join():
     if request.method == 'POST':
         name = request.form.get('name')
         birthdate = request.form.get('birthdate')
         username = request.form.get('username')
-        password = request.form.get('password')
-        print("get 저장")
-
-        # 뉴유저 생성
-        new_user = User(name=name, birthdate=birthdate, username=username, password=password)
-        print("new 저장")
-
+        pwd = request.form.get('pwd')  # 비밀번호 값을 받아옵니다.
         # 데베에 뉴유저 추가
-        try:
-            # 데베에 뉴유저 추가
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Successfully signed up! Please login.', 'success')
-            print("데베 저장")
-            return redirect(url_for('login'))
-        except IntegrityError:
-            db.session.rollback()
-            
+               # 데이터베이스에서 동일한 username을 가진 사용자가 있는지 확인
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
             flash('Username already exists. Please choose a different one.', 'error')
             print("Username already exists. Please choose a different one.")
             
             return redirect(url_for('join'))
 
+        # 새 사용자 생성 및 데이터베이스에 추가
+        new_user = User(name=name, birthdate=birthdate, username=username, pwd=pwd)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Successfully signed up! Please login.', 'success')
+        return redirect(url_for('login'))
     return render_template('join.html')
+    
         
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
-        password = request.form.get('password')
+        pwd = request.form.get('pwd')
             
         # 사용자가 존재하는지 확인
         user = User.query.filter_by(username=username).first()
-        if user:                # 비밀번호가 맞는지 확인
-            if user.check_password(password):
-                session['logged_in'] = True
-                session['user_id'] = user.id
-                session['username'] = username
-                session['name'] = user.name
-                session['birthdate'] = user.birthdate
-                return redirect(url_for('workplace'))
-            else:
-                # 개발 환경에서만 사용하고 실제 배포 시에는 제거하세요
-                # 해시된 비밀번호와 입력된 비밀번호의 해시를 콘솔에 출력
-                print(f"Stored hash: {user.password}")
-                print(f"Entered hash: {generate_password_hash(password)}")
-                flash('Invalid password', 'error')
-                print("Incorrect password")
+        if user and user.check_pwd(pwd):
+            # 로그인 성공 처리
+            session['logged_in'] = True
+            session['user_id'] = user.id  # 고유 ID 사용 권장
+            session['username'] = username
+            return redirect(url_for('workplace'))
         else:
-            flash('Invalid username', 'error')
-            print("Username not found")
+            # 로그인 실패 처리
+            flash('Invalid username or password', 'error')
                 
     return render_template('login.html')
 
@@ -198,18 +322,13 @@ def voice_login_join_choice():
 
 @app.route('/cartoon_gallery1')
 def cartoon_gallery1():
+    page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
+    per_page = 3  # 한 페이지당 표시할 이미지 수
+    # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
+    pagination = ImageModel.query.filter_by(category="helloflatcute2d_V10.safetensors [5a7204177d]").paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
     username = session.get('username', 'Guest')
-    cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
-    # 이미지 업로드를 처리하는 Flask 라우트에서
-    if request.method == 'POST':
-        # ... 이미지 업로드 로직 ...
-
-        category = request.form.get('category')  # 카테고리 정보를 폼 데이터에서 가져옵니다.
-        new_image = ImageModel(user_id=user_id, model_name=model_name, file_path=file_path, category=category)
-        db.session.add(new_image)
-        db.session.commit()
-
-    return render_template('cartoon_gallery1.html', username=username, images=cartoon_images)
+    return render_template('cartoon_gallery1.html', images=images, pagination=pagination)
 
 @app.route('/cartoon_gallery2')
 def cartoon_gallery2():
@@ -230,8 +349,12 @@ def guide():
 @app.route('/live_gallery1')
 def live_gallery1():
     live_images = ImageModel.query.filter_by(category='live').all()
-
-    return render_template('live_gallery1.html', images=live_images)
+    page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
+    per_page = 3  # 한 페이지당 표시할 이미지 수
+        # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
+    pagination = ImageModel.query.filter_by(category="chosenMix_bakedVae.safetensors [52b8ebbd5b]").paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
+    return render_template('live_gallery1.html', images=images, pagination=pagination)
 
 @app.route('/live_gallery2')
 def live_gallery2():
@@ -293,86 +416,115 @@ def new_back():
         username = session.get('username', 'Guest')
         return render_template('new_back.html', username=username)
 
-@app.route('/new_complete')
+@app.route('/new_complete', methods=['GET', 'POST'])
 def new_complete():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    form = ImageInfoForm()
     username = session.get('username', 'Guest')
-    return render_template('new_complete.html', username=username)
 
-@app.route('/new_filter')
+    return render_template('new_complete.html', username=username, form=form)
+
+@app.route('/new_filter', methods=['GET', 'POST'])
 def new_filter():
-    filter_number = request.form['filter']
-    image_path = 'object/output_t2i{current_time}.png'
-    image = Image.open(image_path)
-    if filter_number == '1':
-        pass
-    elif filter_number == '2':
-        image = image.point(lambda p: p * 1.1)
-    elif filter_number == '3':
-        image = image.filter(ImageFilter.Color3DLUT.generate(lambda r, g, b: (r, g*0.9, b*0.6)))
-    elif filter_number == '4':
-        enhancer = ImageEnhance.Brightness(image)
-        image = enhancer.enhance(1.1)  
-    elif filter_number == '5':
-    # '새벽하늘' 필터 예시: 파란색 톤을 강조합니다.
-        r, g, b = image.split()
-        b = b.point(lambda i: i * 1.2)  # 파란색 채널을 강화합니다.
-        image = Image.merge('RGB', (r, g, b))
-    elif filter_number == '6':
-        # '낭만적' 필터 예시: 붉은색 톤을 강조합니다.
-        r, g, b = image.split()
-        r = r.point(lambda i: i * 1.2)  # 빨간색 채널을 강화합니다.
-        image = Image.merge('RGB', (r, g, b))   
-    elif filter_number == '7':
-    # '높은 대비' 필터 예시: 대비를 증가시킵니다.
-        enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
+    if request.method == 'POST':
+        if not session.get('file_path'):
+            flash('Image file is missing.', 'error')
+            return redirect(url_for('new_object'))
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filter_number = request.form.get('filter')
+        if not filter_number:
+            # 적절한 오류 메시지를 표시하거나 기본 값을 설정
+            flash('Filter number is required.', 'error')
+            return redirect(url_for('new_object')) 
+        file_path = session.get('file_path') 
+        if not file_path:
+            flash('Image file is missing.', 'error')
+            return redirect(url_for('new_object'))
+        full_file_path = os.path.join(app.static_folder, file_path)
+        print("Attempting to open:", full_file_path)
+                # 파일 존재 여부 확인
+        if not os.path.exists(full_file_path):
+            flash('Image file not found.', 'error')
+            return redirect(url_for('new_object'))
+        image = Image.open(full_file_path)
 
-    elif filter_number == '8':
-        # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
-        enhancer = ImageEnhance.Color(image)
-        image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
+        print(file_path)
+        print(filter_number)
+        if filter_number == '1':
+            pass
+        elif filter_number == '2':
+            image = image.point(lambda p: p * 1.1)
+        elif filter_number == '3':
+            lut_size = 8
+            image = image.filter(ImageFilter.Color3DLUT.generate(lut_size, lambda r, g, b: (r, g*0.9, b*0.6)))
+        elif filter_number == '4':
+            enhancer = ImageEnhance.Brightness(image)
+            image = enhancer.enhance(1.1)  
+        elif filter_number == '5':
+        # '새벽하늘' 필터 예시: 파란색 톤을 강조합니다.
+            r, g, b = image.split()
+            b = b.point(lambda i: i * 1.2)  # 파란색 채널을 강화합니다.
+            image = Image.merge('RGB', (r, g, b))
+        elif filter_number == '6':
+            # '낭만적' 필터 예시: 붉은색 톤을 강조합니다.
+            r, g, b = image.split()
+            r = r.point(lambda i: i * 1.2)  # 빨간색 채널을 강화합니다.
+            image = Image.merge('RGB', (r, g, b))   
+        elif filter_number == '7':
+        # '높은 대비' 필터 예시: 대비를 증가시킵니다.
+            enhancer = ImageEnhance.Contrast(image)
+            image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
 
-    elif filter_number == '9':
-        # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
-        r, g, b = image.split()
-        r = r.point(lambda i: i * 0.9)
-        g = g.point(lambda i: i * 0.7)
-        b = b.point(lambda i: i * 0.5)
-        image = Image.merge('RGB', (r, g, b))
-        enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(0.8)
+        elif filter_number == '8':
+            # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
+            enhancer = ImageEnhance.Color(image)
+            image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
 
-    elif filter_number == '10':
-        # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
-        r, g, b = image.split()
-        r = r.point(lambda i: i * 0.8)
-        g = g.point(lambda i: i * 0.8)
-        b = b.point(lambda i: i * 1.2)
-        image = Image.merge('RGB', (r, g, b))
-        enhancer = ImageEnhance.Brightness(image)
-        image = enhancer.enhance(1.2)
+        elif filter_number == '9':
+            # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
+            r, g, b = image.split()
+            r = r.point(lambda i: i * 0.9)
+            g = g.point(lambda i: i * 0.7)
+            b = b.point(lambda i: i * 0.5)
+            image = Image.merge('RGB', (r, g, b))
+            enhancer = ImageEnhance.Contrast(image)
+            image = enhancer.enhance(0.8)
 
-    elif filter_number == '11':
-        # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
-        sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
-        image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
+        elif filter_number == '10':
+            # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
+            r, g, b = image.split()
+            r = r.point(lambda i: i * 0.8)
+            g = g.point(lambda i: i * 0.8)
+            b = b.point(lambda i: i * 1.2)
+            image = Image.merge('RGB', (r, g, b))
+            enhancer = ImageEnhance.Brightness(image)
+            image = enhancer.enhance(1.2)
 
-    elif filter_number == '12':
-        # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
-        image = image.convert('L')     
-    
-    
-    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f'object/output_t2i_{filter_number}_{current_time}.png'
-    image.save(file_name)
+        elif filter_number == '11':
+            # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
+            sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
+            image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
 
+        elif filter_number == '12':
+            # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
+            image = image.convert('L')     
+        
+        
+        file_name = f'object/output_t2i_{filter_number}_{current_time}.png'
+        image.save(os.path.join(app.static_folder, file_name))
+
+        session['file_path'] = file_name
+        
+        return redirect(url_for('new_complete'))
     username = session.get('username', 'Guest')
-    return render_template('new_filter.html', username=username, filename=file_name)
+    return render_template('new_filter.html', username=username)
 
 @app.route('/new_no_save')
 def new_no_save():
     username = session.get('username', 'Guest')
     return render_template('new_no_save.html', username=username)
+
 
 @app.route('/new_object', methods=['POST', 'GET'])
 def new_object():
@@ -380,99 +532,69 @@ def new_object():
         data = request.json
         payload["prompt"] += data.get('prompt', '')
         payload["negative_prompt"] += data.get('negative', '')
+        
+        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+        print(payload)
+        user_id = session.get('user_id', 'default_user_id')
+        r = response.json()
+        # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+        for i in r['images']:
+            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            # API 요청을 보내 이미지 정보 검색
+            png_payload = {
+                "image": "data:image/png;base64," + i
+            }
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+            # PIL 이미지에 메타 데이터 삽입
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+            # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            file_name = f'object/output_t2i_{current_time}.png'
+            image.save(os.path.join(app.static_folder, file_name))
+            session['file_path'] = file_name
 
-        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-        if response.status_code == 200:
-            r = response.json()
-            user_id = session.get('user_id')
-            if user_id is None:
-                return jsonify({'error': 'User not logged in'}), 403
-
-            # 데이터베이스에 저장할 정보를 요청 데이터에서 가져옵니다.
-            title = data.get('title')  
-            category = data.get('category')  
-
-            # 이미지를 하나씩 처리합니다.
-            for i, img_data in enumerate(r['images']):
-                image = Image.open(io.BytesIO(base64.b64decode(img_data.split(",",1)[1])))
-                current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-                file_name = f'output_t2i_{current_time}_{i}.png'
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)  # 올바른 저장 경로 설정
-                image.save(file_path)
-
-                # 이미지 모델 인스턴스 생성 및 데이터베이스에 저장
-                new_image = ImageModel(
-                    user_id=user_id,
-                    model_name='Default',
-                    file_path=file_path,
-                    title=title,
-                    category=category
-                )
-                db.session.add(new_image)
-            db.session.commit()
-
-            return jsonify({'redirect': url_for('new_filter')}), 200
-        else:
-            return jsonify({'error': 'Failed to generate image'}), 500
-
+        # 다음 페이지 리디렉션 url
+        return jsonify(redirect=url_for('new_filter'))
     else:
-        # GET 요청시 사용자에게 form을 렌더링합니다.
+        # GET 요청시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('new_object.html', username=username)
 
 
-    #     # 이미지 생성 API 요청
-    #     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
-    #     print(payload)
-
-    #     r = response.json()
-
-    #     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    #     for i in r['images']:
-    #         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-    #         # API 요청을 보내 이미지 정보 검색
-    #         png_payload = {
-    #             "image": "data:image/png;base64," + i
-    #         }
-    #         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
-    #         # PIL 이미지에 메타 데이터 삽입
-    #         pnginfo = PngImagePlugin.PngInfo()
-    #         pnginfo.add_text("parameters", response2.json().get("info"))
-    #         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-    #         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    #         file_name = f'object/output_t2i{current_time}.png'
-
-    #         # 이미지 저장
-    #         image.save(file_name, pnginfo = pnginfo)
-    #         images_saved.append(file_path)
-
-            
-    #     file_path = save_image_to_filesystem(image_data)
-    #         # 현재 로그인한 사용자의 ID
-    #     user_id = session.get('user_id')
-
-    #     # 이미지 모델 이름
-    #     model_name = payload.get('model_name')
-
-    #     # 새 이미지 모델 인스턴스 생성
-    #     new_image = ImageModel(user_id=user_id, model_name=model_name, file_path=file_path)
-    #     db.session.add(new_image)
-    #     db.session.commit()
-        
-    #     # 다음 페이지 리디렉션 url
-    #     redirect_url = url_for('new_filter')
-    #     return jsonify(redirect = redirect_url)
-    
-    # else:
-    #     # GET 요청시 HTML 반환
-    #     username = session.get('username', 'Guest')
-    #     return render_template('new_object.html', username=username)
-
-@app.route('/new_save_success')
+@app.route('/new_save_success', methods=['GET', 'POST'])
 def new_save_success():
-    username = session.get('username', 'Guest')
-    return render_template('new_save_success.html', username=username)
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
 
+    form = ImageInfoForm()
+    if form.validate_on_submit():
+        try:
+            db.session.begin_nested()
+            title = form.title.data
+            caption = form.caption.data
+            user_id = session.get('user_id')
+            file_path = session.get('file_path')
+            image_style = session.get('image_style', 'default_style')
+            print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
+            new_image = ImageModel(user_id=user_id, file_path=file_path, title=title, category=image_style, caption=caption)
+            db.session.add(new_image)
+            db.session.commit()
+            session['title'] = title
+            session['caption'] = caption
+            flash('작품이 저장되었습니다!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+            flash('오류가 발생했습니다.', 'error')
+        finally:
+            db.session.close()  # 데이터베이스 세션을 명시적으로 닫음
+        return redirect(url_for('new_save_success'))  # 리디렉션할 함수를 지정하세요
+
+    username = session.get('username', 'Guest')
+    title = session.get('title', '')
+    caption = session.get('caption', '')
+    return render_template('new_save_success.html', username=username, form=form, title=title, caption=caption)
 @app.route('/new_shot', methods=['GET', 'POST'])
 def new_shot():
     # payload 값 참조
@@ -506,7 +628,8 @@ def new_style():
         option_payload = {
             "sd_model_checkpoint" : selected_model
         }
-
+        print(selected_model)
+        session['image_style'] = selected_model
         # checkpoint 모델 변경
         response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
 
@@ -522,6 +645,7 @@ def new_style():
         
         # 다음 페이지 리디렉션 url
         redirect_url = url_for('new_shot', _external=True)
+        
         return jsonify(redirect = redirect_url)
     
     else:
@@ -531,9 +655,12 @@ def new_style():
 
 @app.route('/pastel_gallery1')
 def pastel_gallery1():
-    pastel_images = ImageModel.query.filter_by(category='pastel').all()
-
-    return render_template('pastel_gallery1', images=pastel_images)
+    page = request.args.get('page', 1, type=int) 
+    per_page = 3  
+   
+    pagination = ImageModel.query.filter_by(category="pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]").paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
+    return render_template('pastel_gallery1.html', images=images, pagination=pagination)
 
 @app.route('/pastel_gallery2')
 def pastel_gallery2():
@@ -547,13 +674,58 @@ def pastel_gallery3():
 
     return render_template('pastel_gallery3', images=pastel_images)
 
-@app.route('/pro_back')
+@app.route('/pro_back', methods=['GET', 'POST'])
 def pro_back():
-    username = session.get('username', 'Guest')
-    return render_template('pro_back.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        user_input = data['prompt']
+
+        # prompt 문자열에 추가
+        payload["prompt"] += "landscape, no human, " + user_input + ", "
+        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
+
+        print("payload 확인:", payload)
+
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_lora')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # prompt 초기화
+        payload["prompt"] = "masterpiece, best quality, highres, "
+        payload["negative_prompt"] = "easynegative, "
+        
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_back.html', username = username)
 
 @app.route('/pro_back_complete')
 def pro_back_complete():
+    # response = requests.post(url=f'{url}/sdapi/v1/txt2img', json = payload)
+    # print(payload)
+    # r = response.json()
+    # # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+    # for i in r['images']:
+    #     image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+    #     # API 요청을 보내 이미지 정보 검색
+    #     png_payload = {
+    #         "image": "data:image/png;base64," + i
+    #     }
+    #     response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json = png_payload)
+    #     # PIL 이미지에 메타 데이터 삽입
+    #     pnginfo = PngImagePlugin.PngInfo()
+    #     pnginfo.add_text("parameters", response2.json().get("info"))
+    #     # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+    #     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #     file_name = f'object/output_t2i{current_time}.png'
+        
+    #     # 이미지 저장
+    #     image.save(file_name, pnginfo = pnginfo)
+    
     username = session.get('username', 'Guest')
     return render_template('pro_back_complete.html', username=username)
 
@@ -591,15 +763,57 @@ def pro_filter():
     username = session.get('username', 'Guest')
     return render_template('pro_filter.html', username=username)
 
-@app.route('/pro_lora')
+@app.route('/pro_lora', methods=['GET', 'POST'])
 def pro_lora():
-    username = session.get('username', 'Guest')
-    return render_template('pro_lora.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += data.get('prompt', '')
+        
+        print("payload 확인:", payload)
+        
+        # 클라이언트에 응답
+        return jsonify(success = True)
+    
+    else:
+        # GET 요청시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_lora.html', username=username)
 
-@app.route('/pro_lora_num')
+@app.route('/pro_lora_num', methods=['GET', 'POST'])
 def pro_lora_num():
-    username = session.get('username', 'Guest')
-    return render_template('pro_lora_num.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        lora_num_data = data.get('prompt', '')
+        
+        # 받은 데이터를 숫자로 변환 후 계산
+        try:
+            num_value = float(lora_num_data)
+            lora_num = num_value / 100
+        except ValueError:
+            # 데이터가 숫자로 변환되지 않는 경우
+            return jsonify(success = False, message = "Invalid numeric value")
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += str(lora_num) + ">"
+
+        print("최종 prompt 확인:", payload)
+        # 클라이언트에 응답
+        return jsonify(success = True)
+    
+    else:
+        # GET 요청시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_lora_num.html', username=username)
 
 @app.route('/pro_more_edit_obj')
 def pro_more_edit_obj():
@@ -621,10 +835,36 @@ def pro_no_save():
     username = session.get('username', 'Guest')
     return render_template('pro_no_save.html', username=username)
 
-@app.route('/pro_object')
+@app.route('/pro_object', methods=['GET', 'POST'])
 def pro_object():
-    username = session.get('username', 'Guest')
-    return render_template('pro_object.html', username=username)
+    # payload 값 참조
+    global payload
+    
+    if request.method == 'POST':
+        # POST 요청 시 JSON 데이터 파싱
+        data = request.json
+        user_input = data['prompt']
+        
+        # prompt 문자열에 추가
+        payload["prompt"] += user_input + ", "
+        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, "
+
+        print("payload 확인:", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_object_complete')
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # prompt 초기화
+        payload["prompt"] = "masterpiece, best quality, highres, "
+        payload["negative_prompt"] = "easynegative, "
+        
+        print(payload)
+        
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_object.html', username=username)
 
 @app.route('/pro_object_complete')
 def pro_object_complete():
@@ -663,10 +903,39 @@ def pro_specify_obj_num2():
     
     return render_template('pro_specify_obj_num2.html', username=username)
 
-@app.route('/pro_style')
+@app.route('/pro_style', methods=['GET', 'POST'])
 def pro_style():
-    username = session.get('username', 'Guest')
-    return render_template('pro_style.html', username=username)
+    if request.method == 'POST':
+        # POST 요청 시 JSON 처리
+        data = request.json
+        style_number = data['style']
+        selected_model = models[style_number - 1]
+        option_payload = {
+            "sd_model_checkpoint" : selected_model
+        }
+        print(selected_model)
+        session['image_style'] = selected_model
+        # checkpoint 모델 변경
+        response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
+        # payload 옵션 추가
+        options = data.get('options', {})
+        if 'styleNumber' in options:
+            del options['styleNumber'] #styleNumber 키 제거
+        # payload 딕셔너리에 options 값 추가
+        for key, value in options.items():
+            payload[key] = value
+        
+        print("payload = ", payload)
+        
+        # 다음 페이지 리디렉션 url
+        redirect_url = url_for('pro_back', _external=True)
+        
+        return jsonify(redirect = redirect_url)
+    
+    else:
+        # GET 요청 시 HTML 반환
+        username = session.get('username', 'Guest')
+        return render_template('pro_style.html', username = username)
 
 @app.route('/voice_join_success')
 def voice_join_success():
@@ -686,26 +955,30 @@ def voice_login():
 
 @app.route('/watercolor_gallery1')
 def watercolor_gallery1():
-    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
+    page = request.args.get('page', 1, type=int) 
+    per_page = 3  
+    # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
+    pagination = ImageModel.query.filter_by(category="pasteldiffusedmix_v22.safetensors [7d21f7acff]").paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
+    return render_template('watercolor_gallery1.html', images=images, pagination=pagination)
 
-    return render_template('watercolor_gallery1', images=watercolor_images)
+# @app.route('/watercolor_gallery2')
+# def watercolor_gallery2():
+#     return render_template('watercolor_gallery2.html', images=images, pagination=pagination)
+# @app.route('/watercolor_gallery3')
+# def watercolor_gallery3():
+#     watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
 
-@app.route('/watercolor_gallery2')
-def watercolor_gallery2():
-    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
-
-    return render_template('watercolor_gallery2', images=watercolor_images)
-
-@app.route('/watercolor_gallery3')
-def watercolor_gallery3():
-    watercolor_images = ImageModel.query.filter_by(category='watercolor').all()
-
-    return render_template('watercolor_gallery3', images=watercolor_images)
-
+#     return render_template('watercolor_gallery3', images=watercolor_images)
 @app.route('/whole_gallery1')
 def whole_gallery1():
-    return render_template('whole_gallery1.html')
-
+    page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
+    per_page = 3  # 한 페이지당 표시할 이미지 수
+    # paginate 메서드를 사용해 이미지를 페이지 별로 나눔
+    pagination = ImageModel.query.paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
+    # 수정된 리스트를 템플릿에 전달합니다.
+    return render_template('whole_gallery1.html', images=images, pagination=pagination)
 @app.route('/whole_gallery2')
 def whole_gallery2():
     return render_template('whole_gallery2.html')
@@ -724,21 +997,30 @@ def logout():
     session.pop('username', None)
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
-
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
 if __name__ == '__main__':
     print(app.config['SQLALCHEMY_DATABASE_URI'])
+
     with app.app_context():
-        # users = User.query.all()  # 모든 User 레코드를 조회합니다.
-        # for user in users:
-        #     print(user.id, user.name, user.birthdate, user.username)
+        db.session.begin()
+        users = User.query.all()  # 모든 User 레코드를 조회합니다.
+        for user in users:
+            print(user.id, user.name, user.birthdate, user.username, user.pwd)
+        images = ImageModel.query.all()  # ImageModel의 모든 인스턴스를 조회
+        for image in images:
+            print(f'ID: {image.id}, User ID: {image.user_id}, File Path: {image.file_path}, Title: {image.title}, Created At: {image.created_at}, Category: {image.category}, Caption: {image.caption}')
+
         if db.engine.url.drivername == "sqlite":
             migrate.init_app(app, db, render_as_batch=True)
         else:
             migrate.init_app(app, db)
-        db.create_all()
-        # try:
-        #     db.create_all()  # 첫 실행에서만 필요하고 그 다음부터는 주석 처리
-        # except Exception as e:
-        #     print(f"An error occurred while creating tables: {e}")
+        try:
+            db.create_all()  # 첫 실행에서만 필요하고 그 다음부터는 주석 처리
+        except Exception as e:
+            print(f"An error occurred while creating tables: {e}")
 
     app.run(debug=True)
+
+
