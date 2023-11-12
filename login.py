@@ -6,7 +6,10 @@ from sqlalchemy.exc import IntegrityError
 from PIL import Image, PngImagePlugin, ImageEnhance, ImageFilter
 from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField,  SubmitField 
+from wtforms import StringField, TextAreaField,  SubmitField
+from wtforms.validators import DataRequired
+import sqlite3
+import pyscrypt
 import os
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -101,6 +104,13 @@ c.execute('''
     )
 ''')
 conn.commit()
+app.config['SQLALCHEMY_POOL_SIZE'] = 50  # 최대 연결 수
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 60  # 연결 타임아웃 (초)
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600  # 연결 재사용 주기 (초)
+# @staticmethod
+# def generate_salt(length=16):
+#     return os.urandom(length).hex()
+# # conn.commit()
 
 def close_connection(exception):
     if conn:
@@ -257,8 +267,6 @@ def join():
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash('Username already exists. Please choose a different one.', 'error')
-            print("Username already exists. Please choose a different one.")
-            
             return redirect(url_for('join'))
 
         # 새 사용자 생성 및 데이터베이스에 추가
@@ -290,7 +298,6 @@ def login():
             flash('Invalid username or password', 'error')
                 
     return render_template('login.html')
-
 # @app.route('/join_success')
 # def join_success():
 #     if not session.get('logged_in'):
@@ -330,17 +337,24 @@ def cartoon_gallery1():
     username = session.get('username', 'Guest')
     return render_template('cartoon_gallery1.html', images=images, pagination=pagination)
 
-@app.route('/cartoon_gallery2')
-def cartoon_gallery2():
-    cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
+    # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
+    pagination = ImageModel.query.filter_by(category="helloflatcute2d_V10.safetensors [5a7204177d]").paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
 
-    return render_template('cartoon_gallery2.html', images=cartoon_images)
+    return render_template('cartoon_gallery1.html', images=images, pagination=pagination)
 
-@app.route('/cartoon_gallery3')
-def cartoon_gallery3():
-    cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
 
-    return render_template('cartoon_gallery3.html', images=cartoon_images)
+# @app.route('/cartoon_gallery2')
+# def cartoon_gallery2():
+#     cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
+
+#     return render_template('cartoon_gallery2.html')
+
+# @app.route('/cartoon_gallery3')
+# def cartoon_gallery3():
+#     cartoon_images = ImageModel.query.filter_by(category='cartoon').all()
+
+#     return render_template('cartoon_gallery3.html')
 
 @app.route('/guide')
 def guide():
@@ -348,25 +362,26 @@ def guide():
 
 @app.route('/live_gallery1')
 def live_gallery1():
-    live_images = ImageModel.query.filter_by(category='live').all()
     page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
     per_page = 3  # 한 페이지당 표시할 이미지 수
-        # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
+
+    # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
     pagination = ImageModel.query.filter_by(category="chosenMix_bakedVae.safetensors [52b8ebbd5b]").paginate(page=page, per_page=per_page, error_out=False)
     images = pagination.items  # 현재 페이지의 이미지들
+
     return render_template('live_gallery1.html', images=images, pagination=pagination)
 
-@app.route('/live_gallery2')
-def live_gallery2():
-    live_images = ImageModel.query.filter_by(category='live').all()
+# @app.route('/live_gallery2')
+# def live_gallery2():
+#     live_images = ImageModel.query.filter_by(category='live').all()
 
-    return render_template('live_gallery2.html', images=live_images)
+#     return render_template('live_gallery2.html', images=live_images)
 
-@app.route('/live_gallery3')
-def live_gallery3():
-    live_images = ImageModel.query.filter_by(category='live').all()
+# @app.route('/live_gallery3')
+# def live_gallery3():
+#     live_images = ImageModel.query.filter_by(category='live').all()
 
-    return render_template('live_gallery3.html', images=live_images)
+#     return render_template('live_gallery3.html', images=live_images)
 
 @app.route('/my_page')
 def my_page():
@@ -423,7 +438,12 @@ def new_complete():
     form = ImageInfoForm()
     username = session.get('username', 'Guest')
 
+    # 이미지 제목과 캡션 입력 폼을 렌더링
+    form = ImageInfoForm()
+
+    username = session.get('username', 'Guest')
     return render_template('new_complete.html', username=username, form=form)
+
 
 @app.route('/new_filter', methods=['GET', 'POST'])
 def new_filter():
@@ -560,8 +580,7 @@ def new_object():
         # GET 요청시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('new_object.html', username=username)
-
-
+    
 @app.route('/new_save_success', methods=['GET', 'POST'])
 def new_save_success():
     if not session.get('logged_in'):
@@ -657,22 +676,24 @@ def new_style():
 def pastel_gallery1():
     page = request.args.get('page', 1, type=int) 
     per_page = 3  
+
    
     pagination = ImageModel.query.filter_by(category="pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]").paginate(page=page, per_page=per_page, error_out=False)
     images = pagination.items  # 현재 페이지의 이미지들
+
     return render_template('pastel_gallery1.html', images=images, pagination=pagination)
 
-@app.route('/pastel_gallery2')
-def pastel_gallery2():
-    pastel_images = ImageModel.query.filter_by(category='pastel').all()
+# @app.route('/pastel_gallery2')
+# def pastel_gallery2():
+#     pastel_images = ImageModel.query.filter_by(category='pastel').all()
 
-    return render_template('pastel_gallery2', images=pastel_images)
+#     return render_template('pastel_gallery2', images=pastel_images)
 
-@app.route('/pastel_gallery3')
-def pastel_gallery3():
-    pastel_images = ImageModel.query.filter_by(category='pastel').all()
+# @app.route('/pastel_gallery3')
+# def pastel_gallery3():
+#     pastel_images = ImageModel.query.filter_by(category='pastel').all()
 
-    return render_template('pastel_gallery3', images=pastel_images)
+#     return render_template('pastel_gallery3', images=pastel_images)
 
 @app.route('/pro_back', methods=['GET', 'POST'])
 def pro_back():
@@ -983,9 +1004,15 @@ def whole_gallery1():
 def whole_gallery2():
     return render_template('whole_gallery2.html')
 
-@app.route('/whole_gallery3')
-def whole_gallery3():
-    return render_template('whole_gallery3.html')
+    return render_template('whole_gallery1.html', images=images, pagination=pagination)
+
+# @app.route('/whole_gallery2')
+# def whole_gallery2():
+#     return render_template('whole_gallery2.html')
+
+# @app.route('/whole_gallery3')
+# def whole_gallery3():
+#     return render_template('whole_gallery3.html')
 
 @app.route('/intro')
 def intro():
@@ -1002,7 +1029,6 @@ def shutdown_session(exception=None):
     db.session.remove()
 if __name__ == '__main__':
     print(app.config['SQLALCHEMY_DATABASE_URI'])
-
     with app.app_context():
         db.session.begin()
         users = User.query.all()  # 모든 User 레코드를 조회합니다.
