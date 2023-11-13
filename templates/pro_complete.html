@@ -58,11 +58,24 @@
           <div class="item--wUd">{{ username }}</div>
           <div class="line-1-SgH">
           </div>
-          <form action="{{ url_for('pro_save_success') }}" id="captions-form">
-          <div class="group-26-Bds"><textarea id="title" autofocus placeholder="작품 제목" cols="30"></textarea></div>
-          <div class="item-2023-1N1">2023</div>
-          <div class="auto-group-kzpf-i1X"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7"></textarea></div>
-        </form>
+          <form action="{{ url_for('pro_save_success') }}" id="captions-form" method="post">
+            {{ form.hidden_tag() }} <!-- CSRF 토큰 렌더링 -->
+            <!-- 작품 제목 입력 필드 -->
+            <div class="group-26-ZYM">
+            {{ form.title.label }}
+            {{ form.title(placeholder="작품 제목") }}</div>
+    
+            <div class="item-2023-QJ5">2023</div>
+            <div class="auto-group-bzhs-iJm">
+                <!-- 작품 설명 입력 필드 -->
+                {{ form.caption.label }}
+                {{ form.caption(rows=7, placeholder="작품 설명") }}
+            </div>
+            <div class="group-58-Bzy">
+              <!-- 저장 버튼 추가 -->
+              <button id="save-button" type="submit" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
+            </div>
+          </form>
         </div>
       </div>
       <div class="item--tq7">
@@ -75,12 +88,12 @@
       * 저장하지 않으면 작품은 사라집니다.
       </div>
       <div class="auto-group-ytzq-Fp5">
-        <form action="{{ url_for('pro_save_success') }}" id="captions-form">
+        {% comment %} <form action="{{ url_for('pro_save_success') }}" id="captions-form">
         <div class="auto-group-lblm-yk5"><input type="submit" value="예" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem"></div>
-      </form>
-        <div class="auto-group-pwv1-rJ5"><a href="{{ url_for('pro_no_save') }}" style="color:white">아니오</a></div>
+      </form> {% endcomment %}
+        {% comment %} <div class="auto-group-pwv1-rJ5"><a href="{{ url_for('pro_no_save') }}" style="color:white">아니오</a></div> {% endcomment %}
       </div>
-      <img class="bi-mic-fill-KhT" src="../static/assets/bi-mic-fill-5y3.png"/>
+      {% comment %} <img class="bi-mic-fill-KhT" src="../static/assets/bi-mic-fill-5y3.png"/> {% endcomment %}
     </div>
   </div>
   <div class="rectangle-30-T2y">

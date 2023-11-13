@@ -475,11 +475,6 @@ def new_complete():
         return redirect(url_for('login'))
     form = ImageInfoForm()
     username = session.get('username', 'Guest')
-
-    # 이미지 제목과 캡션 입력 폼을 렌더링
-    form = ImageInfoForm()
-
-    username = session.get('username', 'Guest')
     return render_template('new_complete.html', username=username, form=form)
 
 
@@ -805,8 +800,11 @@ def pro_back_complete():
 
 @app.route('/pro_complete')
 def pro_complete():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    form = ImageInfoForm()
     username = session.get('username', 'Guest')
-    return render_template('pro_complete.html', username=username)
+    return render_template('pro_complete.html', username=username, form=form)
 
 @app.route('/pro_edit_obj_check')
 def pro_edit_obj_check():
@@ -821,6 +819,20 @@ def pro_edit_obj_num():
 @app.route('/pro_edit_object')
 def pro_edit_object():
     return process_edit_object()
+@app.route('/save-output-image', methods=['POST'])
+def save_output_image():
+    try:
+        image_data = request.data  
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'output_image_{current_time}.png'
+        with open(os.path.join(app.static_folder, file_name), 'wb') as f: 
+            f.write(image_data)
+        session['output_file_path'] = file_name  # 세션에 저장
+        return jsonify({'message': 'Output image saved successfully'}), 200  
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Failed to save output image'}), 500
+
 
 @app.route('/list_processed_images')
 def list_processed_images():
@@ -939,7 +951,7 @@ def pro_filter():
             image = image.convert('L')     
         
         
-        file_name = f'pro_object/output_t2i_{filter_number}_{current_time}.png'
+        file_name = f'fin/output_t2i_{filter_number}_{current_time}.png'
         image.save(os.path.join(app.static_folder, file_name))
 
         session['file_path'] = file_name
@@ -1097,8 +1109,44 @@ def pro_object_complete():
 
 @app.route('/pro_save_success')
 def pro_save_success():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    form = ImageInfoForm()
+    if form.validate_on_submit():
+        try:
+            db.session.begin_nested()
+            title = form.title.data
+            caption = form.caption.data
+            user_id = session.get('user_id')  # 세션에서 사용자 ID를 가져옴
+
+            if user_id is None:
+                flash('사용자 ID가 없습니다. 다시 로그인하십시오.', 'error')
+                return redirect(url_for('login'))
+
+            file_path = session.get('file_path')
+            print(file_path)
+            image_style = session.get('image_style', 'default_style')
+            print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
+            new_image = ImageModel(user_id=user_id, file_path=file_path, title=title, category=image_style, caption=caption)
+            db.session.add(new_image)
+            db.session.commit()
+            session['title'] = title
+            session['caption'] = caption
+            flash('작품이 저장되었습니다!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+            flash('오류가 발생했습니다.', 'error')
+        finally:
+            db.session.close()  # 데이터베이스 세션을 명시적으로 닫음
+
+        return redirect(url_for('new_save_success'))
+
     username = session.get('username', 'Guest')
-    return render_template('pro_save_success.html', username=username)
+    title = session.get('title', '')
+    caption = session.get('caption', '')
+    return render_template('pro_save_success.html', username=username, form=form, title=title, caption=caption)
 
 @app.route('/pro_specify_obj')
 def pro_specify_obj():
