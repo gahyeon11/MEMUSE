@@ -85,7 +85,8 @@
       <!-- 페이지네이션 링크 -->
       <div class="auto-group-ju3f-KTw">      
         <div>
-        {% for page_num in pagination.iter_pages() %}
+          {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+
           <a href="{{ url_for('whole_gallery1', page=page_num) }}" style="font-size: 20px; margin-right: 5px;">{{ page_num }}</a>
         {% endfor %}
       </div>
