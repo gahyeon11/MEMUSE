@@ -284,7 +284,7 @@ body {
 .item-7-wMT .auto-group-pqnh-NxZ .auto-group-ck7s-kGH .rectangle-9-kL9 {
   width: 512px;
   height: 512px;
-  position: absolute;
+  position: relative;
   left: 34rem;
   top: 29rem;
   background-color: #d9d9d9;
@@ -526,12 +526,16 @@ body {
   background-color: #003c74;
   flex-shrink: 0;
 }
-.image-container {
-  position: relative;
-}
-#object-image {
-  position: absolute;
+
+.background-image, .processed-image {
+  position: absolute; /* 컨테이너 내에서 절대 위치 설정 */
   top: 0;
   left: 0;
-  z-index: 1; /* 객체 이미지를 배경 이미지 위로 겹치도록 설정 */
+  width: 100%; /* 컨테이너의 크기에 맞춰 조절 */
+  height: 100%; /* 컨테이너의 크기에 맞춰 조절 */
+  z-index: 1; /* 배경 이미지 z-index 설정 */
+}
+
+.processed-image {
+  z-index: 2; /* 객체 이미지가 위로 오도록 z-index 설정 */
 }

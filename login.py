@@ -25,6 +25,7 @@ from flask_bcrypt import Bcrypt
 from wtforms.validators import DataRequired
 import pymysql
 import shutil
+from pro_edit_object import process_edit_object
 
 
 pymysql.install_as_MySQLdb()
@@ -762,44 +763,45 @@ def pro_back():
         # GET 요청 시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('pro_back.html', username = username)
-    
-@app.route('/pro_back_complete')
-def pro_back_complete():
-    background_folder = 'static/background'
-    
-    # 'background' 폴더 내의 모든 파일 나열
-    background_images = [filename for filename in os.listdir(background_folder) if filename.endswith(".png")]
-    
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-    print(payload)
-    r = response.json()
-    
-    # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
-        # API 요청을 보내 이미지 정보 검색
-        png_payload = {
-            "image": "data:image/png;base64," + i
-        }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
-        # PIL 이미지에 메타 데이터 삽입
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
-        # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = os.path.join(background_folder, f'output_t2i{current_time}.png')  # 경로 수정
         
-        # 이미지 저장
-        image.save(file_name, pnginfo=pnginfo)
-    
-    # 가장 최근에 저장된 이미지 파일 경로 찾기
-    latest_image_path = None
-    if background_images:
-        latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
-        latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
-    
-    username = session.get('username', 'Guest')
-    return render_template('pro_back_complete.html', username=username, latest_image_path=latest_image_path)
+@app.route('/pro_back_complete', methods=['GET', 'POST'])
+def pro_back_complete():
+    if request.method == 'GET':
+        background_folder = 'static/background'
+        
+        # 'background' 폴더 내의 모든 파일 나열
+        background_images = [filename for filename in os.listdir(background_folder) if filename.endswith(".png")]
+        
+        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
+        print(payload)
+        r = response.json()
+        
+        # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+        for i in r['images']:
+            image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
+            # API 요청을 보내 이미지 정보 검색
+            png_payload = {
+                "image": "data:image/png;base64," + i
+            }
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+            # PIL 이미지에 메타 데이터 삽입
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+            # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            file_name = os.path.join(background_folder, f'output_t2i{current_time}.png')  # 경로 수정
+            
+            # 이미지 저장
+            image.save(file_name, pnginfo=pnginfo)
+        
+        # 가장 최근에 저장된 이미지 파일 경로 찾기
+        latest_image_path = None
+        if background_images:
+            latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
+            latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+        
+        username = session.get('username', 'Guest')
+        return render_template('pro_back_complete.html', username=username, latest_image_path=latest_image_path)
 
 @app.route('/pro_complete')
 def pro_complete():
@@ -822,14 +824,26 @@ def pro_edit_object():
 
 @app.route('/list_processed_images')
 def list_processed_images():
+    logging.info("Fetching processed image files")
     pro_object_folder = 'static/processed'  # 수정된 폴더 경로
-
-    # 처리된 이미지 파일 목록 가져오기
-    processed_image_files = os.listdir(pro_object_folder)
-
-    # JSON 형식으로 반환
-    return jsonify(processed_image_files)
+    try:
+        processed_image_files = os.listdir(pro_object_folder)
+        return jsonify(processed_image_files)
+    except Exception as e:
+        return jsonify({"error": str(e)})
     
+@app.route('/get_processed_image_paths')
+def get_processed_image_paths():
+    logging.info("Fetching processed image files")
+    pro_object_folder = 'static/processed'
+    try:
+        processed_image_files = os.listdir(pro_object_folder)
+        # 파일 이름을 전체 경로로 변환
+        full_paths = [os.path.join(pro_object_folder, file) for file in processed_image_files]
+        return jsonify(full_paths)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
 @app.route('/pro_edit_shot_check')
 def pro_edit_shot_check():
     username = session.get('username', 'Guest')
@@ -935,6 +949,7 @@ def pro_filter():
     # GET 요청
     username = session.get('username', 'Guest')
     return render_template('pro_filter.html', username=username)
+
 @app.route('/pro_lora', methods=['GET', 'POST'])
 def pro_lora():
     # payload 값 참조

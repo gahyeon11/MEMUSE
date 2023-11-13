@@ -57,14 +57,14 @@
       <div class="rectangle-9-kL9">
         <div class="image-container">
           {% if background_image %}
-              <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
+              <img class="background-image" src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
           {% endif %}
-          <div id="file-list">
-
-        </div>
-        </div>
-        
+          {% if processed_image %}
+              <img class="processed-image" src="{{ url_for('static', filename=processed_image) }}" alt="Processed Image">
+          {% endif %}
+        </div>      
       </div>
+    </div>
       <div class="group-14-sff">
         <div class="item--CC9">
           <span class="item--CC9-sub-0">{{ username }}&nbsp;</span>
@@ -94,7 +94,6 @@
         </div>
       </div>
     </div>
-  </div>
   <div class="rectangle-30-KQV">
   </div>
 </div>
@@ -104,29 +103,29 @@
 <script>
 // Flask 애플리케이션의 /list_processed_images 엔드포인트 호출
 // Flask 애플리케이션의 /list_processed_images 엔드포인트 호출
-$.ajax({
-    url: '/list_processed_images',
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) {
-        // data에는 이미지 파일 목록이 포함됩니다.
-        if (data.length > 0) {
-            // 이미지 파일 목록을 화면에 표시
-            var fileListElement = document.getElementById('file-list');
-            var fileListHTML = '<ul>';
-            data.forEach(function(filename) {
-                fileListHTML += '<li>' + filename + '</li>';
-            });
-            fileListHTML += '</ul>';
-            fileListElement.innerHTML = fileListHTML;
-        } else {
-            console.log('No processed images available.');
-        }
-    },
-    error: function(error) {
-        console.log('Error:', error);
-    }
-});
+// $.ajax({
+//     url: '/list_processed_images',
+//     type: 'GET',
+//     dataType: 'json',
+//     success: function(data) {
+//         // data에는 이미지 파일 목록이 포함됩니다.
+//         if (data.length > 0) {
+//             // 이미지 파일 목록을 화면에 표시
+//             var fileListElement = document.getElementById('file-list');
+//             var fileListHTML = '<ul>';
+//             data.forEach(function(filename) {
+//                 fileListHTML += '<li>' + filename + '</li>';
+//             });
+//             fileListHTML += '</ul>';
+//             fileListElement.innerHTML = fileListHTML;
+//         } else {
+//             console.log('No processed images available.');
+//         }
+//     },
+//     error: function(error) {
+//         console.log('Error:', error);
+//     }
+// });
 
 </script>
 
