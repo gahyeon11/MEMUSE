@@ -827,7 +827,7 @@ def save_output_image():
         file_name = f'output_image_{current_time}.png'
         with open(os.path.join(app.static_folder, file_name), 'wb') as f: 
             f.write(image_data)
-        session['output_file_path'] = file_name  # 세션에 저장
+        session['file_path'] = file_name  # 세션에 저장
         return jsonify({'message': 'Output image saved successfully'}), 200  
     except Exception as e:
         print(e)
@@ -1106,8 +1106,7 @@ def pro_object_complete():
     
     username = session.get('username', 'Guest')
     return render_template('pro_object_complete.html', username=username, latest_image_path=latest_image_path)
-
-@app.route('/pro_save_success')
+@app.route('/new_save_success', methods=['GET', 'POST'])
 def pro_save_success():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -1141,7 +1140,7 @@ def pro_save_success():
         finally:
             db.session.close()  # 데이터베이스 세션을 명시적으로 닫음
 
-        return redirect(url_for('new_save_success'))
+        return redirect(url_for('pro_save_success'))
 
     username = session.get('username', 'Guest')
     title = session.get('title', '')
