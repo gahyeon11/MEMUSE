@@ -52,7 +52,7 @@
     </div>
     <div class="auto-group-grgh-Qr5">
       <div class="auto-group-eut1-YBb">
-        <div class="rectangle-9-gob">
+        <div class="rectangle-9-gob"><img src="{{ url_for('static', filename=session['file_path']) }}" alt="Filtered Image">
         </div>
         <div class="group-3-RWH">
           <div class="item--wUd">{{ username }}</div>
@@ -86,17 +86,17 @@
       저장된 작품은 ‘마이 페이지&gt;나의 작품’에서 확인할 수 있습니다.
       <br/>
       * 저장하지 않으면 작품은 사라집니다.
+ 
+      <!-- <div class="auto-group-n9ms-Gd7"> -->
+      
+        <!-- <div class="group-59-dry"><a href="{{url_for('new_no_save')}}" style="color:white">아니오</a></div>
+          
+      </div> -->
       </div>
-      <div class="auto-group-ytzq-Fp5">
-        {% comment %} <form action="{{ url_for('pro_save_success') }}" id="captions-form">
-        <div class="auto-group-lblm-yk5"><input type="submit" value="예" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem"></div>
-      </form> {% endcomment %}
-        {% comment %} <div class="auto-group-pwv1-rJ5"><a href="{{ url_for('pro_no_save') }}" style="color:white">아니오</a></div> {% endcomment %}
-      </div>
-      {% comment %} <img class="bi-mic-fill-KhT" src="../static/assets/bi-mic-fill-5y3.png"/> {% endcomment %}
+      <!-- <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/> -->
     </div>
   </div>
-  <div class="rectangle-30-T2y">
+  <div class="rectangle-30-2eD">
   </div>
 </div>
-</body>
+<!-- HTML 코드 중 수정한 부분 -->
