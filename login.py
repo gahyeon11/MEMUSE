@@ -5,7 +5,6 @@ from flask import g
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 from PIL import Image, PngImagePlugin, ImageEnhance, ImageFilter
-from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField,  SubmitField
 from wtforms.validators import DataRequired
@@ -26,6 +25,7 @@ from wtforms.validators import DataRequired
 import pymysql
 import shutil
 from pro_edit_object import process_edit_object
+import time
 
 
 pymysql.install_as_MySQLdb()
@@ -505,34 +505,48 @@ def new_filter():
         print(filter_number)
         if filter_number == '1':
             pass
+
         elif filter_number == '2':
             image = image.point(lambda p: p * 1.1)
+
         elif filter_number == '3':
             lut_size = 8
             image = image.filter(ImageFilter.Color3DLUT.generate(lut_size, lambda r, g, b: (r, g*0.9, b*0.6)))
+        
         elif filter_number == '4':
             enhancer = ImageEnhance.Brightness(image)
             image = enhancer.enhance(1.1)  
+
         elif filter_number == '5':
         # '새벽하늘' 필터 예시: 파란색 톤을 강조합니다.
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             b = b.point(lambda i: i * 1.2)  # 파란색 채널을 강화합니다.
             image = Image.merge('RGB', (r, g, b))
+            
         elif filter_number == '6':
             # '낭만적' 필터 예시: 붉은색 톤을 강조합니다.
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             r = r.point(lambda i: i * 1.2)  # 빨간색 채널을 강화합니다.
             image = Image.merge('RGB', (r, g, b))   
+
         elif filter_number == '7':
         # '높은 대비' 필터 예시: 대비를 증가시킵니다.
             enhancer = ImageEnhance.Contrast(image)
             image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
+
         elif filter_number == '8':
             # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
             enhancer = ImageEnhance.Color(image)
             image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
+
         elif filter_number == '9':
             # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             r = r.point(lambda i: i * 0.9)
             g = g.point(lambda i: i * 0.7)
@@ -540,8 +554,11 @@ def new_filter():
             image = Image.merge('RGB', (r, g, b))
             enhancer = ImageEnhance.Contrast(image)
             image = enhancer.enhance(0.8)
+
         elif filter_number == '10':
             # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             r = r.point(lambda i: i * 0.8)
             g = g.point(lambda i: i * 0.8)
@@ -549,16 +566,18 @@ def new_filter():
             image = Image.merge('RGB', (r, g, b))
             enhancer = ImageEnhance.Brightness(image)
             image = enhancer.enhance(1.2)
+
         elif filter_number == '11':
             # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
             sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
             image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
+
         elif filter_number == '12':
             # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
             image = image.convert('L')     
         
         
-        filter_file_name = f'fin/output_t2i_{filter_number}_{current_time}.png'
+        filter_file_name = f'fin/output_t2i{filter_number}{current_time}.png'
         image.save(os.path.join(app.static_folder, filter_file_name))
         session['file_path'] = filter_file_name
         print(filter_file_name)
@@ -568,6 +587,7 @@ def new_filter():
         return redirect(url_for('new_complete'))
     username = session.get('username', 'Guest')
     return render_template('new_filter.html', username=username)
+
 @app.route('/new_no_save')
 def new_no_save():
     username = session.get('username', 'Guest')
@@ -597,7 +617,7 @@ def new_object():
             pnginfo = PngImagePlugin.PngInfo()
             pnginfo.add_text("parameters", response2.json().get("info"))
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-            file_name = f'object/output_t2i_{current_time}.png'
+            file_name = f'object/output_t2i{current_time}.png'
             image.save(os.path.join(app.static_folder, file_name))
             session['file_path'] = file_name
             # 이미지 저장(db x)
@@ -765,7 +785,7 @@ def pro_back_complete():
         background_folder = 'static/background'
         
         # 'background' 폴더 내의 모든 파일 나열
-        background_images = [filename for filename in os.listdir(background_folder) if filename.endswith(".png")]
+        
         
         response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
         print(payload)
@@ -788,23 +808,37 @@ def pro_back_complete():
             
             # 이미지 저장
             image.save(file_name, pnginfo=pnginfo)
+
+            background_images = [filename for filename in os.listdir(background_folder) if filename.endswith(".png")]
+
+            # print("save1")
+            print(background_images)
         
         # 가장 최근에 저장된 이미지 파일 경로 찾기
         latest_image_path = None
         if background_images:
             latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
             latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+            # print("save2")
+            # print(background_images)
         
         username = session.get('username', 'Guest')
         return render_template('pro_back_complete.html', username=username, latest_image_path=latest_image_path)
 
-@app.route('/pro_complete')
+@app.route('/pro_complete', methods=['GET', 'POST'])
 def pro_complete():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     form = ImageInfoForm()
     username = session.get('username', 'Guest')
+    # print("aaaaaaaa1")
+    # print(session['file_path'])
+    #time.sleep(1)
+    # print("aaaaaaaa2")
+    # print(session['file_path'])
+
     return render_template('pro_complete.html', username=username, form=form)
+       
 
 @app.route('/pro_edit_obj_check')
 def pro_edit_obj_check():
@@ -819,19 +853,42 @@ def pro_edit_obj_num():
 @app.route('/pro_edit_object')
 def pro_edit_object():
     return process_edit_object()
-@app.route('/save-output-image', methods=['POST'])
-def save_output_image():
-    try:
-        image_data = request.data  
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'output_image_{current_time}.png'
-        with open(os.path.join(app.static_folder, file_name), 'wb') as f: 
-            f.write(image_data)
-        session['file_path'] = file_name  # 세션에 저장
-        return jsonify({'message': 'Output image saved successfully'}), 200  
-    except Exception as e:
-        print(e)
-        return jsonify({'message': 'Failed to save output image'}), 500
+
+# @app.route('/save-output-image', methods=['POST'])
+# def save_output_image():
+#     try:
+#         image_data = request.data  
+#         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+#         file_name = f'output_image_{current_time}.png'
+#         with open(os.path.join(app.static_folder, file_name), 'wb') as f: 
+#             f.write(image_data)
+#         session['file_path'] = file_name  # 세션에 저장
+#         return jsonify({'message': 'Output image saved successfully'}), 200  
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message': 'Failed to save output image'}), 500
+
+@app.route('/save-screenshot', methods=['POST'])
+def save_screenshot():
+    # 요청 데이터에서 이미지 정보 추출
+    data = request.json
+    image_data = data['image']
+    image_data = base64.b64decode(image_data.split(',')[1])
+
+    # 저장할 파일의 경로 설정
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f'bo/output_t2i{current_time}.png' # 경로 수정
+    full_file_path = os.path.join(app.static_folder, file_name)
+    
+    # 필요한 경우 디렉토리 생성
+    os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+    # 파일 저장
+    with open(full_file_path, 'wb') as file:
+        file.write(image_data)
+    session['file_path'] = file_name  # 세션에 저장 
+      
+ 
+    return {'message': 'Screenshot saved successfully'}
 
 
 @app.route('/list_processed_images')
@@ -865,64 +922,92 @@ def pro_edit_shot_check():
 def pro_edit_shot_num():
     username = session.get('username', 'Guest')
     return render_template('pro_edit_shot_num.html', username=username)
+
 @app.route('/pro_filter', methods=['GET', 'POST'])
 def pro_filter():
-    if request.method == 'POST':
-        if not session.get('file_path'):
-            flash('Image file is missing.', 'error')
-            return redirect(url_for('pro_filter'))
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filter_number = request.form.get('filter')
-        if not filter_number:
-            # 적절한 오류 메시지를 표시하거나 기본 값을 설정
-            flash('Filter number is required.', 'error')
-            return redirect(url_for('pro_filter')) 
+    if request.method == 'POST':  
+        # 세션에서 파일 경로 확인
         file_path = session.get('file_path') 
+        
         if not file_path:
             flash('Image file is missing.', 'error')
             return redirect(url_for('pro_filter'))
+        print("Attempting to open:", file_path)
+        # 'static/' 부분을 제거하고 역슬래시를 슬래시로 변경
+        
+        print("1111111111111111")
+        print("Attempting to open:", file_path)
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filter_number = request.form.get('filter')
+        if not filter_number:
+            flash('Filter number is required.', 'error')
+            return redirect(url_for('pro_filter')) 
+
         full_file_path = os.path.join(app.static_folder, file_path)
-        print("Attempting to open:", full_file_path)
-                # 파일 존재 여부 확인
+        full_file_path = full_file_path.replace('\\', '/')
+        print("후Attempting to open:", full_file_path)
+
+
         if not os.path.exists(full_file_path):
             flash('Image file not found.', 'error')
             return redirect(url_for('pro_filter'))
+        
         image = Image.open(full_file_path)
 
-        print(file_path)
         print(filter_number)
         if filter_number == '1':
+            # 1번
             pass
+
         elif filter_number == '2':
+            # 2번
             image = image.point(lambda p: p * 1.1)
+
         elif filter_number == '3':
+            # 3번
             lut_size = 8
             image = image.filter(ImageFilter.Color3DLUT.generate(lut_size, lambda r, g, b: (r, g*0.9, b*0.6)))
+        
         elif filter_number == '4':
+            # 4번
             enhancer = ImageEnhance.Brightness(image)
             image = enhancer.enhance(1.1)  
+
         elif filter_number == '5':
+            # 5번
         # '새벽하늘' 필터 예시: 파란색 톤을 강조합니다.
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             b = b.point(lambda i: i * 1.2)  # 파란색 채널을 강화합니다.
             image = Image.merge('RGB', (r, g, b))
+
         elif filter_number == '6':
+            # 6번
             # '낭만적' 필터 예시: 붉은색 톤을 강조합니다.
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             r = r.point(lambda i: i * 1.2)  # 빨간색 채널을 강화합니다.
             image = Image.merge('RGB', (r, g, b))   
+
         elif filter_number == '7':
+            # 7번
         # '높은 대비' 필터 예시: 대비를 증가시킵니다.
             enhancer = ImageEnhance.Contrast(image)
             image = enhancer.enhance(2.0)  # 대비를 두 배로 증가시킵니다.
 
         elif filter_number == '8':
+            # 8번
             # '차분한' 필터 예시: 색상의 강도를 낮춥니다.
             enhancer = ImageEnhance.Color(image)
             image = enhancer.enhance(0.5)  # 색상의 강도를 낮춥니다.
 
         elif filter_number == '9':
+            # 9번
             # '빈티지' 필터 예시: 세피아 톤을 적용하고, 콘트라스트를 약간 낮춤
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             r = r.point(lambda i: i * 0.9)
             g = g.point(lambda i: i * 0.7)
@@ -932,7 +1017,10 @@ def pro_filter():
             image = enhancer.enhance(0.8)
 
         elif filter_number == '10':
+            # 10번
             # '블루밍' 필터 예시: 전체적으로 밝고, 푸른 톤을 증가
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             r, g, b = image.split()
             r = r.point(lambda i: i * 0.8)
             g = g.point(lambda i: i * 0.8)
@@ -942,23 +1030,29 @@ def pro_filter():
             image = enhancer.enhance(1.2)
 
         elif filter_number == '11':
+            # 11번
             # '세피아' 필터 예시: 세피아 톤으로 이미지를 변환
             sepia_filter = Image.new('RGB', image.size, (255, 240, 192))
             image = Image.blend(image.convert('RGB'), sepia_filter, 0.3)
 
         elif filter_number == '12':
+            # 12번
             # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
             image = image.convert('L')     
         
-        
-        file_name = f'fin/output_t2i_{filter_number}_{current_time}.png'
+        file_name = f'fin/output_t2i{filter_number}{current_time}.png'
         image.save(os.path.join(app.static_folder, file_name))
-
-        session['file_path'] = file_name
+        print("fin 저장:", file_name)
         
+        session['file_path'] = file_name
+        # print("6767676767")
+        # print(file_name) 
+        # print(session['file_path']) 
+        print("fin 후 settion path :", session['file_path'])
+
         return redirect(url_for('pro_complete'))
     
-    # GET 요청
+    # GET 요청 처리
     username = session.get('username', 'Guest')
     return render_template('pro_filter.html', username=username)
 
@@ -1070,6 +1164,43 @@ def pro_object():
         username = session.get('username', 'Guest')
         return render_template('pro_object.html', username=username)
     
+# @app.route('/pro_object_complete')
+# def pro_object_complete():
+#     # 이미지 생성 코드
+#     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
+#     print(payload)
+#     r = response.json()
+    
+#     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
+#     for i in r['images']:
+#         image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
+#         # API 요청을 보내 이미지 정보 검색
+#         png_payload = {
+#             "image": "data:image/png;base64," + i
+#         }
+#         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+#         # PIL 이미지에 메타 데이터 삽입
+#         pnginfo = PngImagePlugin.PngInfo()
+#         pnginfo.add_text("parameters", response2.json().get("info"))
+#         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
+#         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+#         file_name = f'static/pro_object/output_t2i{current_time}.png'
+        
+#         # 이미지 저장
+#         image.save(file_name, pnginfo=pnginfo)
+    
+#     # 가장 최근에 저장된 이미지 파일 경로 찾기
+#     latest_image_path = None
+#     pro_object_folder = 'static/pro_object'
+#     pro_object_images = [filename for filename in os.listdir(pro_object_folder) if filename.endswith(".png")]
+    
+#     if pro_object_images:
+#         latest_image_path = os.path.join('pro_object', pro_object_images[-1])  # 경로 수정
+#         latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+    
+#     username = session.get('username', 'Guest')
+#     return render_template('pro_object_complete.html', username=username, latest_image_path=latest_image_path)
+
 @app.route('/pro_object_complete')
 def pro_object_complete():
     # 이미지 생성 코드
@@ -1088,25 +1219,40 @@ def pro_object_complete():
         # PIL 이미지에 메타 데이터 삽입
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
+        
         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f'static/pro_object/output_t2i{current_time}.png'
-        
+        file_name = f'pro_object/output_t2i{current_time}.png'
+        full_file_path = os.path.join(app.static_folder, file_name)
+
+    # 필요한 경우 디렉토리 생성
+        os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+
         # 이미지 저장
-        image.save(file_name, pnginfo=pnginfo)
+        image.save(full_file_path, pnginfo=pnginfo)
     
     # 가장 최근에 저장된 이미지 파일 경로 찾기
     latest_image_path = None
     pro_object_folder = 'static/pro_object'
     pro_object_images = [filename for filename in os.listdir(pro_object_folder) if filename.endswith(".png")]
-    
+    pro_object_images.sort()
+    print("Sorted pro_object_images:", pro_object_images)
+
     if pro_object_images:
         latest_image_path = os.path.join('pro_object', pro_object_images[-1])  # 경로 수정
         latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+    print("Latest image path:", latest_image_path)
+
     
+        # 디버깅을 위한 로그 출력
+    print("Images in pro_object_folder:", pro_object_images)
+    print("Latest image path:", latest_image_path)
+
     username = session.get('username', 'Guest')
     return render_template('pro_object_complete.html', username=username, latest_image_path=latest_image_path)
-@app.route('/new_save_success', methods=['GET', 'POST'])
+
+
+@app.route('/pro_save_success', methods=['GET', 'POST'])
 def pro_save_success():
     if not session.get('logged_in'):
         return redirect(url_for('login'))

@@ -98,82 +98,54 @@
   </div>
 </div>
 </body>
-<!-- JavaScript 코드 -->
-<!-- JavaScript 코드 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+
 <script>
-// Flask 애플리케이션의 /list_processed_images 엔드포인트 호출
-// Flask 애플리케이션의 /list_processed_images 엔드포인트 호출
-// $.ajax({
-//     url: '/list_processed_images',
-//     type: 'GET',
-//     dataType: 'json',
-//     success: function(data) {
-//         // data에는 이미지 파일 목록이 포함됩니다.
-//         if (data.length > 0) {
-//             // 이미지 파일 목록을 화면에 표시
-//             var fileListElement = document.getElementById('file-list');
-//             var fileListHTML = '<ul>';
-//             data.forEach(function(filename) {
-//                 fileListHTML += '<li>' + filename + '</li>';
-//             });
-//             fileListHTML += '</ul>';
-//             fileListElement.innerHTML = fileListHTML;
-//         } else {
-//             console.log('No processed images available.');
-//         }
-//     },
-//     error: function(error) {
-//         console.log('Error:', error);
-//     }
-// });
-function dataURItoBlob(dataURI) {
-  const byteString = atob(dataURI.split(',')[1]);
-  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
+  function dataURItoBlob(dataURI) {
+      const byteString = atob(dataURI.split(',')[1]);
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
   }
-  return new Blob([ab], { type: mimeString });
-}
 
+  // "아니오" 링크 엘리먼트 가져오기 및 클릭 이벤트 리스너 추가
+  const noLink = document.querySelector('.auto-group-etut-tHw a');
+  noLink.addEventListener('click', async function(event) {
+      event.preventDefault();
 
-const outputImage = document.getElementById('output-image');
-// "아니오" 링크 엘리먼트 가져오기
-const noLink = document.querySelector('.auto-group-etut-tHw a');
+      // 특정 요소만 캡처하기 위해 해당 요소를 지정
+      const elementToCapture = document.querySelector('.rectangle-9-kL9');
 
+      html2canvas(elementToCapture).then(canvas => {
+          const dataUrl = canvas.toDataURL('image/png');
 
-// "아니오" 링크에 클릭 이벤트 리스너 추가
-noLink.addEventListener('click', async function(event) {
-    event.preventDefault(); // 기본 클릭 동작을 막음
-
-    const canvas = document.createElement('canvas');
-    canvas.width = outputImage.clientWidth; 
-    canvas.height = outputImage.clientHeight; 
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(outputImage, 0, 0, canvas.width, canvas.height);
-
-    const dataUrl = canvas.toDataURL('image/png');
-
-    try {
-        const response = await fetch('/save-output-image', {
-            method: 'POST',
-            body: dataURItoBlob(dataUrl), 
-            headers: { 'Content-Type': 'image/png' }
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log(result.message); 
-            window.location.href = "{{ url_for('pro_filter') }}";
-          } else {
-            console.error('Failed to save image');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-
-    // 여기에 추가적인 동작을 수행할 수 있습니다.
-});
-
+          fetch('/save-screenshot', {
+              method: 'POST',
+              body: JSON.stringify({ image: dataUrl }),
+              headers: { 'Content-Type': 'application/json' }
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              if (data.message === 'Screenshot saved successfully') {
+                  window.location.href = "{{ url_for('pro_filter') }}";
+              }
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+          });
+      });
+  });
 </script>
+
+  <!-- html2canvas 라이브러리 -->
+  
+</body>

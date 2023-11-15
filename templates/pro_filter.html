@@ -44,6 +44,7 @@
     </div>
     <div class="auto-group-xs3p-4uP">
       <div class="item--D1b">적용하고 싶은 필터의 번호를 클릭 또는 말씀해 주세요.</div>
+      <div>File Path: {{ session.get('file_path', 'No file path set') }}</div>
       <img class="bi-mic-fill-DQu" src="../static/assets/bi-mic-fill-NEV.png"/>
       <!-- <div class="item--fGu">
       선택한 필터의 번호는 -입니다.
@@ -84,7 +85,7 @@
           <div class="item--F9s">필터</div>
         </div>
       </div>
-      <a href="{{ url_for('pro_complete') }}"> <div class="auto-group-s1v3-w2h">
+      <a> <div class="auto-group-s1v3-w2h">
         <div class="rectangle-9-TWq" onclick="sendFilter('1')"><img src="../static/I/001.png" width="100%" height = "100%" >
         </div>
         <div class="rectangle-11-Tv9" onclick="sendFilter('2')"><img src="../static/I/002.png" width="100%" height = "100%" >
@@ -106,7 +107,7 @@
         <div class="item--9iR">5. 새벽하늘</div>
         <div class="item--4qP">6. 낭만적</div>
       </div>
-      <a href="{{ url_for('pro_complete') }}"> <div class="auto-group-jxlu-Pcm">
+      <a> <div class="auto-group-jxlu-Pcm">
         <div class="rectangle-16-7Ym" onclick="sendFilter('7')"><img src="../static/I/007.png" width="100%" height = "100%" >
         </div>
         <div class="rectangle-20-rmF" onclick="sendFilter('8')"><img src="../static/I/008.png" width="100%" height = "100%" >

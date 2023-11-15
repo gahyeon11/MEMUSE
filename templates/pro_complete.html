@@ -37,6 +37,7 @@
           <div class="group-2-bbo">
             <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-AQ1" src="../static/assets/icons8-user1-1-bZT.png"/></a>
+            <div>File Path: {{ session.get('file_path', 'No file path set') }}</div>
           </div>
         </div>
       </div>
