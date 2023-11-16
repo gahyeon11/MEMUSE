@@ -18,7 +18,7 @@
 <body>
 <div class="item-1-LC1">
   <a href="{{ url_for('pro_lora') }}">   
-  <img class="auto-group-ejmt-EoB" src="../static/assets/auto-group-ejmt.png"/></a>
+  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a>
   <div class="auto-group-5ndw-m2R">
     <div class="group-61-5J1">
       <div class="auto-group-hcmx-ERo">
@@ -157,8 +157,28 @@
         window.location.href = '/pro_back_complete';
         break;
       case '다음':
-        window.location.href = '/pro_back_complete';
+      var brushedValue = document.getElementById('brushedForm').elements.brushed.value;
+
+        fetch('/pro_lora_num', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt: brushedValue })
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/pro_back_complete';
+          }
+          else {
+            throw new Error('pro_lora_num 서버 처리 실패');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
         break;
+        
       case '이전으로':
         window.location.href = '/pro_lora';
         break;

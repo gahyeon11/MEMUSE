@@ -424,3 +424,15 @@ textarea {
 /* font-family: 'Nanum Gothic', sans-serif; */
 font-size: 15px;
 }
+
+.rectangle-30-right {
+  right: 0;
+  top: 0;
+  z-index: 5;
+}
+
+.rectangle-29-left {
+  width: 25.8rem; /* 너비 설정 */
+  height: 108rem; /* 높이 설정 */
+  background-color: #003c74; /* 배경색 설정 */
+}

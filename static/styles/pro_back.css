@@ -216,8 +216,8 @@ body {
   font-family: 'Hahmlet', Inter, serif;
 /* font-family: 'Nanum Gothic', sans-serif; */
 }
-.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-14-Ee5 .item--aC9 .item--aC9-sub-1 {
-}
+/* .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-14-Ee5 .item--aC9 .item--aC9-sub-1 {
+} */
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-14-Ee5 .auto-group-cw8m-e5X {
   width: 63.3rem;
   height: 100%;
@@ -471,7 +471,9 @@ body {
   flex-shrink: 0;
 }
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj {
-  margin-bottom: 1.65rem;
+  margin-left: -42rem;
+  margin-bottom: 0rem;
+  margin-top: -3rem;
   max-width: 46rem;
   display: flex;
   align-items: center;
@@ -485,6 +487,7 @@ body {
   font-family: 'Hahmlet', Inter, serif;
 /* font-family: 'Nanum Gothic', sans-serif; */
   flex-shrink: 0;
+  text-align:center;
 }
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-0 {
   text-align:center;
@@ -499,8 +502,8 @@ body {
   font-family: 'Hahmlet', Inter, serif;
 /* font-family: 'Nanum Gothic', sans-serif; */
 }
-.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-2 {
-}
+/* .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-2 {
+} */
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-3 {
   font-size: 1.7rem;
   font-weight: 700;
@@ -511,10 +514,10 @@ body {
   font-family: 'Hahmlet', Inter, serif;
 /* font-family: 'Nanum Gothic', sans-serif; */
 }
-.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-4 {
-}
+/* .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-4 {
+} */
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-32-x2u {
-  margin: 0rem 38.1rem 17.2rem 38.1rem;
+  margin: 5rem 50rem 17.2rem 38.1rem;
   width: calc(100% - 76.2rem);
   height: 6rem;
   cursor: pointer;
@@ -535,6 +538,29 @@ body {
   border-radius: 2rem;
   flex-shrink: 0;
 }
+.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-32-next {
+  margin: -23.2rem 50rem 17.2rem 60rem;
+  width: calc(100% - 76.2rem);
+  height: 6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.2125;
+  color: #ffffff;
+  /* font-family: Inter, 'Source Sans Pro'; */
+  font-family: 'Hahmlet', Inter, serif;
+/* font-family: 'Nanum Gothic', sans-serif; */
+  white-space: nowrap;
+  border: solid 0.3rem #003c74;
+  box-sizing: border-box;
+  background-color: #003c74;
+  border-radius: 2rem;
+  flex-shrink: 0;
+}
+
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .bi-mic-fill-yyb {
   margin-left: 74.7rem;
   width: 2.5rem;
@@ -543,13 +569,14 @@ body {
   vertical-align: top;
   flex-shrink: 0;
 }
-.item-1-LC1 .rectangle-30-KGm {
+
+
+.item-1-LC1 .rectangle-30-right {
   width: 25.8rem;
   height: 108rem;
   background-color: #003c74;
   flex-shrink: 0;
 }
-
 
 input{
   width:260px;

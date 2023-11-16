@@ -19,7 +19,7 @@
 <body>
 <div class="item-1-LC1">
   <a href="{{ url_for('pro_back_complete') }}">   
-  <img class="auto-group-ejmt-EoB" src="../static/assets/auto-group-ejmt.png"/></a>
+  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a>
   <div class="auto-group-5ndw-m2R">
     <div class="group-61-5J1">
       <div class="auto-group-hcmx-ERo">
@@ -76,7 +76,7 @@
       <div class="item--9ds">
         <span class="item--9ds-sub-0">어떤 오브젝트를 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
       </div>
-      <form action="{{ url_for('pro_object_complete') }}" method="post" id="mood" style="width:850px">
+      <form action="{{ url_for('pro_object') }}" method="post" id="mood" style="width:850px">
       <div class="auto-group-ct25-WWM"><textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea></div>
       <br>
       <div class="item--8Xj" style="transform:translate(43%,0)">
@@ -91,52 +91,28 @@
             <!-- 다음 버튼 -->
             <button type="button" id="resetButton" style="background:#003D75; color:white">다시</button>
             <button type="button" id="nextButton" style="background:#003D75; color:white">다음</button>
-
-      <!-- <div class="group-32-x2u"><input type="submit" value="완료" style="background:#003D75; color:white"></div> -->
-      </form>
-      <button type="button" id="startRecognition"><img class="bi-mic-fill-yyb" src="../static/assets/bi-mic-fill-TEH.png"/></button> 
+          </form>
+          <button type="button" id="startRecognition"><img class="bi-mic-fill-yyb" src="../static/assets/bi-mic-fill-TEH.png"/></button> 
+        </div>
+      </div>
+      <div class="rectangle-30-KGm">
+      </div>
     </div>
-  </div>
-  <div class="rectangle-30-KGm">
-  </div>
-</div>
-<script>
-  // 번역된 텍스트를 저장할 변수
-  var translatedTextGlobal = '';
+  <script>
+    // 번역된 텍스트를 저장할 변수
+    var translatedTextGlobal = '';
 
-  document.getElementById('mood').addEventListener('submit', function(event){
+    document.getElementById('mood').addEventListener('submit', function(event){
     event.preventDefault();
-    // 폼 데이터 가져오기
-    var promptValue = document.getElementById('background').value;
-    var data = {
-      prompt: promptValue,
-      translatedText: translatedTextGlobal  // 번역된 텍스트 추가
-    };
-    // 서버에 포스트 요청
-    fetch('/pro_object', {
-      method: 'POST',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      // 서버로부터 받은 리디렉션 주소로 페이지 이동
-      if (data.redirect) {
-        window.location.href = data.redirect;
-      }
-    })
-    .catch(error => {
-      console.error('Error_pro_back:', error);
-    });
-});
+    sendRequestAndRedirect();
+  });
 
-  if (annyang) {
+    // 음성 인식 관련 코드
+    if (annyang) {
       annyang.setLanguage('ko');
       var final_transcripts = [];
       var result_save = false;
-  
+
       annyang.addCallback('result', function (phrases) {
       if (phrases[0].trim() == "음성 시작") {
         result_save = true;
@@ -147,86 +123,70 @@
         var final_transcript = phrases.map(p => p.trim()).join(' ');
         final_transcripts.push(final_transcript);
   
-        // 음성 인식 결과를 텍스트 박스에 표시
-        document.getElementById('background').value = final_transcripts.join(' ');
+          // 음성 인식 결과를 텍스트 박스에 표시
+          document.getElementById('background').value = final_transcripts.join(' ');
   
-        // 음성 명령 처리
-        if (final_transcript.includes("다음")) {
-          // '다음' 버튼 클릭
-          document.getElementById('nextButton').click();
-        } else if (final_transcript.includes("다시")) {
-          // '완료' 버튼 클릭
-          document.getElementById('resetButton').click();
-        }
-      }
-    });
-  
-      // 시작 버튼 이벤트 리스너 설정
-      const startButton = document.getElementById('startRecognition');
-      startButton.addEventListener('click', function () {
-        if (result_save) {
-          result_save = false;
-          // this.textContent = '음성 인식 시작';
-        } else {
-          result_save = true;
-          // this.textContent = '음성 인식 일시 중지';
+          // 음성 명령 처리
+          if (final_transcript.includes("다음")) {
+            document.getElementById('nextButton').click();
+          } else if (final_transcript.includes("다시")) {
+            document.getElementById('resetButton').click();
+          }
         }
       });
-  
-      // annyang 시작
+
+      const startButton = document.getElementById('startRecognition');
+      startButton.addEventListener('click', function () {
+        result_save = !result_save;
+      });
+
       annyang.start({ autoRestart: false, continuous: true });
     } else {
       alert('Sorry, your browser does not support speech recognition.');
     }
 
-const resetButton = document.getElementById('resetButton');
+    // Reset 버튼 이벤트 리스너
+    const resetButton = document.getElementById('resetButton');
+    resetButton.addEventListener('click', function () {
+      document.getElementById('background').value = ''; 
+    });
 
-resetButton.addEventListener('click', function () {
-    document.getElementById('background').value = ''; // textarea의 내용을 비웁니다.
-});
+    // 다음 버튼 이벤트 리스너
+    const nextButton = document.getElementById('nextButton');
+    nextButton.addEventListener('click', function () {
+      sendRequestAndRedirect();
+    });
 
-
-const nextButton = document.getElementById('nextButton');
-
-nextButton.addEventListener('click', function () {
-  const textToTranslate = document.getElementById('background').value;
-    sendRequestAndRedirect(textToTranslate);
-});
-
-function sendRequestAndRedirect(textToTranslate) {
-    // 먼저 번역 요청을 보냅니다.
-    fetch('/translate', {
+    // 번역 요청 및 서버에 데이터 전송
+    function sendRequestAndRedirect() {
+      const textToTranslate = document.getElementById('background').value;
+      fetch('/translate', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 'text': textToTranslate }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        // 번역된 텍스트를 서버로 보내면서 완료 요청을 합니다.
-        return fetch('/pro_back', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ translatedText: data.translatedText })
+      })
+      .then(response => response.json())
+      .then(data => {
+        return fetch('/pro_object', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ translatedText: data.translatedText })
         });
-    })
-    .then(response => response.json())
-    .then(data => {
-        // 서버로부터 리다이렉트 URL을 받으면 해당 페이지로 이동합니다.
+      })
+      .then(response => response.json())
+      .then(data => {
         if (data.redirect) {
-            window.location.href = data.redirect;
+          window.location.href = data.redirect;
         }
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error('Error in request or redirect:', error);
-    });
-}
-
-
-</script>
+      });
+    }
+  </script>
 </body>
 </html>
-  

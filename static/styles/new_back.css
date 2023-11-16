@@ -21,29 +21,28 @@ a {
 body {
   width: 192rem;
 }.item-2-VqB {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+  /* Similar to .item-4-RPo */
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
   background-color: #ffffff;
+  position: relative;
+  width: 192rem; /* Match the width */
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
 }
 .item-2-VqB .auto-group-sd2z-ceu {
-  margin-right: 2.6rem;
-  width: 33.8rem;
-  height: 108rem;
-  position: relative;
-  object-fit: contain;
-  vertical-align: top;
-  flex-shrink: 0;
+  position: absolute; /* 절대 위치 지정 */
+  width: 7rem; /* 이미지 너비 */
+  height: auto; /* 이미지 높이는 자동으로 */
+  bottom: 170px; /* 하단에서의 위치 */
+  left: 70%; /* 왼쪽에서 50% 위치에 배치 */
+  transform: translateX(-50%); /* 중앙 정렬 */
+  z-index: 10; /* 다른 요소들 위에 오도록 */
+  
 }
 .item-2-VqB .auto-group-mizo-vvV {
-  margin: 1.8rem 9.4rem 0rem 0rem;
-  width: 120.6rem;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
+   /* 원본과 동일한 여백 및 너비 조정 */
+   margin-left: 25.8rem;
+   margin-right: 25.8rem;
 }
 .item-2-VqB .auto-group-mizo-vvV .group-61-EgH {
   width: 100%;
@@ -502,9 +501,99 @@ body {
   vertical-align: top;
   flex-shrink: 0;
 }
-.item-2-VqB .rectangle-30-5zH {
+.item-2-VqB .rectangle-30-right {
+  position: absolute; /* 오른쪽 사각형을 절대 위치 설정 */
+  right: 0; /* 페이지 오른쪽에 고정 */
+  top: 0; /* 상단에 고정 */
   width: 25.8rem;
   height: 108rem;
   background-color: #003c74;
-  flex-shrink: 0;
+  z-index: 5; /* 다른 요소들 위에 오도록 z-index 설정 */
 }
+.item-2-VqB .rectangle-29-left {
+  width: 25.8rem;
+  height: 108rem;
+  background-color: #003c74;  
+}
+
+/* Adjust the left and right containers similar to .item-4-RPo */
+.left-container .rectangle-30-right {
+  position: absolute;
+  width: 25.8rem;
+  height: 108rem;
+  background-color: #003c74;
+
+}
+
+.rectangle-30-right {
+  right: 0;
+  top: 0;
+  z-index: 5;
+  background-color: #003c74;
+}
+
+.rectangle-29-left {
+  width: 25.8rem; /* 너비 설정 */
+  height: 108rem; /* 높이 설정 */
+  background-color: #003c74; /* 배경색 설정 */
+}
+
+.left-container {
+  position: absolute; /* 컨테이너를 절대 위치 설정 */
+  left: 0; /* 왼쪽 가장자리에 위치 */
+  top: 0; /* 상단에 위치 */
+  z-index: 5; /* 다른 요소들 위에 오도록 z-index 설정 */
+}
+
+/* 상단 네비게이션 바 조정 */
+.item-2-VqB .group-61-EgH .auto-group-vp7x-nho .group-10-TSZ .group-1-1ys {
+  /* 각 요소의 마진, 폰트 크기 등 조정 */
+  font-size: 2rem; /* 폰트 크기 */
+  margin-right: 10.6rem; /* 오른쪽 여백 */
+  /* 기타 스타일 조정 */
+}
+
+/* 중앙 콘텐츠 영역 조정 */
+.item-2-VqB .auto-group-dnxs-LRo .group-14-sRj .auto-group-jvw1-F4u {
+  /* 요소의 위치, 크기, 스타일 조정 */
+  width: 51.8rem; /* 너비 */
+  margin-right: 6rem;
+
+  /* 기타 스타일 조정 */
+}
+
+/* 사각형 및 기타 요소 조정 */
+.item-2-VqB .rectangle-30-right .rectangle-29-left {
+  /* 위치 및 크기 조정 */
+  width: 25.8rem; /* 너비 */
+  height: 108rem; /* 높이 */
+  background-color: #003c74; /* 배경색 */
+  
+}
+
+.item-2-VqB .auto-group-mizo-vvV .group-61-EgH {
+  margin-top: 18px; /* 상단 메뉴바의 상단 여백 증가 */
+}
+
+.item-2-VqB .auto-group-mizo-vvV .group-14-sRj {
+  margin-top: 18px; /* 콘텐츠 영역의 상단 여백 증가 */
+  
+}
+
+.line-2-oRs {
+  position: absolute; /* 절대 위치 설정 */
+  margin-top: 60px;
+  margin-right: 94px;
+  z-index: 10; /* 다른 요소들 위에 오도록 */
+}
+
+/* .group-61-MRs 클래스의 하단 마진 조정 */
+.group-61-MRs {
+  margin-bottom: 100px; /* 원하는 간격으로 조정 */
+}
+
+/* 또는 .group-14-sRj 클래스의 상단 마진 조정 */
+.group-14-sRj {
+  margin-top: 100px; /* 원하는 간격으로 조정 */
+}
+

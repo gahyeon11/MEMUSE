@@ -377,7 +377,7 @@ def cartoon_gallery1():
     page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
     per_page = 3  # 한 페이지당 표시할 이미지 수
     # 카테고리가 "helloflatcute2d_V10.safetensors [5a7204177d]"인 이미지만 필터링하고 페이지네이션 적용
-    pagination = ImageModel.query.filter_by(category="helloflatcute2d_V10.safetensors [5a7204177d]").paginate(page=page, per_page=per_page, error_out=False)
+    pagination = ImageModel.query.filter_by(category="chosenMix_bakedVae.safetensors [52b8ebbd5b]").paginate(page=page, per_page=per_page, error_out=False)
     images = pagination.items  # 현재 페이지의 이미지들
     username = session.get('username', 'Guest')
     return render_template('cartoon_gallery1.html', images=images, pagination=pagination)
@@ -1050,7 +1050,7 @@ def pro_filter():
         # print(session['file_path']) 
         print("fin 후 settion path :", session['file_path'])
 
-        return redirect(url_for('pro_complete'))
+        return jsonify({'redirect': url_for('pro_complete')})
     
     # GET 요청 처리
     username = session.get('username', 'Guest')
