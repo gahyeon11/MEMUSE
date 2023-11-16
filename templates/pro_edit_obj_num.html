@@ -44,33 +44,28 @@
       <img class="line-2-7yj" src="../static/assets/line-2-cnD.png"/>
     </div>
     <div class="auto-group-jbff-U3b">
-      <div class="item--1ZK">이동시킬 오브젝트의 번호를 클릭 또는 말씀해 주세요.</div>
+      <div class="item--1ZK">오브젝트를 이동시킬 번호를 말씀해주세요. (1-9) </div>
       <img class="bi-mic-fill-2jK" src="../static/assets/bi-mic-fill-9ub.png"/>
       <div class="item--ZUM">
-        <span class="item--ZUM-sub-0">오브젝트 이동을 원치 않는다면&nbsp;</span>
+        <span class="item--ZUM-sub-0">이동을 마쳤다면 &nbsp;</span>
         <!-- <span class="item--ZUM-sub-1"> </span> -->
-        <span class="item--ZUM-sub-2">‘이동 안함 ’</span>
-        <span class="item--ZUM-sub-3">을 클릭 또는 말씀해 주세요.</span>
+        <span class="item--ZUM-sub-2">‘완료’</span>
+        <span class="item--ZUM-sub-3">를 클릭 또는 말씀해 주세요.</span>
       </div>
-      <div class="group-63-rVP"><a href="{{ url_for('pro_filter') }}" style="color:white">이동 안함</a></div>
-      <a href="{{ url_for('pro_edit_obj_check') }}">
-      <div class="rectangle-9-uiZ">
+      <div class="auto-group-6ved-gxZ">
+      <div class="group-63-rVP"><a href="{{ url_for('pro_filter') }}" id = "noLink" style="color:white">완료</a></div>
+    </div>
+    <div class="rectangle-9-uiZ">
+      <div class="image-container" style="position: relative; overflow: hidden;">
         {% if background_image %}
-              <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
-          {% endif %}
-        <div id="object-container"></div>
-      </div>      
-      
-    </a>
-      <a href="{{ url_for('pro_edit_obj_check') }}">
-        <div class="rectangle-9-uiZ">
-          {% if background_image %}
-                <img src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
-            {% endif %}
-          <div id="object-container"></div>
-        </div>      
-        
-      </a>
+            <img class="background-image" id="background-image" src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
+        {% endif %}
+        {% if processed_image %}
+            <img class="processed-image object-image" id="processed-image" src="{{ url_for('static', filename=processed_image) }}" alt="Processed Image" style="position: absolute; top: 0; left: 0; z-index: 1;">
+        {% endif %}
+    </div>
+    </div>
+      </div> 
       <div class="group-14-SyP">
         <div class="item--aph">
           <span class="item--aph-sub-0">{{ username }}&nbsp;</span>
@@ -100,149 +95,158 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="rectangle-30-FQM">
+  <div class="rectangle-30-KQV">
   </div>
 </div>
 </body>
-<!-- JavaScript 코드 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-window.addEventListener('load', function() {
-    $.ajax({
-        url: '/get_processed_image_paths',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (data.length > 0) {
-                var randomImagePath = data[Math.floor(Math.random() * data.length)];
-                var objectImage = new Image();
-                objectImage.src = randomImagePath;
-                objectImage.alt = 'Object Image';
+  function dataURItoBlob(dataURI) {
+      const byteString = atob(dataURI.split(',')[1]);
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+  }
 
-                objectImage.onload = function() {
-                    var backgroundImage = document.querySelector('.rectangle-9-kL9 img');
-                    if (backgroundImage) {
-                        var backgroundImageWidth = backgroundImage.width;
-                        var backgroundImageHeight = backgroundImage.height;
+  // "아니오" 링크 엘리먼트 가져오기 및 클릭 이벤트 리스너 추가
+  const noLink = document.querySelector('.group-63-rVP a');
+  noLink.addEventListener('click', async function(event) {
+      event.preventDefault();
 
-                        var randomLeft = Math.floor(Math.random() * (backgroundImageWidth - objectImage.width));
-                        var randomTop = Math.floor(Math.random() * (backgroundImageHeight - objectImage.height));
+      // 특정 요소만 캡처하기 위해 해당 요소를 지정
+      const elementToCapture = document.querySelector('.rectangle-9-uiZ');
 
-                        objectImage.style.position = 'absolute';
-                        objectImage.style.left = randomLeft + 'px';
-                        objectImage.style.top = randomTop + 'px';
+      html2canvas(elementToCapture).then(canvas => {
+          const dataUrl = canvas.toDataURL('image/png');
 
-                        var objectContainer = document.getElementById('object-container');
-                        objectContainer.appendChild(objectImage);
-                    } else {
-                        console.log('Background image not found');
-                    }
-                };
-            } else {
-                console.log('No processed images available.');
-            }
-        },
-        error: function(error) {
-            console.log('Error:', error);
-        }
-    });
-    setupObjectClickHandlers();
-});
-let selectedObject = null;
-
-const positions = [
-    { top: '0%', left: '0%' },   
-    { top: '0%', left: '33%' },  
-    { top: '0%', left: '66%' },  
-    { top: '33%', left: '0%' },   
-    { top: '33%', left: '33%' },  
-    { top: '33%', left: '66%' },  
-    { top: '66%', left: '0%' },   
-    { top: '66%', left: '33%' },  
-    { top: '66%', left: '66%' }
-];
-
-// 오브젝트 이미지 클릭 이벤트 핸들러를 추가합니다.
-function setupObjectClickHandlers() {
-  const objects = document.querySelectorAll('.object-image'); // 오브젝트 이미지 클래스 또는 식별자를 사용하세요.
-  objects.forEach(object => {
-      object.addEventListener('click', function() {
-          // 선택된 오브젝트를 갱신합니다.
-          if (selectedObject) {
-              selectedObject.classList.remove('selected'); // 선택 표시를 제거합니다.
-          }
-          selectedObject = this;
-          selectedObject.classList.add('selected'); // 선택 표시를 추가합니다.
+          fetch('/save-screenshot', {
+              method: 'POST',
+              body: JSON.stringify({ image: dataUrl }),
+              headers: { 'Content-Type': 'application/json' }
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              if (data.message === 'Screenshot saved successfully') {
+                  window.location.href = "{{ url_for('pro_filter') }}";
+              }
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+          });
       });
   });
-}
+</script>
 
-function resizeOverlay(scaleFactor) {
-  if (selectedOverlay) {
-      selectedOverlay.style.transform = 'scale(' + scaleFactor + ')';
-  }
-}
-window.addEventListener('keydown', (e) => {
-  if (!selectedOverlay) return;
-
-  const key = parseInt(e.key);
-  if (key >= 1 && key <= 9) {
-      const bgWidth = background.clientWidth;
-      const bgHeight = background.clientHeight;
-      
-      
-      const cols = 3;
-      const rows = 3;
-      const cellWidth = bgWidth / cols;
-      const cellHeight = bgHeight / rows;
-      const col = (key - 1) % cols;
-      const row = Math.floor((key - 1) / rows);
-
-  
-      const overlayX = col * cellWidth;
-      const overlayY = row * cellHeight;
-      selectedOverlay.style.left = `${overlayX}px`;
-      selectedOverlay.style.top = `${overlayY}px`;
-  }
-
-
-  if (e.key === '+') {
-      selectedOverlay.style.width = selectedOverlay.clientWidth * 1.1 + "px";  
-      selectedOverlay.style.height = "auto";  
-  }
-  if (e.key === '-') {
-      selectedOverlay.style.width = selectedOverlay.clientWidth * 0.9 + "px";  
-      selectedOverlay.style.height = "auto";  
-  }
-  if (e.key === 'Enter') { 
-      if (selectedOverlay) {
-          selectedOverlay.style.border = 'none'; 
-          selectedOverlay = null; 
-      }
-      return;
-  }
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var processedImage = document.getElementById('processed-image');
+    if (processedImage) {
+        selectedObject = processedImage;
+        selectedObject.classList.add('selected');
+    }
 });
 
-function undo() {
-  console.log('Undoing');
+window.addEventListener('load', function() {
+    var backgroundImage = document.getElementById('background-image');
+    if (!backgroundImage) {
+        console.log('Background image not found');
+        return;
+    }  
+    
+    $.ajax({
+      url: '/get_processed_image_paths',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+          if (data.length > 0) {
+              var randomImagePath = data[Math.floor(Math.random() * data.length)];
+              var objectImage = new Image();
+              objectImage.src = randomImagePath;
+              objectImage.alt = 'Object Image';
 
-  if (overlayHistoryIndex <= 0) return;
-  overlayHistoryIndex--;
+              objectImage.onload = function() {
+                  var backgroundImage = document.querySelector('.rectangle-9-kL9 img');
+                  if (backgroundImage) {
+                      var backgroundImageWidth = backgroundImage.width;
+                      var backgroundImageHeight = backgroundImage.height;
 
-  const previousState = overlayHistory[overlayHistoryIndex];
-  applyOverlayState(previousState);
-}
+                      var randomLeft = Math.floor(Math.random() * (backgroundImageWidth - objectImage.width));
+                      var randomTop = Math.floor(Math.random() * (backgroundImageHeight - objectImage.height));
 
-function redo() {
-  console.log('Redoing');
+                      objectImage.style.position = 'absolute';
+                      objectImage.style.left = randomLeft + 'px';
+                      objectImage.style.top = randomTop + 'px';
 
-  if (overlayHistoryIndex >= overlayHistory.length - 1) return;
-  overlayHistoryIndex++;
+                      var objectContainer = document.getElementById('object-container');
+                      objectContainer.appendChild(objectImage);
+                  } else {
+                      console.log('Background image not found');
+                  }
+              };
+          } else {
+              console.log('No processed images available.');
+          }
+      },
+      error: function(error) {
+          console.log('Error:', error);
+      }
+  });
+      setupObjectClickHandlers();
+  });
 
-  const nextState = overlayHistory[overlayHistoryIndex];
-  applyOverlayState(nextState);
-}
 
+  // const positions = [
+  //     { top: '0%', left: '0%' },   
+  //     { top: '0%', left: '33%' },  
+  //     { top: '0%', left: '66%' },  
+  //     { top: '33%', left: '0%' },   
+  //     { top: '33%', left: '33%' },  
+  //     { top: '33%', left: '66%' },  
+  //     { top: '66%', left: '0%' },   
+  //     { top: '66%', left: '33%' },  
+  //     { top: '66%', left: '66%' }
+  // ];
+  window.addEventListener('keydown', (e) => {
+    var processedImage = document.getElementById('processed-image');
+    var backgroundImage = document.getElementById('background-image');
+    if (!processedImage || !backgroundImage) return;
+
+    var bgRect = backgroundImage.getBoundingClientRect();
+    const cols = 3;
+    const rows = 3;
+    const cellWidth = bgRect.width / cols;
+    const cellHeight = bgRect.height / rows;
+
+    const key = parseInt(e.key);
+    if (key >= 1 && key <= 9) {
+        const col = (key - 1) % cols;
+        const row = Math.floor((key - 1) / cols);
+        var newLeft = bgRect.left + col * cellWidth;
+        var newTop = bgRect.top + row * cellHeight;
+
+        processedImage.style.left = Math.max(bgRect.left, Math.min(newLeft, bgRect.right - processedImage.offsetWidth)) - bgRect.left + 'px';
+        processedImage.style.top = Math.max(bgRect.top, Math.min(newTop, bgRect.bottom - processedImage.offsetHeight)) - bgRect.top + 'px';
+    }
+
+    if (e.key === '+') {
+        processedImage.style.width = Math.min(processedImage.clientWidth * 1.1, bgRect.width) + "px";
+        processedImage.style.height = "auto";
+    }
+    if (e.key === '-') {
+        processedImage.style.width = Math.max(processedImage.clientWidth * 0.9, 10) + "px";
+        processedImage.style.height = "auto";
+    }
+});
 
 </script>

@@ -437,15 +437,3 @@ body {
   border-radius: 5.3rem;
   flex-shrink: 0;
 }
-
-.item-1-pAV .auto-group-deps-yKo .custom-text {
-  font-size: 0.5rem; /* 원하는 폰트 크기로 조정 */
-  font-weight: normal;
-  color: #FFFFFF; /* 흰색으로 설정 */
-  font-family: 'Gothic', sans-serif; /* 고딕체로 설정 */
-  white-space: nowrap;
-  flex-shrink: 0;
-  text-align: center; /* 텍스트 가운데 정렬 */
-  margin-top: auto; /* 페이지 하단 중앙으로 위치시키려면 margin-top을 auto로 설정 */
-  margin-bottom: 1rem; /* 하단 여백을 조절 */
-}
