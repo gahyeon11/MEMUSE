@@ -67,7 +67,8 @@
         <div class="auto-group-vk3s-MD3">
           <!-- Image List -->
           <div class="auto-group-jhgm-Gau">
-              {% for image in images %}
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+
                   <div class="auto-group-fhih-U6d">
                       <!-- Image Insertion -->
                       <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="image-display">

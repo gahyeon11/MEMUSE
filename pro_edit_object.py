@@ -36,6 +36,7 @@ def process_edit_object():
         with open(object_image_path, 'rb') as file:
             input_image = file.read()
         output_image = remove(input_image)
+        
         # 결과 이미지 저장 (예: 'static/processed/object.png')
         processed_file_name = 'processed/' + object_image_file
         processed_image_path = processed_file_name.replace('static/', '', 1)

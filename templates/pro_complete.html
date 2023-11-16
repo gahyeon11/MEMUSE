@@ -37,6 +37,7 @@
           <div class="group-2-bbo">
             <a href="{{ url_for('my_page') }}"> 
             <img class="icons8-user1-1-AQ1" src="../static/assets/icons8-user1-1-bZT.png"/></a>
+            <div>File Path: {{ session.get('file_path', 'No file path set') }}</div>
           </div>
         </div>
       </div>
@@ -52,17 +53,30 @@
     </div>
     <div class="auto-group-grgh-Qr5">
       <div class="auto-group-eut1-YBb">
-        <div class="rectangle-9-gob">
+        <div class="rectangle-9-gob"><img src="{{ url_for('static', filename=session['file_path']) }}" alt="Filtered Image">
         </div>
         <div class="group-3-RWH">
           <div class="item--wUd">{{ username }}</div>
           <div class="line-1-SgH">
           </div>
-          <form action="{{ url_for('pro_save_success') }}" id="captions-form">
-          <div class="group-26-Bds"><textarea id="title" autofocus placeholder="작품 제목" cols="30"></textarea></div>
-          <div class="item-2023-1N1">2023</div>
-          <div class="auto-group-kzpf-i1X"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7"></textarea></div>
-        </form>
+          <form action="{{ url_for('pro_save_success') }}" id="captions-form" method="post">
+            {{ form.hidden_tag() }} <!-- CSRF 토큰 렌더링 -->
+            <!-- 작품 제목 입력 필드 -->
+            <div class="group-26-ZYM">
+            {{ form.title.label }}
+            {{ form.title(placeholder="작품 제목") }}</div>
+    
+            <div class="item-2023-QJ5">2023</div>
+            <div class="auto-group-bzhs-iJm">
+                <!-- 작품 설명 입력 필드 -->
+                {{ form.caption.label }}
+                {{ form.caption(rows=7, placeholder="작품 설명") }}
+            </div>
+            <div class="group-58-Bzy">
+              <!-- 저장 버튼 추가 -->
+              <button id="save-button" type="submit" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
+            </div>
+          </form>
         </div>
       </div>
       <div class="item--tq7">
@@ -73,17 +87,17 @@
       저장된 작품은 ‘마이 페이지&gt;나의 작품’에서 확인할 수 있습니다.
       <br/>
       * 저장하지 않으면 작품은 사라집니다.
+ 
+      <!-- <div class="auto-group-n9ms-Gd7"> -->
+      
+        <!-- <div class="group-59-dry"><a href="{{url_for('new_no_save')}}" style="color:white">아니오</a></div>
+          
+      </div> -->
       </div>
-      <div class="auto-group-ytzq-Fp5">
-        <form action="{{ url_for('pro_save_success') }}" id="captions-form">
-        <div class="auto-group-lblm-yk5"><input type="submit" value="예" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem"></div>
-      </form>
-        <div class="auto-group-pwv1-rJ5"><a href="{{ url_for('pro_no_save') }}" style="color:white">아니오</a></div>
-      </div>
-      <img class="bi-mic-fill-KhT" src="../static/assets/bi-mic-fill-5y3.png"/>
+      <!-- <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/> -->
     </div>
   </div>
-  <div class="rectangle-30-T2y">
+  <div class="rectangle-30-2eD">
   </div>
 </div>
 <script>
