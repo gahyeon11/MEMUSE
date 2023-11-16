@@ -100,4 +100,62 @@
   <div class="rectangle-30-2eD">
   </div>
 </div>
-<!-- HTML 코드 중 수정한 부분 -->
+<script>
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'ko-KR';
+  
+  let title = '';
+  let captions = '';
+  let isTitleComplete = false;
+  
+  window.addEventListener('load', () => {
+    recognition.start();
+  });
+  
+  recognition.onresult = (event) => {
+    const result = event.results[event.results.length - 1][0].transcript;
+    console.log('음성 인식 결과:', result);
+  
+    switch (result) {
+      case '마이페이지':
+        window.location.href = '/mypage';
+        break;
+      case '가이드':
+        window.location.href = '/guide';
+        break;
+      case '이전으로':
+        window.location.href = '/pro_filter';
+        break;
+      case '저장':
+        if (!isTitleComplete) {
+          isTitleComplete = true;
+          document.getElementById('title').disabled = true;
+          document.getElementById('captions').focus();
+        } else {
+          const form = document.getElementById('captions-form');
+          form.action = "{{ url_for('pro_save_success') }}";
+          form.submit();
+        }
+        break;
+      default:
+        if (!isTitleComplete) {
+          title += result + ' ';
+          document.getElementById('title').value = title;
+        } else {
+          captions += result + ' ';
+          document.getElementById('captions').value = captions;
+        }
+        break;
+    }
+  };
+  
+  document.getElementById('save-button').addEventListener('click', () => {
+    const form = document.getElementById('captions-form');
+    form.action = "{{ url_for('pro_save_success') }}";
+    form.submit();
+  });
+</script>
+</body>
+</html>

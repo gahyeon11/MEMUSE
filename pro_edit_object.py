@@ -45,5 +45,7 @@ def process_edit_object():
         
             file.write(output_image)
         processed_image_paths.append(processed_image_path)
-
+        session['background_image'] = background_image_url
+        session['processed_image'] = processed_image_path
+        session['object_image'] = object_image_url
     return render_template('pro_edit_object.html', username=username, background_image=background_image_url, object_image=object_image_url, processed_image=processed_image_path)

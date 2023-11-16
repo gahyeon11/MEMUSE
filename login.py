@@ -16,7 +16,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 import requests
 import io
 import json
-import sqlite3
 from PIL import Image, PngImagePlugin, ImageFilter
 from datetime import datetime
 import base64
@@ -845,10 +844,14 @@ def pro_edit_obj_check():
     username = session.get('username', 'Guest')
     return render_template('pro_edit_obj_check.html', username=username)
 
-@app.route('/pro_edit_obj_num')
+@app.route('/pro_edit_obj_num', methods=['GET', 'POST'])
 def pro_edit_obj_num():
+    background_image_url = session.get('background_image')
+    processed_image_path = session.get('processed_image')
+    object_image_url = session.get('object_image')
+
     username = session.get('username', 'Guest')
-    return render_template('pro_edit_obj_num.html', username=username)
+    return render_template('pro_edit_obj_num.html', username=username,object_image=object_image_url, background_image=background_image_url, processed_image=processed_image_path)
 
 @app.route('/pro_edit_object')
 def pro_edit_object():
