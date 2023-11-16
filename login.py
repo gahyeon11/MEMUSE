@@ -17,7 +17,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 import requests
 import io
 import json
-import sqlite3
 from PIL import Image, PngImagePlugin, ImageFilter
 from datetime import datetime
 import base64
@@ -795,7 +794,7 @@ def pro_back_complete():
     # 가장 최근에 저장된 이미지 파일 경로 찾기
     latest_image_path = None
     if background_images:
-        latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
+        latest_image_path = os.path.join('/static/background', background_images[-1])  # 경로 수정
         latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
     
     username = session.get('username', 'Guest')
