@@ -19,15 +19,25 @@ a {
 }
 
 body {
-  width: 192rem;
+  width: 100%;
+  height: 100%;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* 뷰포트 높이에 맞춤 */
+  overflow: hidden; /* 스크롤바 제거 */
 }
 .item-4-RPo {
   display: flex;
   justify-content: center;
   background-color: #ffffff;
   position: relative;
-  width: 192rem; /* Match the width */
+  width: auto;
+  height: 100vh; /* 전체 화면 높이에 맞춤 */
   position: relative; /* 부모 요소를 상대 위치로 설정 */
+  margin: 0 auto; /* 좌우 마진 자동 조정 */
 }
 .item-4-RPo .auto-group-lsuf-vLZ {
   margin-right: 2.6rem;
@@ -503,7 +513,7 @@ body {
   vertical-align: top;
   flex-shrink: 0;
 }
-.item-4-RPo .rectangle-30-ZS1 {
+.item-4-RPo .rectangle-right {
   width: 25.8rem;
   height: 108rem;
   background-color: #003c74;
@@ -537,7 +547,7 @@ body {
   z-index: 1; /* 필요한 경우 z-index 조정 */
 }
 
-.rectangle-29-left, .rectangle-30-right {
+.rectangle-left, .rectangle-right {
   width: 25.8rem; /* 너비 설정 */
   height: 108rem; /* 높이 설정 */
   position: absolute; /* 절대 위치 지정 */
@@ -546,10 +556,19 @@ body {
   background-color: #003c74;
 }
 
-.rectangle-29-left {
+.rectangle-left {
   left: 0; /* 왼쪽 끝에 위치 */
 }
 
-.rectangle-30-right {
+.rectangle-right {
   right: 0; /* 오른쪽 끝에 위치 */
 }
+
+.auto-group-fyxh-qTX{
+  position: absolute;
+  top: 50%; /* 상단으로부터 50% */
+  left: 50%; /* 왼쪽으로부터 50% */
+  transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
+  padding-top: 25px;
+}
+

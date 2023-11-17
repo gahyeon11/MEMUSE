@@ -1,0 +1,69 @@
+/* Global Styles */
+
+/* 기본 HTML 요소 */
+html {
+    font-size: 62.5%;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Inter', 'Source Sans Pro', serif;
+    overflow-x: hidden; /* 가로 스크롤바 제거 */
+  }
+  
+  /* 공통 폰트 스타일 */
+  a {
+    text-decoration: none;
+    color: #003c74;
+  }
+  
+  /* 공통 레이아웃 스타일 */
+  .rectangle-left, .rectangle-right {
+    width: 25.8rem;
+    height: 108rem;
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    background-color: #003c74;
+    height: 100vh;
+  }
+  
+  .rectangle-left {
+    left: 0;
+  }
+  
+  .rectangle-right {
+    right: 0;
+  }
+  
+  /* 공통 요소 스타일 */
+  .button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: #003c74;
+    cursor: pointer;
+  }
+  
+  /* 공통 이미지 스타일 */
+  .image-display {
+    width: 30rem;
+    height: 30rem;
+    object-fit: cover;
+  }
+  
+  /* 반응형 디자인 */
+  @media only screen and (max-width: 768px) {
+    .rectangle-left, .rectangle-right {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+  
+    /* 모바일 화면에서의 추가 스타일 */
+  }
+  
