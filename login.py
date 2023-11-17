@@ -84,6 +84,7 @@ def translate_text(text_to_translate):
         }
         response = requests.post('https://openapi.naver.com/v1/papago/n2mt', headers=headers, data=data)
         translated_text = response.json()['message']['result']['translatedText']
+        print("번역 완료")
         return translated_text
     except Exception as e:
         return str(e)
@@ -93,8 +94,10 @@ def translate_text(text_to_translate):
 def translate_endpoint():
     try:
         request_data = request.json
+        print("JSON 받기 완료")
         text_to_translate = request_data['text']
         translated_text = translate_text(text_to_translate)
+        print("전달 완료")
         return jsonify({'translatedText': translated_text})
     except Exception as e:
         return jsonify({'error': str(e)})
@@ -761,7 +764,7 @@ def pro_back():
 
         # prompt 문자열에 추가
         payload["prompt"] += "landscape, no human, " + user_input + ", "
-        payload["negative_prompt"] += "nsfw, lowres, wortst quality, watermark, bad hands, missing fingers, extra arms, bed legs, human, "
+        payload["negative_prompt"] += "nsfw, lowres, worst quality, watermark, bad hands, missing fingers, extra arms, bed legs, human, "
 
         print("payload 확인:", payload)
 

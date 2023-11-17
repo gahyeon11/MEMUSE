@@ -587,13 +587,3 @@ body {
   z-index: 10; /* 다른 요소들 위에 오도록 */
 }
 
-/* .group-61-MRs 클래스의 하단 마진 조정 */
-.group-61-MRs {
-  margin-bottom: 100px; /* 원하는 간격으로 조정 */
-}
-
-/* 또는 .group-14-sRj 클래스의 상단 마진 조정 */
-.group-14-sRj {
-  margin-top: 100px; /* 원하는 간격으로 조정 */
-}
-
