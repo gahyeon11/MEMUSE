@@ -163,6 +163,7 @@ nextButton.addEventListener('click', function () {
   sendRequestAndRedirect();
 });
 
+   // 번역 요청 및 서버에 데이터 전송
   function sendRequestAndRedirect() {
     const textToTranslate = document.getElementById('background').value;
     fetch('/translate', {
