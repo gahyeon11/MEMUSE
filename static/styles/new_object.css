@@ -541,13 +541,12 @@ html, body {
 
 
 .auto-group-vayq-oJy {
-  position: absolute;
-  top: 50%; /* 상단으로부터 50% */
-  left: 50%; /* 왼쪽으로부터 50% */
+  position: relative;
+  top: 49%; /* 상단으로부터 50% */
+  left: 30.5%; /* 왼쪽으로부터 50% */
   transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
-  padding-top : 5px
+  padding-bottom: 228px;
 }
-
 .item--uzq {
   position: relative;
   left: -10px; /* 왼쪽으로 10픽셀 이동 */

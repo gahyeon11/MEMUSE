@@ -56,8 +56,8 @@
       </div>
       <div class="auto-group-6ved-gxZ">
       <div class="group-63-rVP"><a href="{{ url_for('pro_filter') }}" id = "noLink" style="color:white">완료</a></div>
-    </div>
-    <div class="rectangle-9-uiZ">
+      </div>
+      <div class="rectangle-9-uiZ">
       <div class="image-container" style="position: relative; overflow: hidden;">
         {% if background_image %}
             <img class="background-image" id="background-image" src="{{ url_for('static', filename=background_image) }}" alt="Background Image">
@@ -65,9 +65,8 @@
         {% if processed_image %}
             <img class="processed-image object-image" id="processed-image" src="{{ url_for('static', filename=processed_image) }}" alt="Processed Image" style="position: absolute; top: 0; left: 0; z-index: 1;">
         {% endif %}
-    </div>
-    </div>
-      </div> 
+      </div>
+        </div>
       <div class="group-14-SyP">
         <div class="item--aph">
           <span class="item--aph-sub-0">{{ username }}&nbsp;</span>
@@ -96,9 +95,8 @@
           <div class="item--MZs">필터</div>
         </div>
       </div>
-    </div>
-  <!-- <div class="rectangle-30-KQV">
-  </div> -->
+  </div>
+  </div>
   <div class="rectangle-right">
   </div>
 </div>
@@ -225,7 +223,6 @@ processedImage = document.querySelector('.processed-image-class'); // 클래스 
   //     { top: '66%', left: '66%' }
   // ];
   window.addEventListener('keydown', (e) => {
-    if (!processedImage) return;
     var processedImage = document.getElementById('processed-image');
     var backgroundImage = document.getElementById('background-image');
     if (!processedImage || !backgroundImage) return;
@@ -238,10 +235,27 @@ processedImage = document.querySelector('.processed-image-class'); // 클래스 
 
     const key = parseInt(e.key);
 
-    const step = 10; // 이동 단계 (픽셀 단위)
+    const moveStep = 10;
+
     let left = parseInt(processedImage.style.left) || 0;
     let top = parseInt(processedImage.style.top) || 0;
-    
+
+
+    // 방향키에 따른 이동 로직
+    switch (e.key) {
+        case 'ArrowUp':
+            processedImage.style.top = (top - moveStep) + 'px';
+            break;
+        case 'ArrowDown':
+            processedImage.style.top = (top + moveStep) + 'px';
+            break;
+        case 'ArrowLeft':
+            processedImage.style.left = (left - moveStep) + 'px';
+            break;
+        case 'ArrowRight':
+            processedImage.style.left = (left + moveStep) + 'px';
+            break;
+    }
     if (key >= 1 && key <= 9) {
         const col = (key - 1) % cols;
         const row = Math.floor((key - 1) / cols);

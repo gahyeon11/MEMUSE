@@ -739,13 +739,12 @@ html, body {
 
 
 .auto-group-ze5f-Yr5 {
-  position: absolute;
-  top: 50%; /* 상단으로부터 50% */
-  left: 50%; /* 왼쪽으로부터 50% */
+  position: relative;
+  top: 48.5%; /* 상단으로부터 50% */
+  left: 30.5%; /* 왼쪽으로부터 50% */
   transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
-  /*padding : 0px*/
+  padding-bottom: 228px;
 }
-
 .group-14-jN9 {
   position: relative;
   left: 0px; /* 왼쪽으로 10픽셀 이동 */
