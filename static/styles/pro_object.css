@@ -535,14 +535,51 @@ body {
   border-radius: 2rem;
   flex-shrink: 0;
 }
-.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .bi-mic-fill-yyb {
+
+.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-32-next {
+  margin: -23.2rem 50rem 17.2rem 60rem;
+  width: calc(100% - 76.2rem);
+  height: 6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.2125;
+  color: #ffffff;
+  /* font-family: Inter, 'Source Sans Pro'; */
+  font-family: 'Hahmlet', Inter, serif;
+/* font-family: 'Nanum Gothic', sans-serif; */
+  white-space: nowrap;
+  border: solid 0.3rem #003c74;
+  box-sizing: border-box;
+  background-color: #003c74;
+  border-radius: 2rem;
+  flex-shrink: 0;
+}
+
+
+/* .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .bi-mic-fill-yyb {
   margin-left: 74.7rem;
   width: 2.5rem;
   height: 3.8667rem;
   object-fit: contain;
   vertical-align: top;
   flex-shrink: 0;
+} */
+
+#startRecognition {
+  background: url('../static/assets/bi-mic-fill-TEH.png') no-repeat center center;
+  background-size: contain;
+  width: 50px; /* 버튼의 너비 */
+  height: 50px; /* 버튼의 높이 */
+  border: none;
+  cursor: pointer;
+  /* 필요한 경우 위치 조정을 위한 추가 스타일링 */
 }
+
+
 .item-1-LC1 .rectangle-30-KGm {
   width: 25.8rem;
   height: 108rem;
