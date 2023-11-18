@@ -760,7 +760,7 @@ def pro_back():
     if request.method == 'POST':
         # POST 요청 시 JSON 데이터 파싱
         data = request.json
-        user_input = data['translatedText']
+        user_input = data.get('translatedText', 'No translated text provided')
 
         # prompt 문자열에 추가
         payload["prompt"] += "landscape, no human, " + user_input + ", "

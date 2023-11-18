@@ -158,58 +158,43 @@
 
   // 음성 인식 결과 이벤트 리스너
   recognition.onresult = (event) => {
-    const result = event.results[event.results.length - 1][0].transcript;
-    console.log('음성 인식 결과:', result);
+      const result = event.results[event.results.length - 1][0].transcript;
+      console.log('음성 인식 결과:', result);
 
-    // 인식된 음성 명령에 따라 URL로 이동
-
-    switch (result) {
-    case '마이페이지':
-      window.location.href = '/mypage'; // 절대 경로 사용
-      break;
-    case '가이드':
-      window.location.href = '/guide'; // 절대 경로 사용
-      break;
-    case '1번':
-      sendFilter(1);
-      break;
-    case '2번':
-      sendFilter(2);
-      break;
-    case '3번':
-      sendFilter(3);
-      break;
-    case '4번':
-      sendFilter(4);
-      break;
-    case '5번':
-      sendFilter(5);
-      break;  
-    case '6번':
-      sendFilter(6);
-      break;
-    case '7번':
-      sendFilter(7);
-      break;
-    case '8번':
-      sendFilter(8);
-      break;
-    case '9번':
-      sendFilter(9);
-      break;
-    case '10번':
-      sendFilter(10);
-      break;    
-    case '11번':
-      sendFilter(11);
-      break;
-    case '12번':
-      sendFilter(12);
-      break;
+      // 인식된 음성 명령에 따라 URL로 이동
+      if (result.includes('마이페이지')) {
+        window.location.href = '/mypage';
+      } else if (result.includes('가이드')) {
+        window.location.href = '/guide';
+      } else if (result.includes('1번')) {
+        sendFilter(1);
+      } else if (result.includes('2번')) {
+        sendFilter(2);
+      } else if (result.includes('3번')) {
+        sendFilter(3);
+      } else if (result.includes('4번')) {
+        sendFilter(4);
+      } else if (result.includes('5번')) {
+        sendFilter(5);
+      } else if (result.includes('6번')) {
+        sendFilter(6);
+      } else if (result.includes('7번')) {
+        sendFilter(7);
+      } else if (result.includes('8번')) {
+        sendFilter(8);
+      } else if (result.includes('9번')) {
+        sendFilter(9);
+      } else if (result.includes('10번')) {
+        sendFilter(10);
+      } else if (result.includes('11번')) {
+        sendFilter(11);
+      } else if (result.includes('12번')) {
+        sendFilter(12);
+      } else if (result.includes('이전으로')) {
+        window.location.href = '/new_back';
+      }
       // 다른 명령에 대한 처리도 추가할 수 있습니다.
-  }
-};
-
+    };
 </script>
 </body>
 </html>

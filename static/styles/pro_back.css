@@ -582,6 +582,16 @@ html, body {
   flex-shrink: 0;
 }
 
+#startRecognition {
+  background: url('../static/assets/bi-mic-fill-TEH.png') no-repeat center center;
+  background-size: contain;
+  width: 50px; /* 버튼의 너비 */
+  height: 50px; /* 버튼의 높이 */
+  border: none;
+  cursor: pointer;
+  /* 필요한 경우 위치 조정을 위한 추가 스타일링 */
+}
+
 
 .item-1-LC1 .rectangle-30-right {
   width: 25.8rem;
