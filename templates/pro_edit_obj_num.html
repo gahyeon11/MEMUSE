@@ -18,8 +18,10 @@
 </head>
 <body>
 <div class="item-8-UiV">
-  <a href="{{ url_for('pro_edit_object') }}">   
-  <img class="auto-group-vawm-bo7" src="../static/assets/auto-group-vawm.png"/></a>
+  <div class="rectangle-left">
+  </div>
+  <!-- <a href="{{ url_for('pro_edit_object') }}">   
+  <img class="auto-group-vawm-bo7" src="../static/assets/auto-group-vawm.png"/></a> -->
   <div class="auto-group-wjx9-jPX">
     <div class="group-61-TKX">
       <div class="auto-group-jq3t-DJh">
@@ -95,7 +97,9 @@
         </div>
       </div>
     </div>
-  <div class="rectangle-30-KQV">
+  <!-- <div class="rectangle-30-KQV">
+  </div> -->
+  <div class="rectangle-right">
   </div>
 </div>
 </body>
@@ -103,6 +107,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+  let processedImage = document.querySelector('.processed-image');
   function dataURItoBlob(dataURI) {
       const byteString = atob(dataURI.split(',')[1]);
       const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
@@ -203,7 +208,9 @@ window.addEventListener('load', function() {
       }
   });
       setupObjectClickHandlers();
-  });
+// processed 이미지를 가져옵니다 (예시: 클래스 이름으로 가져오기)
+processedImage = document.querySelector('.processed-image-class'); // 클래스 이름에 맞게 변경하세요
+});
 
 
   // const positions = [
@@ -218,6 +225,7 @@ window.addEventListener('load', function() {
   //     { top: '66%', left: '66%' }
   // ];
   window.addEventListener('keydown', (e) => {
+    if (!processedImage) return;
     var processedImage = document.getElementById('processed-image');
     var backgroundImage = document.getElementById('background-image');
     if (!processedImage || !backgroundImage) return;
@@ -229,6 +237,11 @@ window.addEventListener('load', function() {
     const cellHeight = bgRect.height / rows;
 
     const key = parseInt(e.key);
+
+    const step = 10; // 이동 단계 (픽셀 단위)
+    let left = parseInt(processedImage.style.left) || 0;
+    let top = parseInt(processedImage.style.top) || 0;
+    
     if (key >= 1 && key <= 9) {
         const col = (key - 1) % cols;
         const row = Math.floor((key - 1) / cols);

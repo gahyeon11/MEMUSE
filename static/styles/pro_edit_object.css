@@ -18,16 +18,38 @@ a {
   color: #003c74;
 }
 
+
 body {
-  width: 192rem;
-}.item-7-wMT {
+  width: 100%;
+  height: 100%;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* 뷰포트 높이에 맞춤 */
+  overflow: hidden; /* 스크롤바 제거 */
+}
+.item-7-wMT {
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  position: relative;
+  width: auto;
+  height: 100vh; /* 전체 화면 높이에 맞춤 */
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
+  margin: 0 auto; /* 좌우 마진 자동 조정 */
+}
+  /* 
+
+.item-7-wMT {
   width: 100%;
   overflow: hidden;
   position: relative;
   display: flex;
   align-items: flex-start;
   background-color: #ffffff;
-}
+} */
 .item-7-wMT .auto-group-uujx-G8q {
   margin-right: 2.6rem;
   width: 33.6rem;
@@ -98,6 +120,7 @@ body {
 }
 .item-7-wMT .auto-group-pqnh-NxZ .group-61-uBo .auto-group-tkkd-44h .group-10-8yf .group-1-uDj {
   margin: 1.3rem 10.25rem 1.2rem 0rem;
+  
   height: calc(100% - 2.5rem);
   display: flex;
   align-items: center;
@@ -538,4 +561,29 @@ body {
 
 .processed-image {
   z-index: 2; /* 객체 이미지가 위로 오도록 z-index 설정 */
+}
+.rectangle-left, .rectangle-right {
+  width: 25.8rem; /* 너비 설정 */
+  height: 108rem; /* 높이 설정 */
+  position: absolute; /* 절대 위치 지정 */
+  top: 0; /* 상단에 위치 */
+  z-index: 5; /* 다른 요소 위에 표시 */
+  background-color: #003c74;
+
+  height: 100vh; /* 전체 뷰포트 높이 */
+}
+
+.rectangle-left {
+  left: 0; /* 왼쪽 끝에 위치 */
+}
+
+.rectangle-right {
+  right: 0; /* 오른쪽 끝에 위치 */
+}
+.auto-group-pqnh-NxZ {
+  position: relative;
+  top: 50%; /* 상단으로부터 50% */
+  left: 50%; /* 왼쪽으로부터 50% */
+  transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
+  padding-bottom: 228px;
 }

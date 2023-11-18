@@ -514,7 +514,7 @@ html, body {
 }
 
 .rectangle-left, .rectangle-right {
-  width: 25.8rem; /* 너비 설정 */
+  width: 18rem; /* 너비 설정 */
   height: 108rem; /* 높이 설정 */
   position: absolute; /* 절대 위치 지정 */
   top: 0; /* 상단에 위치 */
@@ -565,4 +565,32 @@ html, body {
 .item--ftd{
   position: relative; /* 또는 absolute */
   left: 12px; /* 왼쪽에서 10px 떨어진 위치에 배치 */
+}
+
+.rectangle-left, .rectangle-right {
+  width: 25.8rem; /* 너비 설정 */
+  height: 108rem; /* 높이 설정 */
+  position: absolute; /* 절대 위치 지정 */
+  top: 0; /* 상단에 위치 */
+  z-index: 5; /* 다른 요소 위에 표시 */
+  background-color: #003c74;
+
+  height: 100vh; /* 전체 뷰포트 높이 */
+}
+
+.rectangle-left {
+  left: 0; /* 왼쪽 끝에 위치 */
+}
+
+.rectangle-right {
+  right: 0; /* 오른쪽 끝에 위치 */
+}
+
+
+.auto-group-mizo-vvV {
+  position: relative;
+  top: 46%; /* 상단으로부터 50% */
+  left: 60%; /* 왼쪽으로부터 50% */
+  transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
+  padding-bottom: 228px;
 }
