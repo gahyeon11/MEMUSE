@@ -444,7 +444,7 @@ font-size: 15px;
   z-index: 5; /* 다른 요소 위에 표시 */
   background-color: #003c74;
 
-  height: 100vh; /* 전체 뷰포트 높이 */
+  height: 100vh;
 }
 
 .rectangle-left {
@@ -462,11 +462,11 @@ font-size: 15px;
 }
 
 .auto-group-cyaz-fwX{
-  position: absolute;
-  top: 50%; /* 상단으로부터 50% */
-  left: 50%; /* 왼쪽으로부터 50% */
+  position: relative;
+  top: 49%; /* 상단으로부터 50% */
+  left: 30.5%; /* 왼쪽으로부터 50% */
   transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
-  padding-bottom: 253px;
+  padding-bottom: 228px;
 }
 
 .rectangle-9-U7b{

@@ -17,8 +17,10 @@
 </head>
 <body>
 <div class="item-16-ptZ">
-  <a href="{{ url_for('pro_filter') }}">   
-  <img class="auto-group-ygsm-Lru" src="../static/assets/left_rectangle.png"/></a>
+  <div class="rectangle-left">
+  </div>
+  <!-- <a href="{{ url_for('pro_filter') }}">   
+  <img class="auto-group-ygsm-Lru" src="../static/assets/left_rectangle.png"/></a> -->
   <div class="auto-group-4cqh-rqF">
     <div class="group-61-BMj">
       <div class="auto-group-bztx-vq7">
@@ -54,7 +56,7 @@
     <div class="auto-group-grgh-Qr5">
       <div class="auto-group-eut1-YBb">
         <div class="rectangle-9-gob"><img src="{{ url_for('static', filename=session['file_path']) }}" alt="Filtered Image">
-        </div>
+
         <div class="group-3-RWH">
           <div class="item--wUd">{{ username }}</div>
           <div class="line-1-SgH">
@@ -77,8 +79,8 @@
               <button id="save-button" type="submit" style="background:#003D75; color:white; font-family:Hahmlet; font-size:1.6rem">저장</button>
             </div>
           </form>
-        </div>
-      </div>
+        </div></div>
+      </div></div>
       <div class="item--tq7">
       작품을 저장하고 싶은가요?
       <br/>
@@ -95,11 +97,13 @@
       </div> -->
       </div>
       <!-- <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/> -->
+    
     </div>
   </div>
-  <div class="rectangle-30-2eD">
+  <div class="rectangle-right">
   </div>
 </div>
+
 <script>
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
