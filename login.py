@@ -135,8 +135,7 @@ models = [
     "helloflatcute2d_V10.safetensors [5a7204177d]",
     "pasteldiffusedmix_v22.safetensors [7d21f7acff]",
     "pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]",
-    "chosenMix_bakedVae.safetensors [52b8ebbd5b]",
-    "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+    "chosenMix_bakedVae.safetensors [52b8ebbd5b]"
     ]
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://myuser:mypassword@localhost/mydatabase'
@@ -630,6 +629,7 @@ def new_object():
         # GET 요청시 HTML 반환
         username = session.get('username', 'Guest')
         return render_template('new_object.html', username=username)
+
 @app.route('/new_save_success', methods=['GET', 'POST'])
 def new_save_success():
     if not session.get('logged_in'):
@@ -650,10 +650,12 @@ def new_save_success():
             file_path = session.get('file_path')
             print(file_path)
             image_style = session.get('image_style', 'default_style')
+            print(image_style)
             print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
             new_image = ImageModel(user_id=user_id, file_path=file_path, title=title, category=image_style, caption=caption)
             db.session.add(new_image)
             db.session.commit()
+            print(ImageModel(session[image_style]))
             session['title'] = title
             session['caption'] = caption
             flash('작품이 저장되었습니다!', 'success')
@@ -706,6 +708,7 @@ def new_style():
         }
         print(selected_model)
         session['image_style'] = selected_model
+        print(session['image_style'])
         # checkpoint 모델 변경
         response = requests.post(url = f'{url}/sdapi/v1/options', json = option_payload)
 
@@ -781,49 +784,46 @@ def pro_back():
         username = session.get('username', 'Guest')
         return render_template('pro_back.html', username = username)
         
-@app.route('/pro_back_complete', methods=['GET', 'POST'])
+@app.route('/pro_back_complete')
 def pro_back_complete():
-    if request.method == 'GET':
         background_folder = 'static/background'
         
         # 'background' 폴더 내의 모든 파일 나열
-        
         
         response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
         print(payload)
         r = response.json()
         
         # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-        for i in r['images']:
-            image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
+        if r['images']:
+            first_image = r['images'][0]
+            image = Image.open(io.BytesIO(base64.b64decode(first_image.split(",", 1)[0])))
             # API 요청을 보내 이미지 정보 검색
             png_payload = {
-                "image": "data:image/png;base64," + i
+                "image": "data:image/png;base64," + first_image
             }
             response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+            
             # PIL 이미지에 메타 데이터 삽입
             pnginfo = PngImagePlugin.PngInfo()
             pnginfo.add_text("parameters", response2.json().get("info"))
+            
             # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             file_name = os.path.join(background_folder, f'output_t2i{current_time}.png')  # 경로 수정
             
             # 이미지 저장
             image.save(file_name, pnginfo=pnginfo)
+            print("이미지 저장 완료")
 
             background_images = [filename for filename in os.listdir(background_folder) if filename.endswith(".png")]
-
-            # print("save1")
-            print(background_images)
         
         # 가장 최근에 저장된 이미지 파일 경로 찾기
         latest_image_path = None
         if background_images:
             latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
             latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
-            # print("save2")
-            # print(background_images)
-        
+
         username = session.get('username', 'Guest')
         return render_template('pro_back_complete.html', username=username, latest_image_path=latest_image_path)
 

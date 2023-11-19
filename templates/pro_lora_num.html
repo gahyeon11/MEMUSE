@@ -97,29 +97,6 @@
   </div>
 </div>
 <script>
-  document.getElementById('brushedForm').addEventListener('submit', function(event){
-    event.preventDefault();
-    var brushedValue = this.elements.brushed.value;
-
-    fetch('/pro_lora_num', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ prompt: brushedValue })
-    })
-    .then(response => {
-      if (response.ok) {
-        window.location.href = '/pro_back_complete';
-      }
-      else {
-        throw new Error('pro_lora_num 서버 처리 실패');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  });
 
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
