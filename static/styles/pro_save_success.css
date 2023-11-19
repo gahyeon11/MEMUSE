@@ -18,24 +18,15 @@ a {
   color: #003c74;
 }
 
-
 body {
-  width: 100%;
-  height: 100%;}
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* 뷰포트 높이에 맞춤 */
-    overflow: hidden; /* 스크롤바 제거 */
+  width: 192rem;
 }.item-17-1Wy {
-  display: flex;
-  justify-content: center;
-  background-color: #ffffff;
+  width: 100%;
+  overflow: hidden;
   position: relative;
-  width: auto;
-  height: 100vh; /* 전체 화면 높이에 맞춤 */
-  position: relative; /* 부모 요소를 상대 위치로 설정 */
-  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  background-color: #ffffff;
 }
 .item-17-1Wy .auto-group-t96h-u6Z {
   margin-right: 2.6rem;
@@ -413,7 +404,7 @@ font-size: 15px;
 .auto-group-tsy5-Dd3 {
   position: relative;
   top: 49%; /* 상단으로부터 50% */
-  left: 30%; /* 왼쪽으로부터 50% */
+  left: 30.5%; /* 왼쪽으로부터 50% */
   transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
   padding-bottom: 228px;
   display: flex;

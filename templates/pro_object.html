@@ -18,10 +18,8 @@
 </head>
 <body>
 <div class="item-1-LC1">
-  <div class="rectangle-left">
-  </div>
-  <!-- <a href="{{ url_for('pro_back_complete') }}">   
-  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a> -->
+  <a href="{{ url_for('pro_back_complete') }}">   
+  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a>
   <div class="auto-group-5ndw-m2R">
     <div class="group-61-5J1">
       <div class="auto-group-hcmx-ERo">
@@ -79,7 +77,9 @@
         <span class="item--9ds-sub-0">어떤 오브젝트를 그리고 싶은지 프롬프트를 입력 또는 말씀해 주세요.</span>
       </div>
       <form action="{{ url_for('pro_object') }}" method="post" id="mood" style="width:850px">
-      <div class="auto-group-ct25-WWM"><textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea></div>
+      <div class="auto-group-ct25-WWM">
+        <textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea>
+      </div>
       <br>
       <div class="item--8Xj" style="transform:translate(43%,0)">
         <span class="item--8Xj-sub-0">재시도를 하고 싶다면
@@ -98,12 +98,10 @@
     </div>
     <div class="group-32-next">
       <!-- 다음 버튼 -->
-      <a href="{{ url_for('pro_back_complete') }}" id="nextButton" style="color:white">다음</a>
+      <a href="{{ url_for('pro_object_complete') }}" id="nextButton" style="color:white">다음</a>
   </form>
   <button type="button" id="startRecognition" class="startRecognitionButton"></button> 
-</div></div>
 </div>
-<div class="rectangle-right">
 </div>
 </div>
 <script>

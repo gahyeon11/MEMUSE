@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>작업실/전문가8</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C600%2C700"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anybody%3A700"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500%2C600"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo+Black%3A400"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/styles/pro_more_object.css"/>
+</head>
+<body>
+<div class="item-6-fJZ">
+  <a href="{{ url_for('pro_object_complete') }}">   
+  <img class="auto-group-bwbf-msP" src="../static/assets/left_rectangle.png"/></a>
+  <div class="auto-group-jtvh-68y">
+    <div class="group-61-1Fw">
+      <div class="auto-group-xbuv-Mah">
+        <div class="group-62-U9X">
+          <a href="{{ url_for('intro') }}">  
+          <img class="group-11-oBo" src="../static/assets/group-11-6Dw.png"/></a>
+          <div class="me-muse-vnD">ME:MUSE</div>
+        </div>
+        <div class="group-10-SEm">
+          <div class="group-1-npR">
+            <div class="workplace-iTB"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+            <div class="museum-RcV"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+            <div class="guide-9YV"><a href="{{ url_for('guide') }}">Guide</a></div>
+            <div class="login-UKs"><a href="{{ url_for('logout') }}">logout</a></div>
+          </div>
+          <div class="group-2-osw">
+            <a href="{{ url_for('my_page') }}"> 
+            <img class="icons8-user1-1-mpm" src="../static/assets/icons8-user1-1-o8D.png"/></a>
+          </div>
+        </div>
+      </div>
+      <img class="line-2-WGZ" src="../static/assets/line-2-D7f.png"/>
+    </div>
+    <div class="auto-group-said-3GV">
+      <div class="group-14-mCV">
+        <div class="item--7XF">
+          <span class="item--7XF-sub-0">{{ username }}&nbsp;</span>
+          <span class="item--7XF-sub-1"> 작가님의 작업</span>
+        </div>
+        <div class="auto-group-twad-aJM">
+          <div class="line-4-uLd">
+          </div>
+          <div class="ellipse-1-d1j">
+          </div>
+          <div class="item--Y8h">스타일</div>
+          <div class="ellipse-2-2Zf">
+          </div>
+          <div class="item--98V">배경</div>
+          <div class="ellipse-3-2i5">
+          </div>
+          <div class="item--Fqj">오브젝트</div>
+          <div class="ellipse-4-kXb">
+          </div>
+          <div class="item--Two">배치</div>
+          <div class="ellipse-5-y9T">
+          </div>
+          <div class="item--hLM">세부 배치</div>
+          <div class="ellipse-6-C2D">
+          </div>
+          <div class="item--uhK">필터</div>
+        </div>
+      </div>
+      <div class="auto-group-wmgv-Qe5">
+        <div class="item--72h">
+        추가적으로 다른 오브젝트가 필요한가요?
+        <br/>
+        클릭 또는 말씀해 주세요.
+        </div>
+        <div class="auto-group-vunh-k5f">
+          <div class="group-40-Tkm"><a href="{{ url_for('pro_object') }}" style="color:white">예</a></div>
+          <div class="group-41-iAu"><a href="{{ url_for('pro_edit_object') }}" style="color:white">아니오</a></div>
+        </div>
+      </div>
+      <img class="bi-mic-fill-9X7" src="../static/assets/bi-mic-fill-PQV.png"/>
+    </div>
+  </div>
+  <div class="rectangle-30-GLq">
+  </div>
+</div>
+<script>
+  // 음성 인식 API 초기화
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  // 음성 인식 시작
+  recognition.start();
+
+  // 음성 인식 결과 이벤트 리스너
+  recognition.onresult = (event) => {
+    const result = event.results[event.results.length - 1][0].transcript;
+    console.log('음성 인식 결과:', result);
+
+    // 인식된 음성 명령에 따라 URL로 이동
+
+  // 인식된 음성 명령에 따라 URL로 이동
+  switch (result) {
+    case '마이페이지':
+      window.location.href = '/mypage'; // 절대 경로 사용
+      break;
+    case '가이드':
+      window.location.href = '/guide'; // 절대 경로 사용
+      break;
+    case '예':
+      window.location.href = '/pro_object'; // 절대 경로 사용
+      break;
+    case '아니요':
+      window.location.href = '/pro_edit_object'; // 절대 경로 사용
+      break;
+    case '이전으로':
+      window.location.href = '/pro_object'; // 절대 경로 사용
+      break;
+    // 다른 명령에 대한 처리도 추가할 수 있습니다.
+  }
+
+  };
+</script>
+</body>
+</html>

@@ -17,9 +17,8 @@
 </head>
 <body>
 <div class="item-1-LC1">
-  <div class="rectangle-left"></div>
-  <!-- <a href="{{ url_for('pro_lora') }}">   
-  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a> -->
+  <a href="{{ url_for('pro_lora') }}">   
+  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a>
   <div class="auto-group-5ndw-m2R">
     <div class="group-61-5J1">
       <div class="auto-group-hcmx-ERo">
@@ -88,38 +87,15 @@
         <br/>
       </div>
       <div class="group-32-x2u"><a href="{{ url_for('pro_back_complete') }}" style="color:white">다음</a></div>
-      <div class="group-32-next"><a href="{{ url_for('pro_back_complete') }}" style="color:white">아니오</a></div>
+      <div class="group-32-x2u"><a href="{{ url_for('pro_back_complete') }}" style="color:white">아니오</a></div>
 
       <img class="bi-mic-fill-yyb" src="../static/assets/bi-mic-fill-TEH.png"/>
     </div>
   </div>
-  <div class="rectangle-right">
+  <div class="rectangle-30-KGm">
   </div>
 </div>
 <script>
-  document.getElementById('brushedForm').addEventListener('submit', function(event){
-    event.preventDefault();
-    var brushedValue = this.elements.brushed.value;
-
-    fetch('/pro_lora_num', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ prompt: brushedValue })
-    })
-    .then(response => {
-      if (response.ok) {
-        window.location.href = '/pro_back_complete';
-      }
-      else {
-        throw new Error('pro_lora_num 서버 처리 실패');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  });
 
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
