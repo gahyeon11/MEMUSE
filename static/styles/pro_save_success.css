@@ -19,14 +19,22 @@ a {
 }
 
 body {
-  width: 192rem;
-}.item-17-1Wy {
   width: 100%;
-  overflow: hidden;
-  position: relative;
+  height: 100%;}
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* 뷰포트 높이에 맞춤 */
+    overflow: hidden; /* 스크롤바 제거 */
+}.item-17-1Wy {
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
   background-color: #ffffff;
+  position: relative;
+  width: auto;
+  height: 100vh; /* 전체 화면 높이에 맞춤 */
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
+  margin: 0 auto;
 }
 .item-17-1Wy .auto-group-t96h-u6Z {
   margin-right: 2.6rem;
@@ -387,6 +395,7 @@ font-size: 15px;
   top: 0; /* 상단에 위치 */
   z-index: 5; /* 다른 요소 위에 표시 */
   background-color: #003c74;
+<<<<<<< Updated upstream
 
   height: 100vh;
 }
@@ -395,11 +404,21 @@ font-size: 15px;
   left: 0; /* 왼쪽 끝에 위치 */
 }
 
+=======
+  height: 100vh;
+}
+.rectangle-left {
+  left: 0; /* 왼쪽 끝에 위치 */
+}
+>>>>>>> Stashed changes
 .rectangle-right {
   right: 0; /* 오른쪽 끝에 위치 */
 }
 /* 기존 상단 바 스타일 유지 */
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 /* 상단 바 아래로 나머지 내용을 이동시킵니다. */
 .auto-group-tsy5-Dd3 {
   position: relative;
@@ -410,4 +429,8 @@ font-size: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

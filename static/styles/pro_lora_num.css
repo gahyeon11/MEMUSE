@@ -19,15 +19,23 @@ a {
 }
 
 body {
-  width: 192rem;
-}.item-1-LC1 {
   width: 100%;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  background-color: #ffffff;
+  height: 100%;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* 뷰포트 높이에 맞춤 */
+  overflow: hidden; /* 스크롤바 제거 */
+}.item-1-LC1 {
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  position: relative;
+  width: auto;
+  height: 100vh; /* 전체 화면 높이에 맞춤 */
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
+  margin: 0 auto;}
 .item-1-LC1 .auto-group-ejmt-EoB {
   margin-right: 2.6rem;
   width: 33.6rem;
@@ -535,7 +543,29 @@ body {
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .item--8Xj .item--8Xj-sub-4 {
 }
 .item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-32-x2u {
-  margin: 0rem 38.1rem 17.2rem 38.1rem;
+  margin: 0rem 38.1rem 17.2rem 25rem;
+  width: calc(100% - 76.2rem);
+  height: 6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.2125;
+  color: #ffffff;
+  /* font-family: Inter, 'Source Sans Pro'; */
+  font-family: 'Hahmlet', Inter, serif;
+/* font-family: 'Nanum Gothic', sans-serif; */
+  white-space: nowrap;
+  border: solid 0.3rem #003c74;
+  box-sizing: border-box;
+  background-color: #003c74;
+  border-radius: 2rem;
+  flex-shrink: 0;
+}
+.item-1-LC1 .auto-group-5ndw-m2R .auto-group-fcot-v7b .group-32-next {
+  margin: -23.2rem 38.1rem 17.2rem 48rem;
   width: calc(100% - 76.2rem);
   height: 6rem;
   cursor: pointer;
@@ -585,4 +615,26 @@ textarea {
   font-family: 'Hahmlet', Inter, serif;
 /* font-family: 'Nanum Gothic', sans-serif; */
 font-size: 15px;
+}
+.rectangle-left, .rectangle-right {
+  width: 25.8rem; /* 너비 설정 */
+  height: 150vh; /* 높이를 뷰포트의 전체 높이로 설정 */
+  position: absolute; /* 고정된 위치로 설정하여 스크롤 시에도 위치 유지 */
+  top: 0; /* 상단에 위치 */
+  z-index: 10; /* 다른 요소 위에 표시 */
+  background-color: #003c74; /* 배경 색상 설정 */
+  /* 전체 뷰포트 높이 */
+}
+.rectangle-left {
+  left: 0; /* 왼쪽 끝에 위치 */
+}
+.rectangle-right {
+  right: 0; /* 오른쪽 끝에 위치 */
+}
+.auto-group-5ndw-m2R {
+  position: relative;
+  top: 49%; /* 상단으로부터 50% */
+  left: 30.5%; /* 왼쪽으로부터 50% */
+  transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
+  padding-bottom: 228px;
 }

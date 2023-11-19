@@ -19,14 +19,22 @@ a {
 }
 
 body {
-  width: 192rem;
-}.item-5-5sF {
   width: 100%;
-  overflow: hidden;
-  position: relative;
+  height: 100%;}
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* 뷰포트 높이에 맞춤 */
+    overflow: hidden; /* 스크롤바 제거 */
+}.item-5-5sF {
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
   background-color: #ffffff;
+  position: relative;
+  width: auto;
+  height: 100vh; /* 전체 화면 높이에 맞춤 */
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
+  margin: 0 auto;
 }
 .item-5-5sF .auto-group-dbd3-1F7 {
   margin-right: 2.6rem;
@@ -553,4 +561,31 @@ body {
   height: 108rem;
   background-color: #003c74;
   flex-shrink: 0;
+}
+.rectangle-left, .rectangle-right {
+  width: 25.8rem; /* 너비 설정 */
+  height: 108rem; /* 높이 설정 */
+  position: absolute; /* 절대 위치 지정 */
+  top: 0; /* 상단에 위치 */
+  z-index: 5; /* 다른 요소 위에 표시 */
+  background-color: #003c74;
+  height: 100vh;
+}
+.rectangle-left {
+  left: 0; /* 왼쪽 끝에 위치 */
+}
+.rectangle-right {
+  right: 0; /* 오른쪽 끝에 위치 */
+}
+/* 기존 상단 바 스타일 유지 */
+/* 상단 바 아래로 나머지 내용을 이동시킵니다. */
+.auto-group-ouz3-vss {
+  position: relative;
+  top: 49%; /* 상단으로부터 50% */
+  left: 30.5%; /* 왼쪽으로부터 50% */
+  transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
+  padding-bottom: 228px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

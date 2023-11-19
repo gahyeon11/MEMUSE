@@ -18,8 +18,10 @@
 </head>
 <body>
 <div class="item-1-LC1">
-  <a href="{{ url_for('pro_back_complete') }}">   
-  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a>
+  <div class="rectangle-left">
+  </div>
+  <!-- <a href="{{ url_for('pro_back_complete') }}">   
+  <img class="auto-group-ejmt-EoB" src="../static/assets/left_rectangle.png"/></a> -->
   <div class="auto-group-5ndw-m2R">
     <div class="group-61-5J1">
       <div class="auto-group-hcmx-ERo">
@@ -92,7 +94,7 @@
       </div>
       <div class="group-32-x2u">
         <!-- 다시 버튼 -->
-        <a href="{{ url_for('pro_object_complete') }}"id="resetButton" style="color:white ">다시</a>
+        <a href="{{ url_for('pro_object') }}"id="resetButton" style="color:white ">다시</a>
         <!-- <button type="button" id="resetButton" style="background:#003D75; color:white">다시</button> -->
         <!-- <button type="button" id="nextButton" style="background:#003D75; color:white">다음</button> -->
     </div>
@@ -101,7 +103,9 @@
       <a href="{{ url_for('pro_object_complete') }}" id="nextButton" style="color:white">다음</a>
   </form>
   <button type="button" id="startRecognition" class="startRecognitionButton"></button> 
+</div></div>
 </div>
+<div class = "rectangle-right">
 </div>
 </div>
 <script>

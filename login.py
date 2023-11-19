@@ -66,8 +66,12 @@ conn.commit()
 # conn = sqlite3.connect('users.db', check_same_thread=False)
 # c = conn.cursor()
 
+# 번역 전역변수
+tran_txt = ""
+
 # 번역 함수
 def translate_text(text_to_translate):
+    global tran_txt
     try:
         # Naver Papago API에 번역 요청
         naver_client_id = 'fIfMjFH9VJ1GjQPim7j5'
@@ -85,6 +89,9 @@ def translate_text(text_to_translate):
         response = requests.post('https://openapi.naver.com/v1/papago/n2mt', headers=headers, data=data)
         translated_text = response.json()['message']['result']['translatedText']
         print("번역 완료")
+
+        # 전역 변수에 번역된 텍스트 저장
+        tran_txt = translated_text
         return translated_text
     except Exception as e:
         return str(e)
@@ -365,7 +372,8 @@ def workplace():
     "prompt" : "",
     "negative_prompt" : "easynegative"
     }
-    print(payload)
+    # tran_txt 초기화
+    tran_txt = ""
     return render_template('workplace.html',  username=username)
 
 @app.route('/voice_login_join_choice')
@@ -762,7 +770,8 @@ def pro_back():
     if request.method == 'POST':
         # POST 요청 시 JSON 데이터 파싱
         data = request.json
-        user_input = data.get('translatedText', 'No translated text provided')
+        print("pro back 데이터 받음")
+        user_input = data['translatedText']
 
         # prompt 문자열에 추가
         payload["prompt"] += "landscape, no human, " + user_input + ", "
@@ -778,6 +787,8 @@ def pro_back():
         # prompt 초기화
         payload["prompt"] = "masterpiece, best quality, highres, "
         payload["negative_prompt"] = "easynegative, "
+
+        print(payload)
         
         # GET 요청 시 HTML 반환
         username = session.get('username', 'Guest')
@@ -1106,7 +1117,7 @@ def pro_lora_num():
 
         print("최종 prompt 확인:", payload)
         # 클라이언트에 응답
-        return jsonify(success = True)
+        return jsonify({'redirect': url_for('pro_back_complete')})
     
     else:
         # GET 요청시 HTML 반환
@@ -1161,6 +1172,9 @@ def pro_object():
         # prompt 초기화
         payload["prompt"] = "masterpiece, best quality, highres, "
         payload["negative_prompt"] = "easynegative, "
+
+        # tran_txt 초기화
+        tran_txt = ""
         
         print(payload)
         
@@ -1240,8 +1254,8 @@ def pro_object_complete():
     latest_image_path = None
     pro_object_folder = 'static/pro_object'
     pro_object_images = [filename for filename in os.listdir(pro_object_folder) if filename.endswith(".png")]
-    pro_object_images.sort()
-    print("Sorted pro_object_images:", pro_object_images)
+    # pro_object_images.sort()
+    # print("Sorted pro_object_images:", pro_object_images)
 
     if pro_object_images:
         latest_image_path = os.path.join('pro_object', pro_object_images[-1])  # 경로 수정
@@ -1250,7 +1264,6 @@ def pro_object_complete():
 
     
         # 디버깅을 위한 로그 출력
-    print("Images in pro_object_folder:", pro_object_images)
     print("Latest image path:", latest_image_path)
 
     username = session.get('username', 'Guest')

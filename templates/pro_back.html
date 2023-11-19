@@ -101,7 +101,7 @@
         </div>
         <div class="group-32-next">
           <!-- 다음 버튼 -->
-          <a href="{{ url_for('pro_lora') }}" id="nextButton" style="color:white">다음</a>
+          <a href="#" id="nextButton" style="color:white">다음</a>
       </form>
       <button type="button" id="startRecognition" class="startRecognitionButton"></button> 
     </div>
@@ -169,34 +169,35 @@ nextButton.addEventListener('click', function () {
 });
 
    // 번역 요청 및 서버에 데이터 전송
-  function sendRequestAndRedirect() {
+async function sendRequestAndRedirect() {
     const textToTranslate = document.getElementById('background').value;
-    fetch('/translate', {
+    try{
+      const translateResponse = await fetch('/translate', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 'text': textToTranslate }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        return fetch('/pro_back', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ translatedText: data.translatedText })
-        });
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.redirect) {
-            window.location.href = data.redirect;
-        }
-    })
-    .catch(error => {
-        console.error('Error in request or redirect:', error);
     });
+    const data = await translateResponse.json();
+
+    // 여기서 /pro_back으로의 요청 처리
+    const proBackResponse = await fetch('/pro_back', {
+
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ translatedText: data.translatedText })
+    });
+    const proBackData = await proBackResponse.json();
+
+    if (proBackData.redirect){
+      window.location.href = proBackData.redirect;
+    }
+  } catch (error){
+    console.error('Error in request or redirect:', error);
+  }
 }
 </script>
 
