@@ -19,14 +19,24 @@ a {
 }
 
 body {
-  width: 192rem;
-}.item-17-1Wy {
   width: 100%;
-  overflow: hidden;
-  position: relative;
+  height: 100%;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* 뷰포트 높이에 맞춤 */
+  overflow: hidden; /* 스크롤바 제거 */
+}
+.item-17-1Wy {
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
   background-color: #ffffff;
+  position: relative;
+  width: auto;
+  height: 100vh; /* 전체 화면 높이에 맞춤 */
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
+  margin: 0 auto; /* 좌우 마진 자동 조정 */
 }
 .item-17-1Wy .auto-group-t96h-u6Z {
   margin-right: 2.6rem;
