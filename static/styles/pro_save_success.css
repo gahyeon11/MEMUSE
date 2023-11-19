@@ -192,8 +192,8 @@ html, body {
   width: 14.5rem;
   height: 0rem;
   position: absolute;
-  left: 90rem;
-  top: 23rem;
+  left: 60rem;
+  top: 20rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -240,7 +240,7 @@ html, body {
 .item-17-1Wy .auto-group-tsy5-Dd3 .auto-group-sccy-qNq .auto-group-pq2d-Mry .rectangle-9-6pZ {
   margin-right: 3rem;
   position: absolute;
-  left: 52.5rem;
+  left: 20rem;
   top: 25.8619rem;
   display: flex;
   align-items: center;
@@ -253,7 +253,7 @@ html, body {
 .item-17-1Wy .auto-group-tsy5-Dd3 .auto-group-sccy-qNq .auto-group-pq2d-Mry .group-3-SNd {
   box-sizing: border-box;
   padding: 2.91rem 3rem 1.7rem 1.969rem;
-  transform: translate(220% ,0);
+  transform: translate(240% ,0);
   width: 29.9rem;
   height: 100%;
   background-color: rgba(247, 245, 245, 0.8600000143);
@@ -413,7 +413,7 @@ font-size: 15px;
 .auto-group-tsy5-Dd3 {
   position: relative;
   top: 49%; /* 상단으로부터 50% */
-  left: 30.5%; /* 왼쪽으로부터 50% */
+  left: 30%; /* 왼쪽으로부터 50% */
   transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
   padding-bottom: 228px;
   display: flex;

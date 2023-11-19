@@ -241,7 +241,7 @@ html, body {
 .item-16-ptZ .auto-group-4cqh-rqF .auto-group-grgh-Qr5 .auto-group-eut1-YBb .rectangle-9-gob {
   margin-right: 3rem;
   position: absolute;
-  left: 52.5rem;
+  left: 10rem;
   top: 25.8619rem;
   display: flex;
   align-items: center;
@@ -253,7 +253,7 @@ html, body {
 }
 .item-16-ptZ .auto-group-4cqh-rqF .auto-group-grgh-Qr5 .auto-group-eut1-YBb .group-3-RWH {
   box-sizing: border-box;
-  padding: 2.91rem 3rem 1.7rem 1.969rem;
+  /* padding: 2.91rem 3rem 1.7rem 1.969rem; */
   transform: translate(220% ,0);
   width: 29.9rem;
   height: 100%;
@@ -328,14 +328,13 @@ html, body {
   border-radius: 2rem;
 }
 .item-16-ptZ .auto-group-4cqh-rqF .auto-group-grgh-Qr5 .item--tq7 {
-  /* margin-bottom: 2.55rem; */
-  /* max-width: 44.4rem; */
+  margin-bottom: 2.55rem;
+  max-width: 44.4rem;
   width: 14.5rem;
-  height: 0rem;
+  height: 100rem;
   position: absolute;
-  left: 90rem;
-  top: 82rem;
-
+  left:100rem;
+  top: 100rem;
   display: flex;
   align-items: center;
   justify-content: center;

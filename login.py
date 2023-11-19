@@ -428,15 +428,14 @@ def my_page():
     if 'username' not in session:
         flash('Please login to view this page.', 'danger')
         return redirect(url_for('login'))
-    username = session.get('username', 'Guest')
-    name = session.get('name', 'Guest')
-    birthdate = session.get('birthdate', 'Guest')
+    username = session.get('username')
+    name = session.get('name')
+    birthdate = session.get('birthdate')
     
     return render_template('my_page.html', username=username, name = name, birthdate = birthdate)
 
 @app.route('/my_page_my_gallery1')
 def my_page_my_gallery1():
-
     
     return render_template('my_page_my_gallery1.html')
 
