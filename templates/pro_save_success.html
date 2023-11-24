@@ -16,9 +16,15 @@
   <link rel="stylesheet" href="../static/styles/pro_save_success.css"/>
 </head>
 <body>
-<div class="item-17-1Wy">
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
   <div class="rectangle-left">
   </div>
+<div class="item-17-1Wy">
   <div class="auto-group-tsy5-Dd3">
     <div class="group-61-Xdj">
       <div class="auto-group-ffvs-59T">
@@ -59,9 +65,9 @@
           <div class="item--keD">{{ username }}</div>
           <div class="line-1-TYd">
           </div>
-          <div class="group-26-Cm7"><textarea id="title" autofocus placeholder="작품 제목" cols="30">{{ title }}</textarea></div>
+          <div class="group-26-Cm7">{{ title }}</div>
           <div class="item-2023-Rtm">Caption</div>
-          <div class="auto-group-4txy-LVw"><textarea id="captions" placeholder="작품 설명" cols="30" rows="7">{{ caption }}</textarea></div>
+          <div class="auto-group-4txy-LVw">{{ caption }}</div>
         </div>
       </div>
       <div class="group-23-Yk9">
@@ -70,11 +76,18 @@
       </div>
       <img class="bi-mic-fill-k3s" src="../static/assets/bi-mic-fill-hCm.png"/>
     </div>
-  </div></div>
+  </div>
   <div class="rectangle-right">
   </div>
 </div>
 <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
@@ -100,5 +113,6 @@
       // 다른 명령에 대한 처리도 추가할 수 있습니다.
     };
 </script>
+
 </body>
 </html>

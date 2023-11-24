@@ -16,9 +16,15 @@
   <link rel="stylesheet" href="../static/styles/new_style.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-1-7UM"> 
   <div class="rectangle-left"></div>
-  <a href="{{url_for("workplace")}}"></a>
+  <!-- <a href="{{url_for("workplace")}}"></a> -->
   <!-- <img class="auto-group-6vh7-q9T" src="../static/assets/left_rectangle.png"/></a> -->
   <div class="auto-group-xqzb-Mdb">
     <div class="group-61-gA5">
@@ -94,8 +100,15 @@
     </div>
   </div>
 </div>
-</div>
+</div><div class="rectangle-right"></div>
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   // 선택지 선택 시 값 서버 전달
   function submitStyle(styleNumber) {
     // styleNumber 값에 따라 payload 생성

@@ -17,6 +17,12 @@
   <link rel="stylesheet" href="../static/styles/new_filter.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-5-WPb">
   <div class="rectangle-left"></div>
   <a href="{{url_for("new_object")}}">   </a>
@@ -122,6 +128,13 @@
   </div>
 </div>
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   function sendFilter(filterNumber) {
     // JavaScript를 사용하여 서버에 POST 요청을 보내는 로직
     fetch('{{ url_for("new_filter") }}', {

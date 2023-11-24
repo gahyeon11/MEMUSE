@@ -15,6 +15,12 @@
   <link rel="stylesheet" href="../static/styles/new_back.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-2-VqB">
         <div class="rectangle-left"></div>
         <a href="{{url_for('new_shot')}}"></a>
@@ -97,6 +103,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function(){
+    document.getElementById('loadingOverlay').style.display = 'none';
     // 모든 rectangle 요소에 이벤트 리스너 추가
     document.querySelectorAll('.rectangle-22-m4V, .rectangle-26-hyj, .rectangle-27-rrd, .rectangle-28-1Ud').forEach(function(rectangle){
       rectangle.addEventListener('click', function(event){
@@ -104,7 +111,7 @@
 
         // 클릭된 요소의 데이터 값 가져오기
         var prompt = this.getAttribute('data-prompt');
-
+        document.getElementById('loadingOverlay').style.display = 'flex';
         // 서버에 포스트 요청
         fetch('/new_back', {
           method: 'POST',
@@ -122,8 +129,15 @@
         })
         .catch(error => {
           console.error('Error_new_back:', error);
+          document.getElementById('loadingOverlay').style.display = 'none';
         });
       });
+    });
+    document.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() {
+            // 로딩 화면 표시
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        });
     });
   });
 

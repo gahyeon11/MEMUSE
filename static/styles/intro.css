@@ -1,6 +1,22 @@
 
 html {
-	font-size:62.5%;
+  font-size: 62.5%;
+}
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* 뷰포트 높이에 맞춤 */
+  overflow: hidden; /* 스크롤바 제거 */
 }
 * {
 	margin: 0;
@@ -16,33 +32,33 @@ input {
 @keyframes slide {
   0%{
     background:linear-gradient(rgba(0,61,117,0.6), rgba(0,61,117,0.6)), url('../assets/bg1.png') no-repeat 100% 100%;
-    background-size:1920px;
+    background-size:cover;
     background-position-y:35%;
   }
   33%{
     background:linear-gradient(rgba(0,61,117,0.6), rgba(0,61,117,0.6)), url('../assets/bg1.png') no-repeat 100% 100%;
-    background-size:1920px;
+    background-size:cover;
     background-position-y:35%;
   }
   33.01%{
     background:linear-gradient(rgba(0,61,117,0.6), rgba(0,61,117,0.6)), url('../assets/bg2.png') no-repeat 100% 100%;
-    background-size:1920px;
+    background-size:cover;
     background-position-y:5%;
   }
   66%{
     background:linear-gradient(rgba(0,61,117,0.6), rgba(0,61,117,0.6)), url('../assets/bg2.png') no-repeat 100% 100%;
-    background-size:1920px;
+    background-size:cover;
     background-position-y:5%;
   }
   66.01%{
     background:linear-gradient(rgba(0,61,117,0.6), rgba(0,61,117,0.6)), url('../assets/bg3.png') no-repeat 100% 100%;
-    background-size:1920px;
+    background-size:cover;
     background-position-y:55%;
 
   }
   100%{
     background:linear-gradient(rgba(0,61,117,0.6), rgba(0,61,117,0.6)), url('../assets/bg3.png') no-repeat 100% 100%;
-    background-size:1920px;
+    background-size:cover;
     background-position-y:55%;
 }
 }
@@ -52,14 +68,12 @@ a {
   color: white;
 }
 
-body {
-  width: 192rem;
-  overflow: hidden;
-}
+
 .item-1-pAV {
   box-sizing: border-box;
   padding: 1.8rem 35.2rem 24.8rem 36.2rem;
   width: 100%;
+  height: 100vh;
   cursor: pointer;
   overflow: hidden;
   position: relative;
@@ -69,15 +83,15 @@ body {
   background-color: #003c74;
   height:100vh;
   background:linear-gradient(rgba(0,61,117,0.9), rgba(0,61,117,0.9)), url('../assets/bg3.png') no-repeat 100% 100%;
-  background-size:1920px;
-  background-position-y:55%;
+  background-size:cover;
+  /* background-position-y:55%; */
   animation: slide 30s infinite;
   animation: slide 6s;
 }
 
 .item-1-pAV .group-60-Ksw {
-  margin-bottom: 16.9619rem;
-  width: 100%;
+  margin-bottom: 17.9619rem;
+  width: 121rem;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -207,7 +221,7 @@ body {
 }
 .item-1-pAV .auto-group-lc9o-RV3 {
   margin: 0rem 36.9rem 0rem 37.9rem;
-  width: calc(100% - 74.8rem);
+  width: calc(100% - 100rem);
   height: 58.1rem;
   position: relative;
   flex-shrink: 0;

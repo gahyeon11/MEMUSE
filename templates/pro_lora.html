@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="../static/styles/pro_lora.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-4-RPo">
   <div class="rectangle-left">
   </div>
@@ -103,6 +109,13 @@
   </div>
 </div>
 <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   document.querySelectorAll('.clickable-rectangle').forEach(function(element){
     element.addEventListener('click', function(){
       // 클릭된 요소의 데이터 값 가져오기

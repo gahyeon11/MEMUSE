@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="../static/styles/pro_back_complete.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-3-jRb">
   <div class="rectangle-left"></div>
   <div class="auto-group-jkff-mt5">
@@ -99,7 +105,14 @@
   </div>
 </div>
 <script>
-  // 음성 인식 API 초기화
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });// 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;

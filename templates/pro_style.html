@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="../static/styles/pro_style.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-1-7UM"> 
   <div class="rectangle-left">
   </div>
@@ -101,6 +107,13 @@
   </div>
 </div>
 <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   // 선택지 선택 시 값 서버 전달
   function submitStyle(styleNumber) {
     // styleNumber 값에 따라 payload 생성

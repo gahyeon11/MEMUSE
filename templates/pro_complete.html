@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="../static/styles/pro_complete.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
   <div class="rectangle-left"></div>
 <div class="item-6-39T">
   <a href="{{url_for("pro_filter")}}">   </a>
@@ -64,13 +70,13 @@
             {{ form.hidden_tag() }} <!-- CSRF 토큰 렌더링 -->
             <!-- 작품 제목 입력 필드 -->
             <div class="group-26-ZYM">
-            {{ form.title.label }}
+
             {{ form.title(placeholder="작품 제목") }}</div>
     
             <div class="item-2023-QJ5">Caption</div>
             <div class="auto-group-bzhs-iJm">
                 <!-- 작품 설명 입력 필드 -->
-                {{ form.caption.label }}
+
                 {{ form.caption(rows=7, placeholder="작품 설명") }}
             </div>
             <div class="group-58-Bzy">
@@ -96,14 +102,20 @@
         <!-- <div class="group-59-dry"><a href="{{url_for('pro_no_save')}}" style="color:white">아니오</a></div>
           
       </div> -->
-      </div>
-      <!-- <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/> -->
     </div>
+      <!-- <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png"/> -->
   </div>
   <div class="rectangle-right"></div>
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;

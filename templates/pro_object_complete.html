@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="../static/styles/pro_object_complete.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중...</p>
+    </div>
+  </div>
 <div class="item-5-5sF">
   <div class="rectangle-left">
   </div>
@@ -100,13 +106,15 @@
 
 </div>
 <script>
-  // 음성 인식 API 초기화
+document.addEventListener('DOMContentLoaded', function() {
+  // 페이지 로딩 완료 시 로딩 화면 숨기기
+  document.getElementById('loadingOverlay').style.display = 'none';
+
+  // 음성 인식 API 초기화 및 시작
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = 'ko-KR'; // 한국어로 설정
-  
-  // 음성 인식 시작
+  recognition.lang = 'ko-KR';
   recognition.start();
   recognition.onresult = (event) => {
       const result = event.results[event.results.length - 1][0].transcript;
@@ -148,7 +156,14 @@
         console.error('Network error:', error);
     });
 }
-
+  // 페이지 이동 버튼 클릭 이벤트 추가
+  document.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      // 로딩 화면 표시
+      document.getElementById('loadingOverlay').style.display = 'flex';
+    });
+  });
+});
 </script>
 </body>
 </html>

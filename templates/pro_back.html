@@ -18,6 +18,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-1-LC1">
   <div class="rectangle-left"></div>
   <!-- <a href="{{ url_for('pro_style') }}">   
@@ -113,6 +119,13 @@
 </div>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
+  });
   var translatedTextGlobal = '';
 
   document.getElementById('mood').addEventListener('submit', function(event){

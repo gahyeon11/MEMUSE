@@ -27,9 +27,6 @@ html, body {
     height: 100vh; /* 뷰포트 높이에 맞춤 */
     overflow: hidden; /* 스크롤바 제거 */
   }.item--v49{
-  width: 100%;
-  overflow: hidden;
-  position: relative;
   display: flex;
   justify-content: center;
   background-color: #ffffff;
@@ -329,15 +326,19 @@ html, body {
   top: 0; /* 상단에 위치 */
   z-index: 5; /* 다른 요소 위에 표시 */
   background-color: #003c74;
+
   height: 100vh;
 }
+
 .rectangle-left {
   left: 0; /* 왼쪽 끝에 위치 */
 }
+
 .rectangle-right {
   right: 0; /* 오른쪽 끝에 위치 */
 }
 /* 기존 상단 바 스타일 유지 */
+
 /* 상단 바 아래로 나머지 내용을 이동시킵니다. */
 .auto-group-vw8v-y2R {
   position: relative;

@@ -5,26 +5,20 @@
   <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
-  <title>작업실/초심자6</title>
+  <title>작업실/전문가22</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo+Black%3A400"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anybody%3A700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../static/styles/new_complete.css"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/styles/pro_complete.css"/>
 </head>
 <body>
-  <div id="loadingOverlay" style="display: none;">
-    <div class="loadingContent">
-      <div class="loader"></div>
-      <p>생성 중..</p>
-    </div>
-  </div>
   <div class="rectangle-left"></div>
 <div class="item-6-39T">
-  <a href="{{url_for("new_filter")}}">   </a>
+  <a href="{{url_for("pro_filter")}}">   </a>
   <!-- <img class="auto-group-qyh3-Z7o" src="../static/assets/left_rectangle.png"/></a> -->
   <div class="auto-group-cyaz-fwX">
     <div class="group-61-Bey">
@@ -66,17 +60,17 @@
           <div class="item--vEV">{{ username }}</div>
           <div class="line-1-DzH">
           </div>
-          <form action="{{ url_for('new_save_success') }}" id="captions-form" method="post">
+          <form action="{{ url_for('pro_save_success') }}" id="captions-form" method="post">
             {{ form.hidden_tag() }} <!-- CSRF 토큰 렌더링 -->
             <!-- 작품 제목 입력 필드 -->
             <div class="group-26-ZYM">
-            
+            {{ form.title.label }}
             {{ form.title(placeholder="작품 제목") }}</div>
     
             <div class="item-2023-QJ5">Caption</div>
             <div class="auto-group-bzhs-iJm">
                 <!-- 작품 설명 입력 필드 -->
-               
+                {{ form.caption.label }}
                 {{ form.caption(rows=7, placeholder="작품 설명") }}
             </div>
             <div class="group-58-Bzy">
@@ -99,7 +93,7 @@
       </div>
       <!-- <div class="auto-group-n9ms-Gd7"> -->
       
-        <!-- <div class="group-59-dry"><a href="{{url_for('new_no_save')}}" style="color:white">아니오</a></div>
+        <!-- <div class="group-59-dry"><a href="{{url_for('pro_no_save')}}" style="color:white">아니오</a></div>
           
       </div> -->
       </div>
@@ -108,15 +102,8 @@
   </div>
   <div class="rectangle-right"></div>
 </div>
-<!-- HTML 코드 중 수정한 부분 -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
 
-    window.onload = function() {
-      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
-    };
-  });
+<script>
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
@@ -142,7 +129,7 @@
         window.location.href = '/guide';
         break;
       case '이전으로':
-        window.location.href = '/new_filter';
+        window.location.href = '/pro_filter';
         break;
       case '저장':
         if (!isTitleComplete) {
@@ -151,7 +138,7 @@
           document.getElementById('captions').focus();
         } else {
           const form = document.getElementById('captions-form');
-          form.action = "{{ url_for('new_save_success') }}";
+          form.action = "{{ url_for('pro_save_success') }}";
           form.submit();
         }
         break;
@@ -169,10 +156,9 @@
   
   document.getElementById('save-button').addEventListener('click', () => {
     const form = document.getElementById('captions-form');
-    form.action = "{{ url_for('new_save_success') }}";
+    form.action = "{{ url_for('pro_save_success') }}";
     form.submit();
   });
-  </script>
-  
+</script>
 </body>
 </html>

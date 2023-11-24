@@ -66,12 +66,9 @@ conn.commit()
 # conn = sqlite3.connect('users.db', check_same_thread=False)
 # c = conn.cursor()
 
-# 번역 전역변수
-tran_txt = ""
 
 # 번역 함수
 def translate_text(text_to_translate):
-    global tran_txt
     try:
         # Naver Papago API에 번역 요청
         naver_client_id = 'fIfMjFH9VJ1GjQPim7j5'
@@ -90,8 +87,6 @@ def translate_text(text_to_translate):
         translated_text = response.json()['message']['result']['translatedText']
         print("번역 완료")
 
-        # 전역 변수에 번역된 텍스트 저장
-        tran_txt = translated_text
         return translated_text
     except Exception as e:
         return str(e)
@@ -216,7 +211,6 @@ class ImageModel(db.Model):
         self.category = category
         self.caption = caption
 
-
 class ImageInfoForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     caption = TextAreaField('Caption')
@@ -307,6 +301,13 @@ with app.app_context():
 #     else:
 #         return jsonify(status="failure", message="저장된 번역이 없음"), 404
 
+@app.route('/image_urls')
+def image_urls():
+    images = ImageModel.query.all()
+    image_urls = [url_for('static', filename=image.file_path) for image in images]
+    return jsonify(image_urls)
+
+
 @app.route('/join', methods=['GET', 'POST'])
 def join():
     if request.method == 'POST':
@@ -344,7 +345,9 @@ def login():
             session['logged_in'] = True
             # session['user'] = user.username 
             session['user_id'] = user.id 
-            session['username'] = username
+            session['username'] = user.username
+            session['name'] = user.name  # 사용자 이름을 세션에 저장
+            session['birthdate'] = user.birthdate  # 사용자 생년월일을 세션에 저장
             return redirect(url_for('workplace'))
         else:
             # 로그인 실패 처리
@@ -372,8 +375,7 @@ def workplace():
     "prompt" : "",
     "negative_prompt" : "easynegative"
     }
-    # tran_txt 초기화
-    tran_txt = ""
+
     return render_template('workplace.html',  username=username)
 
 @app.route('/voice_login_join_choice')
@@ -443,8 +445,23 @@ def my_page():
 
 @app.route('/my_page_my_gallery1')
 def my_page_my_gallery1():
-    
-    return render_template('my_page_my_gallery1.html')
+    page = request.args.get('page', 1, type=int)  # URL에서 페이지 번호를 가져옴, 기본값은 1
+    per_page = 3  # 한 페이지당 표시할 이미지 수
+
+    # 현재 로그인한 사용자의 id를 세션에서 가져옴
+    user_id = session.get('user_id')
+    if not user_id:
+        # 로그인하지 않은 경우, 사용자를 로그인 페이지로 리디렉션
+        flash('Please login to view this page.', 'danger')
+        return redirect(url_for('login'))
+
+    # 현재 로그인한 사용자의 user_id를 사용하여 이미지 필터링 및 페이지네이션 적용
+    pagination = ImageModel.query.filter_by(user_id=user_id).paginate(page=page, per_page=per_page, error_out=False)
+    images = pagination.items  # 현재 페이지의 이미지들
+
+    return render_template('my_page_my_gallery1.html', images=images, pagination=pagination)
+
+
 
 @app.route('/my_page_my_gallery2')
 def my_page_my_gallery2():
@@ -1173,8 +1190,6 @@ def pro_object():
         payload["prompt"] = "masterpiece, best quality, highres, "
         payload["negative_prompt"] = "easynegative, "
 
-        # tran_txt 초기화
-        tran_txt = ""
         
         print(payload)
         

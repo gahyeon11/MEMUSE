@@ -13,94 +13,90 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@200;300;400;500&family=Inter:wght@500;600&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../static/styles/my_page_my_gallery1.css"/>
+  <link rel="stylesheet" href="../static/styles/whole_gallery1.css"/>
 </head>
 <body>
-<div class="item--iTs">
-  <div class="rectangle-29-ryP">
-  </div>
-  <div class="auto-group-bsgr-8AD">
-    <div class="group-61-C3b">
-      <div class="auto-group-sgrf-Xbf">
-        <div class="group-62-DzH">
-          <a href="{{ url_for("intro")}}">  
-          <img class="group-11-Xzy" src="../static/assets/group-11-dX7.png"/></a>
-          <div class="me-muse-eph">ME:MUSE</div>
-        </div>
-        <div class="group-10-Fi1">
-          <div class="group-1-Qau">
-            <div class="workplace-XfX"><a href="{{ url_for("workplace")  }}">Workplace</a></div>
-            <div class="museum-SXb"><a href="{{ url_for("whole_gallery1")}}">Gallery</a></div>
-            <div class="guide-SXb"><a href="{{ url_for("guide")}}">Guide</a></div>
-            <div class="login-GWd"><a href="{{url_for("logout")}}">logout</a></div>
-          </div>
-          <div class="group-2-zhX">
-            <a href="{{ url_for("my_page")}}"> 
-            <img class="icons8-user1-1-xeM" src="../static/assets/icons8-user1-1.png"/></a>
-          </div>
-        </div>
-      </div>
-      <img class="line-2-HRj" src="../static/assets/line-2.png"/>
+  <div class="item--9V3">
+    <div class="rectangle-left">
     </div>
-    <div class="item--D4V">나만의 전시회</div>
-    <div class="item--gTs">
-      <span class="item--gTs-sub-0">
-      원하는 작품의 번호를 말하면 자세히 볼 수 있습니다.
-      <br/>
-      더 많은 작품을 보고 싶다면 페이지 번호를 말씀해 주세요.
-      <span style="color:#1400ff; font-weight:bold">"0번 페이지" </span>
-</span>
-    </div>
-    <div class="auto-group-xobx-ymj">
-      <div class="auto-group-zund-5Zs">
-        <div class="group-19-bYD">
-          <div class="item--u37">1. 작품명</div>
-          <div class="line-6-1M3">
+    <div class="auto-group-aqwf-pr5">
+      <div class="group-61-kUq">
+        <div class="auto-group-zbyj-hus">
+          <div class="group-62-Cbj">
+            <a href="{{ url_for('intro') }}">  
+            <img class="group-11-KRT" src="../static/assets/group-11-xfK.png"/></a>
+            <div class="me-muse-T1s">ME:MUSE</div>
+          </div>
+          <div class="group-10-Md3">
+            <div class="group-1-K45">
+              <div class="workplace-q2R"><a href="{{ url_for('workplace') }}">Workplace</a></div>
+              <div class="museum-MFf"><a href="{{ url_for('whole_gallery1') }}">Gallery</a></div>
+              <div class="guide-sjo"><a href="{{ url_for('guide') }}">Guide</a></div>
+              <div class="login-zpR"><a href="{{ url_for('logout') }}">logout</a></div>
+            </div>
+            <div class="group-2-LNV">
+              <a href="{{ url_for('my_page') }}"> 
+              <img class="icons8-user1-1-W25" src="../static/assets/icons8-user1-1-Y1F.png"/></a>
+            </div>
           </div>
         </div>
-        <div class="group-15-LeD">
-          <div class="item--rcZ">2. 작품명</div>
-          <div class="line-7-Z1B">
-          </div>
-        </div>
-        <div class="group-16-Hxm">
-          <div class="item--DbX">3. 작품명</div>
-          <div class="line-8-LRF">
-          </div>
-        </div>
+        <img class="line-2-dsP" src="../static/assets/line-2-L1f.png"/>
       </div>
-      <div class="auto-group-7sff-TEy">
-        <div class="group-20-yDK">
-          <div class="item--VBf">4. 작품명</div>
-          <div class="line-9-cXB">
-          </div>
+      <div class="item--b3X">나만의 전시회</div>
+      <div class="item-0-0--JCq">
+        <span class="item-0-0--JCq-sub-0">보고 싶은 전시회의 번호를 말하면 입장할 수 있습니다
+        <!-- <span style="color:#1400ff; font-weight:bold">
+         “0번 전시회”</span> -->
+        <br/>
+        더 많은 작품을 보고 싶다면 페이지 번호를 말씀해 주세요
+        <span style="color:#1400ff; font-weight:bold"> “0번 페이지”</span>
+        <br/>
+        <!-- 특정 스타일(만화/수채화/파스텔/실사)의 전시회만을 보고 싶다면 다음과 같이 말씀해 주세요
+        <span style="color:#1400ff; font-weight:bold">
+          “만화 전시회”</span></span>
+          <div style="text-align:right; position:absolute; right:60px; height:180px; font-weight:bold; line-height:24px;">
+            <a href="{{ url_for('whole_gallery1') }}"><span>전체</a><span><br/> 
+              <a href="{{ url_for('cartoon_gallery1') }}"><span>만화</a><span><br/> 
+              <a href="{{ url_for('watercolor_gallery1') }}"><span>수채화</a><span><br/> 
+              <a href="{{ url_for('pastel_gallery1') }}"><span>파스텔</a><span><br/> 
+              <a href="{{ url_for('live_gallery1') }}"><span>실사</a><span><br/>
+        </div> -->
         </div>
-        <div class="group-18-ZSR">
-          <div class="item--H7X">5. 작품명</div>
-          <div class="line-11-D1B">
+      <div class="auto-group-vk3s-MD3">
+        <!-- 이미지 목록 -->
+        <div class="auto-group-vk3s-MD3">
+          <!-- Image List -->
+          <div class="auto-group-jhgm-Gau">
+              {% for image in images %}
+                  <div class="auto-group-fhih-U6d">
+                      <!-- Image Insertion -->
+                      <img src="{{ url_for('static', filename=image.file_path) }}" alt="{{ image.title }}" class="image-display">
+  
+                      <div class="item--nt1">{{ image.user.username if image.user else 'Unknown User' }}</div>
+                      <div class="line-8-iWm"></div>
+                      <div class="item--fS1">{{ image.title }}</div>
+                  </div>
+              {% endfor %}
           </div>
-        </div>
-        <div class="group-17-kmo">
-          <div class="item--HFw">6. 작품명</div>
-          <div class="line-14-1Sq">
-          </div>
-        </div>
       </div>
-      <div class="auto-group-kkxf-jNq">
-        <div class="group-29-dUd">
-          <div class="group-28-mKw"><a href="{{url_for("my_page")}}">1</a></div>
+      
+        <!-- 페이지네이션 링크 -->
+        <div class="auto-group-ju3f-KTw">      
+          <div>
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+              {% if page_num %}
+                <a href="{{ url_for('my_page_my_gallery1', page=page_num) }}" style="font-size: 20px; margin-right: 5px;">{{ page_num }}</a>
+              {% else %}
+                <span style ="font-size: 20px; margin-right: 5px;">...</span>
+              {% endif %}
+            {% endfor %}
         </div>
-        <div class="group-30-cLZ">
-          <div class="group-28-9LV"><a href="{{url_for("my_page_my_gallery2")}}">2</a></div>
+          <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
+  
+  
         </div>
-        <div class="group-31-R37">
-          <div class="group-28-Lfs"><a href="{{url_for("my_page_my_gallery3")}}">3</a></div>
-        </div>
-        <img class="bi-mic-fill-22u" src="../static/assets/bi-mic-fill-bNq.png"/>
       </div>
     </div>
+    <div class="rectangle-right">
+    </div>
   </div>
-  <div class="rectangle-30-d6q">
-  </div>
-</div>
-</body>

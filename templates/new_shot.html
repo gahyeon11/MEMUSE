@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="../static/styles/new_shot.css"/>
 </head>
 <body>
+  <div id="loadingOverlay" style="display: none;">
+    <div class="loadingContent">
+      <div class="loader"></div>
+      <p>생성 중..</p>
+    </div>
+  </div>
 <div class="item-4-RPo">
     <div class="rectangle-left"></div>
   <a href="{{url_for("new_style")}}">   
@@ -95,6 +101,10 @@
 <script>
   document.addEventListener('DOMContentLoaded', function(){
     // 모든 rectangle 요소에 이벤트 리스너 추가
+    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+    window.onload = function() {
+      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
+    };
     document.querySelectorAll('.rectangle-22-deq, .rectangle-26-nGq, .rectangle-27-jSy').forEach(function(rectangle){
       rectangle.addEventListener('click', function(event){
         event.preventDefault(); // 기본 링크 동작 방지
