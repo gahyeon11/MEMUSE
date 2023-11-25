@@ -19,7 +19,7 @@
 <body>
   <div id="loadingOverlay" style="display: none;">
     <div class="loadingContent">
-      <div class="loader"></div>
+      <img src="../static/assets/loading.gif" alt="생성 중..."/>
       <p>생성 중..</p>
     </div>
   </div>
@@ -89,7 +89,7 @@
         <textarea id="background" required autofocus placeholder="예) 교복을 입은 빨간 머리의 소녀, 풀샷" cols="30" rows="7"></textarea>
       </div>
       <br>
-      <div class="item--8Xj" style="transform:translate(43%,0)">
+      <div class="item--8Xj" style="transform:translate(43%,-70%)">
         <span class="item--8Xj-sub-0">재시도를 하고 싶다면
         <span style="color:#1400ff; font-weight:bold">‘다시’</span>
         라고 말씀해 주세요.
@@ -107,21 +107,40 @@
     <div class="group-32-next">
       <!-- 다음 버튼 -->
       <a href="{{ url_for('pro_object_complete') }}" id="nextButton" style="color:white">다음</a>
-  </form>
+    </div> 
+    </form>
   <button type="button" id="startRecognition" class="startRecognitionButton"></button> 
-</div></div>
+</div>
+<div class="mic-wrapper">
+  <div class="mic-blink-circle"></div>
+  <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+  width:  50px;"/>
+</div>
+</div>
 </div>
 <div class = "rectangle-right">
 </div>
 </div>
 <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+document.addEventListener('DOMContentLoaded', function() {
+  // 초기 로딩 시 로딩 화면 숨김
+  window.onload = function() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+  };
 
-    window.onload = function() {
-      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
-    };
+  // 모든 링크에 대한 클릭 이벤트 처리
+  document.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault(); // 기본 링크 이동을 중단
+      var href = this.getAttribute('href'); // 링크의 href 값 가져오기
+
+      // 로딩 화면 표시
+      document.getElementById('loadingOverlay').style.display = 'flex';
+
+      // 지정된 시간 후에 페이지 이동
+    });
   });
+});
     // 번역된 텍스트를 저장할 변수
     var translatedTextGlobal = '';
 

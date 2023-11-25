@@ -413,13 +413,14 @@ white-space:nowrap;
   border-radius: 2rem;
   flex-shrink: 0;
 }
-.item-6-39T .auto-group-cyaz-fwX .auto-group-5eyr-R9K .bi-mic-fill-JTK {
+.item-6-39T .auto-group-cyaz-fwX .auto-group-cyaz-fwX .mic-wrapper .bi-mic-fill-JTK {
   margin-left: 74.7rem;
-  width: 2.5rem;
-  height: 3.8667rem;
+  width: 0.5rem;
+  height: 1rem;
   object-fit: contain;
   vertical-align: top;
   flex-shrink: 0;
+
 }
 .item-6-39T .rectangle-right {
   width: 25.8rem;
@@ -515,8 +516,31 @@ font-size: 15px;
   height: 50px;
   animation: spin 2s linear infinite;
 }
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.mic-wrapper {
+  position: relative;
+  display: inline-block; /* 혹은 적절한 레이아웃 설정 */
+  top: 10%;
+  left: 40%;
+}
+
+.mic-blink-circle {
+  position: absolute;
+  top: 20%;
+  left: 125%;
+  transform: translate(-50%, -50%);
+  width: 10px; /* 원 크기 조절 */
+  height: 10px;
+  background-color: #DE080F; /* 원 색상 조절 */
+  border-radius: 50%;
+  animation: blink 1s linear infinite;
+  z-index: -1; /* 마이크 이미지 뒤에 위치 */
 }

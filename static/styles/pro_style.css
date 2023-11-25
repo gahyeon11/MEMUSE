@@ -813,4 +813,31 @@ html, body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.mic-wrapper {
+  position: relative;
+  display: inline-block; /* 혹은 적절한 레이아웃 설정 */
+  top: 0rem;
+  left: 40%;
+}
+
+.mic-blink-circle {
+  position: absolute;
+  top: 20%;
+  left: 125%;
+  transform: translate(-50%, -50%);
+  width: 10px; /* 원 크기 조절 */
+  height: 10px;
+  background-color: #DE080F; /* 원 색상 조절 */
+  border-radius: 50%;
+  animation: blink 1s linear infinite;
+  z-index: -1; /* 마이크 이미지 뒤에 위치 */
 }

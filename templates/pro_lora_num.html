@@ -18,7 +18,7 @@
 <body>
   <div id="loadingOverlay" style="display: none;">
     <div class="loadingContent">
-      <div class="loader"></div>
+      <img src="../static/assets/loading.gif" alt="생성 중..."/>
       <p>생성 중..</p>
     </div>
   </div>
@@ -96,7 +96,11 @@
       <div class="group-32-x2u"><a id="noButton" style="color:white">아니오</a></div>
       <div class="group-32-next"><a id="nextButton" style="color:white">다음</a></div>
 
-      <img class="bi-mic-fill-yyb" src="../static/assets/bi-mic-fill-TEH.png"/>
+      <div class="mic-wrapper">
+        <div class="mic-blink-circle"></div>
+        <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+        width:  50px;"/>
+      </div>
     </div>
   </div>
   <div class="rectangle-right">
@@ -104,13 +108,23 @@
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // 'DOMContentLoaded' 이벤트가 발생하면 로딩 화면을 보이게 설정
-  document.getElementById('loadingOverlay').style.display = 'flex';
-  
-  // 모든 리소스가 로드되면 로딩 화면을 숨김
+  // 초기 로딩 시 로딩 화면 숨김
   window.onload = function() {
     document.getElementById('loadingOverlay').style.display = 'none';
   };
+
+  // 모든 링크에 대한 클릭 이벤트 처리
+  document.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault(); // 기본 링크 이동을 중단
+      var href = this.getAttribute('href'); // 링크의 href 값 가져오기
+
+      // 로딩 화면 표시
+      document.getElementById('loadingOverlay').style.display = 'flex';
+
+      // 지정된 시간 후에 페이지 이동
+    });
+  });
 });
 
   // 음성 인식 API 초기화

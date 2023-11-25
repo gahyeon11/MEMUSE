@@ -18,7 +18,7 @@
 <body>
   <div id="loadingOverlay" style="display: none;">
   <div class="loadingContent">
-    <div class="loader"></div>
+    <img src="../static/assets/loading.gif" alt="생성 중..."/>
     <p>생성 중...</p>
   </div>
 </div>
@@ -50,15 +50,14 @@
     </div>
     <div class="auto-group-ck7s-kGH">
       <div class="item--J2u" >작가님의 그림이에요!</div>
-      <img class="bi-mic-fill-jtu" src="../static/assets/bi-mic-fill-sVB.png"/>
       <div class="item--4wB">
       완성됐어요! 오브젝트 배치를 변경할까요?
       <br/>
       클릭 또는 말씀해 주세요.
       </div>
       <div class="auto-group-6ved-gxZ">
-        <div class="group-42-RQM"><a href="{{ url_for('pro_edit_obj_num') }}" style="color:white">예</a></div>
-        <div class="auto-group-etut-tHw"><a href="{{ url_for('pro_filter') }}" id = "noLink" style="color:white">아니오</a></div>
+        <div class="group-42-RQM"><a href="{{ url_for('pro_filter') }}" id = "noLink" style="color:white">아니요</a></div>
+        <div class="auto-group-etut-tHw"><a href="{{ url_for('pro_edit_obj_num') }}"  style="color:white">예</a></div>
       </div>
       <div class="rectangle-9-kL9">
         <div class="image-container">
@@ -99,6 +98,11 @@
           <!-- <div class="item--2gH">필터</div> -->
         </div>
       </div>
+      <div class="mic-wrapper">
+        <div class="mic-blink-circle"></div>
+        <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+        width:  50px;"/>
+      </div>
     </div>
   </div>
   <!-- <div class="rectangle-30-KQV">
@@ -126,7 +130,7 @@
   }
 
   // "아니오" 링크 엘리먼트 가져오기 및 클릭 이벤트 리스너 추가
-  const noLink = document.querySelector('.auto-group-etut-tHw a');
+  const noLink = document.querySelector('.group-42-RQM a');
   noLink.addEventListener('click', async function(event) {
       event.preventDefault();
 

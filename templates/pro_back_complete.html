@@ -16,12 +16,7 @@
   <link rel="stylesheet" href="../static/styles/pro_back_complete.css"/>
 </head>
 <body>
-  <div id="loadingOverlay" style="display: none;">
-    <div class="loadingContent">
-      <div class="loader"></div>
-      <p>생성 중..</p>
-    </div>
-  </div>
+
 <div class="item-3-jRb">
   <div class="rectangle-left"></div>
   <div class="auto-group-jkff-mt5">
@@ -50,7 +45,6 @@
     <div class="auto-group-p6pr-MQM" >
      
       <div class="item--J4h">배경이 마음에 드나요?</div>
-      <img class="bi-mic-fill-kSV" src="../static/assets/bi-mic-fill-zU1.png"/>
       <div class="item--UdP">
         <span class="item--UdP-sub-0">처음으로 돌아가고 싶다면 클릭 또는
         <span style="color:#1400ff; font-weight:bold">‘처음’</span>
@@ -65,8 +59,6 @@
     <img class="item--J2u" src="{{ url_for('static', filename=latest_image_path) }}" />
   </div>
 {% endif %}
-
-      
       <div class="group-14-tPb">
         <div class="item--cqP">
           <span class="item--cqP-sub-0">{{ username }}&nbsp;</span>
@@ -99,20 +91,18 @@
         <div class="group-38-EbB"><a href="{{ url_for('pro_back') }}" style="color:white" onclick="deleteAllImages()">처음</a></div>
         <div class="group-39-6dP"><a href="{{ url_for('pro_object') }}" style="color:white" >다음</a></div>
       </div>
+          <div class="mic-wrapper">
+        <div class="mic-blink-circle"></div>
+        <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+        width:  50px;"/>
+      </div>
     </div>
   </div>
   <div class="rectangle-right">
   </div>
 </div>
 <script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
-
-    window.onload = function() {
-      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
-    };
-  });// 음성 인식 API 초기화
+  // 음성 인식 API 초기화
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;

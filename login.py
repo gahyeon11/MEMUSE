@@ -674,12 +674,10 @@ def new_save_success():
             file_path = session.get('file_path')
             print(file_path)
             image_style = session.get('image_style', 'default_style')
-            print(image_style)
             print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
             new_image = ImageModel(user_id=user_id, file_path=file_path, title=title, category=image_style, caption=caption)
             db.session.add(new_image)
             db.session.commit()
-            print(ImageModel(session[image_style]))
             session['title'] = title
             session['caption'] = caption
             flash('작품이 저장되었습니다!', 'success')
@@ -860,12 +858,6 @@ def pro_complete():
         return redirect(url_for('login'))
     form = ImageInfoForm()
     username = session.get('username', 'Guest')
-    # print("aaaaaaaa1")
-    # print(session['file_path'])
-    #time.sleep(1)
-    # print("aaaaaaaa2")
-    # print(session['file_path'])
-
     return render_template('pro_complete.html', username=username, form=form)
        
 
@@ -1198,43 +1190,6 @@ def pro_object():
         username = session.get('username', 'Guest')
         return render_template('pro_object.html', username=username)
     
-# @app.route('/pro_object_complete')
-# def pro_object_complete():
-#     # 이미지 생성 코드
-#     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-#     print(payload)
-#     r = response.json()
-    
-#     # 이미지 저장, 텍스트 데이터를 이진 데이터로 디코딩
-#     for i in r['images']:
-#         image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
-#         # API 요청을 보내 이미지 정보 검색
-#         png_payload = {
-#             "image": "data:image/png;base64," + i
-#         }
-#         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
-#         # PIL 이미지에 메타 데이터 삽입
-#         pnginfo = PngImagePlugin.PngInfo()
-#         pnginfo.add_text("parameters", response2.json().get("info"))
-#         # 현재 날짜와 시간을 문자열로 가져와 파일 이름으로 설정
-#         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-#         file_name = f'static/pro_object/output_t2i{current_time}.png'
-        
-#         # 이미지 저장
-#         image.save(file_name, pnginfo=pnginfo)
-    
-#     # 가장 최근에 저장된 이미지 파일 경로 찾기
-#     latest_image_path = None
-#     pro_object_folder = 'static/pro_object'
-#     pro_object_images = [filename for filename in os.listdir(pro_object_folder) if filename.endswith(".png")]
-    
-#     if pro_object_images:
-#         latest_image_path = os.path.join('pro_object', pro_object_images[-1])  # 경로 수정
-#         latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
-    
-#     username = session.get('username', 'Guest')
-#     return render_template('pro_object_complete.html', username=username, latest_image_path=latest_image_path)
-
 @app.route('/pro_object_complete')
 def pro_object_complete():
     # 이미지 생성 코드

@@ -482,23 +482,25 @@ html, body {
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.2125;
-  color: #000000;
+  color: #ffffff;
   white-space:nowrap;
   /* font-family: Inter, 'Source Sans Pro'; */
   font-family: 'Hahmlet', Inter, serif;
 /* font-family: 'Nanum Gothic', sans-serif; */
+z-index: 10;
 }
 .item-15-vSV .auto-group-zkah-mT7 .auto-group-xs3p-4uP .group-14-svh .auto-group-r7m3-Rz9 .ellipse-6-w9B {
   width: 5.8rem;
   height: 5.8rem;
   position: absolute;
-  left: 57.5rem;
+  left: 46rem;
   top: 0;
   border: solid 0.1rem #003c74;
   box-sizing: border-box;
   filter: blur(0.2rem);
   background-color: #003c74;
   border-radius: 2.9rem;
+  z-index: 0;
 }
 .item-15-vSV .auto-group-zkah-mT7 .auto-group-xs3p-4uP .group-14-svh .auto-group-r7m3-Rz9 .item--F9s {
   width: 1.7rem;
@@ -881,4 +883,31 @@ html, body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.mic-wrapper {
+  position: relative;
+  display: inline-block; /* 혹은 적절한 레이아웃 설정 */
+  top: -10rem;
+  left: 40%;
+}
+
+.mic-blink-circle {
+  position: absolute;
+  top: 20%;
+  left: 125%;
+  transform: translate(-50%, -50%);
+  width: 10px; /* 원 크기 조절 */
+  height: 10px;
+  background-color: #DE080F; /* 원 색상 조절 */
+  border-radius: 50%;
+  animation: blink 1s linear infinite;
+  z-index: -1; /* 마이크 이미지 뒤에 위치 */
 }

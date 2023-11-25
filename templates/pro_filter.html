@@ -18,7 +18,7 @@
 <body>
   <div id="loadingOverlay" style="display: none;">
     <div class="loadingContent">
-      <div class="loader"></div>
+      <img src="../static/assets/loading.gif" alt="생성 중..."/>
       <p>생성 중..</p>
     </div>
   </div>
@@ -52,7 +52,7 @@
     </div>
     <div class="auto-group-xs3p-4uP">
       <div class="item--D1b">적용하고 싶은 필터의 번호를 클릭 또는 말씀해 주세요.</div>
-      <img class="bi-mic-fill-DQu" src="../static/assets/bi-mic-fill-NEV.png"/>
+      
       <!-- <div class="item--fGu">
       선택한 필터의 번호는 -입니다.
       <br/>
@@ -84,12 +84,12 @@
           <div class="ellipse-4-j9b">
           </div>
           <div class="item--qiR">배치</div>
-          <div class="ellipse-5-LQH">
+          <div class="ellipse-6-w9B">
           </div>
           <div class="item--FXF">필터</div>
-          <!-- <div class="ellipse-6-w9B">
-          </div> -->
-          <!-- <div class="item--F9s">필터</div> -->
+          <div class="ellipse-6-w9B">
+          </div>
+          <div class="item--F9s">필터</div>
         </div>
       </div>
       <a> <div class="auto-group-s1v3-w2h">
@@ -137,18 +137,35 @@
         <div class="item--k1P">12. 흑백</div>
       </div>
     </div>
+    <div class="mic-wrapper">
+      <div class="mic-blink-circle"></div>
+      <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+      width:  50px;"/>
+    </div>
   </div></div>
   <div class="rectangle-right">
   </div>
 </div>
 <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
+document.addEventListener('DOMContentLoaded', function() {
+  // 초기 로딩 시 로딩 화면 숨김
+  window.onload = function() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+  };
 
-    window.onload = function() {
-      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
-    };
+  // 모든 링크에 대한 클릭 이벤트 처리
+  document.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault(); // 기본 링크 이동을 중단
+      var href = this.getAttribute('href'); // 링크의 href 값 가져오기
+
+      // 로딩 화면 표시
+      document.getElementById('loadingOverlay').style.display = 'flex';
+
+      // 지정된 시간 후에 페이지 이동
+    });
   });
+});
   function sendFilter(filterNumber) {
     fetch('{{ url_for("pro_filter") }}', {
       method: 'POST',

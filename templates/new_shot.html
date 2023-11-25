@@ -18,7 +18,7 @@
 <body>
   <div id="loadingOverlay" style="display: none;">
     <div class="loadingContent">
-      <div class="loader"></div>
+      <img src="../static/assets/loading.gif" alt="생성 중..."/>
       <p>생성 중..</p>
     </div>
   </div>
@@ -92,7 +92,11 @@
         <a href="{{url_for("new_back")}}" class="rectangle-27-jSy" data-prompt="eye-level angle, full shot,"> <img src="../static/assets/angle_full.png">
         </a>
       </div>
-      <img class="bi-mic-fill-Dsw" src="../static/assets/bi-mic-fill-sAq.png"/>
+      <div class="mic-wrapper">
+        <div class="mic-blink-circle"></div>
+        <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+        width:  50px;"/>
+      </div>
     </div>
   </div></div>
   <div class="rectangle-right">
@@ -100,11 +104,10 @@
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function(){
-    // 모든 rectangle 요소에 이벤트 리스너 추가
-    document.getElementById('loading').style.display = 'flex'; // 로딩 문구 보이기
-    window.onload = function() {
-      document.getElementById('loading').style.display = 'none'; // 로딩 문구 숨기기
-    };
+    document.getElementById('loadingOverlay').style.display = 'flex';
+      window.onload = function() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+      };
     document.querySelectorAll('.rectangle-22-deq, .rectangle-26-nGq, .rectangle-27-jSy').forEach(function(rectangle){
       rectangle.addEventListener('click', function(event){
         event.preventDefault(); // 기본 링크 동작 방지

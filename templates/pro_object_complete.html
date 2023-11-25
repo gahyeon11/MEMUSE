@@ -18,7 +18,7 @@
 <body>
   <div id="loadingOverlay" style="display: none;">
     <div class="loadingContent">
-      <div class="loader"></div>
+      <img src="../static/assets/loading.gif" alt="생성 중..."/>
       <p>생성 중...</p>
     </div>
   </div>
@@ -52,7 +52,7 @@
     </div>
     <div class="auto-group-8ta5-Lty">
       <div class="item--HJR">오브젝트가 마음에 드나요?</div>
-      <img class="bi-mic-fill-LGh" src="../static/assets/bi-mic-fill-eBB.png"/>
+      
       {% if latest_image_path %}
       <div class="rectangle-9-f45">
         <img class="item--J2u" src="{{ url_for('static', filename=latest_image_path) }}" />
@@ -98,6 +98,11 @@
       <div class="auto-group-qcy9-Gsj">
         <div class="group-38-zoj"><a href="{{ url_for('pro_object') }}" style="color:white" onclick="delete_object_image()">처음</a></div>
         <div class="group-39-f9B"><a href="{{ url_for('pro_edit_object') }}" style="color:white">다음</div>
+      </div>
+      <div class="mic-wrapper">
+        <div class="mic-blink-circle"></div>
+        <img class="bi-mic-fill-JTK" src="../static/assets/bi-mic-fill-1J9.png" style="
+        width:  50px;"/>
       </div>
     </div>
   </div>
