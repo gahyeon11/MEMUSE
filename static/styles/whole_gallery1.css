@@ -705,7 +705,7 @@ white-space: nowrap;
   position: relative;
   display: inline-block; /* 혹은 적절한 레이아웃 설정 */
   top: 10%;
-  left: 40%;
+  left: 70%;
 }
 
 .mic-blink-circle {

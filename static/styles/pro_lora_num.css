@@ -681,8 +681,8 @@ font-size: 15px;
 .mic-wrapper {
   position: relative;
   display: inline-block; /* 혹은 적절한 레이아웃 설정 */
-  top: 0rem;
-  left: 40%;
+  top: 1rem;
+  left: 80%;
 }
 
 .mic-blink-circle {

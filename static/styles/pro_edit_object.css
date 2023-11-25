@@ -1,3 +1,4 @@
+
 html {
 	font-size:62.5%;
 }
@@ -209,7 +210,7 @@ html, body {
   height: 0rem;
   position: absolute;
   left: 53.6rem;
-  top: 27.0619rem;
+  top: 22.0619rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -237,7 +238,7 @@ html, body {
   height: 21rem;
   position: absolute;
   left: 49rem;
-  top: 72.5119rem;
+  top: 68.5119rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,7 +257,7 @@ html, body {
   height: 6rem;
   position: absolute;
   left: 48.8rem;
-  top: 87rem;
+  top: 83rem;
   display: flex;
   align-items: center;
 }
@@ -308,7 +309,7 @@ html, body {
   height: 512px;
   position: relative;
   left: 34rem;
-  top: 29rem;
+  top: 25rem;
   background-color: #d9d9d9;
 }
 .item-7-wMT .auto-group-pqnh-NxZ .auto-group-ck7s-kGH .group-14-sff {
@@ -603,9 +604,6 @@ html, body {
 
 .loadingContent {
   text-align: center;
-  color: #ffffff; /* 밝은 색상으로 변경 */
-  font-size: 1.5rem; /* 글자 크기 증가 */
-
 }
 
 .loader {
@@ -620,7 +618,9 @@ html, body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}@keyframes blink {
+}
+
+@keyframes blink {
   0%, 100% {
     opacity: 1;
   }
@@ -633,7 +633,7 @@ html, body {
   position: relative;
   display: inline-block; /* 혹은 적절한 레이아웃 설정 */
   top: 35%;
-  left: 94%;
+  left: 105%;
 }
 
 .mic-blink-circle {

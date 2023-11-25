@@ -19,14 +19,15 @@ a {
 }
 
 body {
-  width: 100%;
-  height: 100%;}
+width: 100%;
+height: 100%;}
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* 뷰포트 높이에 맞춤 */
-    overflow: hidden; /* 스크롤바 제거 */
-}.item-5-5sF {
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* 뷰포트 높이에 맞춤 */
+  overflow: hidden; /* 스크롤바 제거 */
+}
+.item-5-5sF {
   display: flex;
   justify-content: center;
   background-color: #ffffff;
@@ -34,8 +35,9 @@ html, body {
   width: auto;
   height: 100vh; /* 전체 화면 높이에 맞춤 */
   position: relative; /* 부모 요소를 상대 위치로 설정 */
-  margin: 0 auto;
+  margin: 0 auto; /* 좌우 마진 자동 조정 */
 }
+
 .item-5-5sF .auto-group-dbd3-1F7 {
   margin-right: 2.6rem;
   width: 33.6rem;
@@ -195,7 +197,7 @@ html, body {
   height: 0rem;
   position: absolute;
   left: 52.5rem;
-  top: 25.8619rem;
+  top: 20.8619rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +225,7 @@ html, body {
   height: 512px;
   position: absolute;
   left: 34rem;
-  top: 28rem;
+  top: 23rem;
   background-color: #d9d9d9;
 }
 .item-5-5sF .auto-group-ouz3-vss .auto-group-8ta5-Lty .group-14-Bo7 {
@@ -462,7 +464,7 @@ html, body {
   height: 20rem;
   position: absolute;
   left: 36.75rem;
-  top: 72.5119rem;
+  top: 68.5119rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -507,7 +509,7 @@ html, body {
   height: 6rem;
   position: absolute;
   left: 48.5rem;
-  top: 86rem;
+  top: 84rem;
   display: flex;
   align-items: center;
 }
@@ -562,6 +564,8 @@ html, body {
   background-color: #003c74;
   flex-shrink: 0;
 }
+
+
 .rectangle-left, .rectangle-right {
   width: 25.8rem; /* 너비 설정 */
   height: 108rem; /* 높이 설정 */
@@ -569,27 +573,25 @@ html, body {
   top: 0; /* 상단에 위치 */
   z-index: 5; /* 다른 요소 위에 표시 */
   background-color: #003c74;
-  height: 100vh;
+
+  height: 100vh; /* 전체 뷰포트 높이 */
 }
+
 .rectangle-left {
   left: 0; /* 왼쪽 끝에 위치 */
 }
+
 .rectangle-right {
   right: 0; /* 오른쪽 끝에 위치 */
 }
-/* 기존 상단 바 스타일 유지 */
-/* 상단 바 아래로 나머지 내용을 이동시킵니다. */
 .auto-group-ouz3-vss {
   position: relative;
   top: 49%; /* 상단으로부터 50% */
   left: 30.5%; /* 왼쪽으로부터 50% */
   transform: translate(-50%, -50%); /* X와 Y축으로 -50% 이동하여 완전 중앙 정렬 */
   padding-bottom: 228px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
-/* 로딩 화면 스타일 */
+
 #loadingOverlay {
   position: fixed;
   top: 0;
@@ -622,8 +624,7 @@ html, body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-@keyframes blink {
+}@keyframes blink {
   0%, 100% {
     opacity: 1;
   }
@@ -635,7 +636,7 @@ html, body {
 .mic-wrapper {
   position: relative;
   display: inline-block; /* 혹은 적절한 레이아웃 설정 */
-  top: 80rem;
+  top: 85rem;
   left: 90%;
 }
 

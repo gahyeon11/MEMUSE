@@ -896,7 +896,7 @@ z-index: 10;
   position: relative;
   display: inline-block; /* 혹은 적절한 레이아웃 설정 */
   top: -10rem;
-  left: 40%;
+  left: 60%;
 }
 
 .mic-blink-circle {

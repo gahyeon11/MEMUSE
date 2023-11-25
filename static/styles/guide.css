@@ -355,7 +355,7 @@ html, body {
   position: relative;
   display: inline-block; /* 혹은 적절한 레이아웃 설정 */
   top: -10rem;
-  left: 60%;
+  left: 92%;
 }
 
 .mic-blink-circle {
