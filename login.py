@@ -25,8 +25,9 @@ import pymysql
 import shutil
 from pro_edit_object import process_edit_object
 import time
+import re
 
-
+num = 1
 pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
@@ -502,7 +503,7 @@ def new_complete():
     username = session.get('username', 'Guest')
     return render_template('new_complete.html', username=username, form=form)
 
-
+    
 @app.route('/new_filter', methods=['GET', 'POST'])
 def new_filter():
     if request.method == 'POST':
@@ -601,13 +602,41 @@ def new_filter():
             # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
             image = image.convert('L')     
         
-        
-        filter_file_name = f'fin/output_t2i{filter_number}{current_time}.png'
-        image.save(os.path.join(app.static_folder, filter_file_name))
-        session['file_path'] = filter_file_name
-        print(filter_file_name)
-        # 이미지 저장(db x)
-        # image.save(file_name, pnginfo = pnginfo)
+        #filter_file_name = f'fin/output_t2i{filter_number}{current_time}.png'
+        # filter_file_name = f'fin/output_t2i.png'
+        #input_path = r'C: /Users /DS /Documents /GitHub /MEMUSE /static /num'
+
+        filename = 'output_t2i'  # 파일명 고정값
+        file_ext = '.png'  # 파일 형식
+        relative_directory = 'num'  # 'static' 폴더 내의 상대 디렉토리
+        base_directory = os.path.join(app.static_folder, relative_directory)
+        output_path = f'{filename}{file_ext}'  # 상대 경로만 사용
+
+        uniq = 1
+        full_output_path = os.path.join(base_directory, output_path)
+        while os.path.exists(full_output_path):  # 동일한 파일명이 존재할 때
+            output_path = f'{filename}({uniq}){file_ext}'  # 파일명(1), 파일명(2)...
+            full_output_path = os.path.join(base_directory, output_path)
+            uniq += 1
+
+        # 이미지 처리 로직
+        # ... [이미지 처리 코드 생략] ...
+
+        image.save(full_output_path)
+        session['file_path'] = os.path.join(relative_directory, output_path).replace('\\', '/')
+        print(full_output_path)
+
+        # image.save(os.path.join(app.static_folder, filter_file_name))
+        # session['file_path'] = filter_file_name
+        # print(filter_file_name)
+
+
+        # base_directory = os.path.join(app.static_folder, 'num')
+        # base_filename = f"num/output_t2i"
+        # filter_file_name = get_next_filename(base_directory, base_filename)
+        # image.save(os.path.join(app.static_folder, filter_file_name ))
+        # session['file_path'] = filter_file_name
+        # print(filter_file_name)
         
         return redirect(url_for('new_complete'))
     username = session.get('username', 'Guest')
@@ -847,7 +876,7 @@ def pro_back_complete():
         latest_image_path = None
         if background_images:
             latest_image_path = os.path.join('background', background_images[-1])  # 경로 수정
-            latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+            latest_image_path = latest_image_path.replace(' / /', '/')  # 백슬래시를 슬래시로 변경
 
         username = session.get('username', 'Guest')
         return render_template('pro_back_complete.html', username=username, latest_image_path=latest_image_path)
@@ -969,7 +998,7 @@ def pro_filter():
             return redirect(url_for('pro_filter')) 
 
         full_file_path = os.path.join(app.static_folder, file_path)
-        full_file_path = full_file_path.replace('\\', '/')
+        full_file_path = full_file_path.replace(' / /', '/')
         print("후Attempting to open:", full_file_path)
 
 
@@ -1065,15 +1094,36 @@ def pro_filter():
             # '흑백' 필터 예시: 이미지를 그레이스케일로 변환
             image = image.convert('L')     
         
-        file_name = f'fin/output_t2i{filter_number}{current_time}.png'
-        image.save(os.path.join(app.static_folder, file_name))
-        print("fin 저장:", file_name)
+        #file_name = f'fin/output_t2i{filter_number}{current_time}.png'
+        # file_name = f'fin/output_t2i.png'
+
+        # image.save(os.path.join(app.static_folder, file_name))
+        # print("fin 저장:", file_name)
         
-        session['file_path'] = file_name
+        # session['file_path'] = file_name
         # print("6767676767")
         # print(file_name) 
         # print(session['file_path']) 
-        print("fin 후 settion path :", session['file_path'])
+        
+        filename = 'output_t2i'  # 파일명 고정값
+        file_ext = '.png'  # 파일 형식
+        relative_directory = 'num'  # 'static' 폴더 내의 상대 디렉토리
+        base_directory = os.path.join(app.static_folder, relative_directory)
+        output_path = f'{filename}{file_ext}'  # 상대 경로만 사용
+
+        uniq = 1
+        full_output_path = os.path.join(base_directory, output_path)
+        while os.path.exists(full_output_path):  # 동일한 파일명이 존재할 때
+            output_path = f'{filename}({uniq}){file_ext}'  # 파일명(1), 파일명(2)...
+            full_output_path = os.path.join(base_directory, output_path)
+            uniq += 1
+
+        # 이미지 처리 로직
+        # ... [이미지 처리 코드 생략] ...
+
+        image.save(full_output_path)
+        session['file_path'] = os.path.join(relative_directory, output_path).replace('\\', '/')
+        print(full_output_path)
 
         return jsonify({'redirect': url_for('pro_complete')})
     
@@ -1229,7 +1279,7 @@ def pro_object_complete():
 
     if pro_object_images:
         latest_image_path = os.path.join('pro_object', pro_object_images[-1])  # 경로 수정
-        latest_image_path = latest_image_path.replace('\\', '/')  # 백슬래시를 슬래시로 변경
+        latest_image_path = latest_image_path.replace(' / /', '/')  # 백슬래시를 슬래시로 변경
     print("Latest image path:", latest_image_path)
 
     
