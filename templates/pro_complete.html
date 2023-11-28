@@ -171,16 +171,16 @@ document.addEventListener('DOMContentLoaded', function() {
           form.submit();
         }
         break;
-      default:
-        if (!isTitleComplete) {
-          title += result + ' ';
-          document.getElementById('title').value = title;
-        } else {
-          captions += result + ' ';
-          document.getElementById('captions').value = captions;
-        }
-        break;
-    }
+    //   default:
+    //     if (!isTitleComplete) {
+    //       title += result + ' ';
+    //       document.getElementById('title').value = title;
+    //     } else {
+    //       captions += result + ' ';
+    //       document.getElementById('captions').value = captions;
+    //     }
+    //     break;
+     }
   };
   
   document.getElementById('save-button').addEventListener('click', () => {

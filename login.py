@@ -674,12 +674,10 @@ def new_save_success():
             file_path = session.get('file_path')
             print(file_path)
             image_style = session.get('image_style', 'default_style')
-            print(image_style)
             print(f"Title: {title}, Caption: {caption}, User ID: {user_id}, File Path: {file_path}, Image Style: {image_style}")
             new_image = ImageModel(user_id=user_id, file_path=file_path, title=title, category=image_style, caption=caption)
             db.session.add(new_image)
             db.session.commit()
-            print(ImageModel(session[image_style]))
             session['title'] = title
             session['caption'] = caption
             flash('작품이 저장되었습니다!', 'success')

@@ -309,4 +309,71 @@ processedImage = document.querySelector('.processed-image-class'); // 클래스 
     }
 });
 
+    // 음성 인식 API 초기화 및 시작
+    const recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'ko-KR';
+    recognition.start();
+
+    recognition.onresult = (event) => {
+      const result = event.results[event.results.length - 1][0].transcript.trim();
+      console.log('음성 인식 결과:', result);
+
+      // 인식된 음성 명령에 따라 처리
+      handleVoiceCommands(result);
+    };
+
+    recognition.onerror = (event) => {
+      console.error('음성 인식 오류:', event.error);
+    };
+
+    // 음성 명령 처리 함수
+    function handleVoiceCommands(command) {
+  var processedImage = document.getElementById('processed-image');
+  var bgRect = document.getElementById('background-image').getBoundingClientRect();
+  if (!processedImage) return;
+
+  const cols = 3;  // 그리드의 열 수 정의
+  const rows = 3;  // 그리드의 행 수 정의
+  const cellWidth = bgRect.width / cols;
+  const cellHeight = bgRect.height / rows;
+
+  let left = parseInt(processedImage.style.left, 10) || 0;
+  let top = parseInt(processedImage.style.top, 10) || 0;
+  const moveStep = 10;
+
+  if (command.includes('플러스')) {
+    processedImage.style.width = Math.min(processedImage.clientWidth * 1.1, bgRect.width) + "px";
+    processedImage.style.height = "auto";
+  } else if (command.includes('마이너스')) {
+    processedImage.style.width = Math.max(processedImage.clientWidth * 0.9, 10) + "px";
+    processedImage.style.height = "auto";
+  } else if (command.includes('상')) {
+    processedImage.style.top = `${top - moveStep}px`;
+  } else if (command.includes('하')) {
+    processedImage.style.top = `${top + moveStep}px`;
+  } else if (command.includes('좌')) {
+    processedImage.style.left = `${left - moveStep}px`;
+  } else if (command.includes('우')) {
+    processedImage.style.left = `${left + moveStep}px`;
+  } else if (command.includes('완료')) {
+    document.getElementById('noLink').click(); // '다음' 버튼 클릭 이벤트 발생
+
+  } else {
+    // 숫자 1부터 9까지 처리
+    const numMatch = command.match(/\b[1-9]\b/);
+    if (numMatch) {
+      const num = parseInt(numMatch[0]);
+      const col = (num - 1) % cols;
+      const row = Math.floor((num - 1) / cols);
+      var newLeft = col * cellWidth;
+      var newTop = row * cellHeight;
+
+      processedImage.style.left = `${newLeft}px`;
+      processedImage.style.top = `${newTop}px`;
+    }
+  }
+}
+
 </script>
