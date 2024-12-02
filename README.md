@@ -39,55 +39,61 @@
 #### 메인페이지
 <br>
 
-<img src = "https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/959ded72-6347-4ca2-b667-59de7c9e2e21.jpg" width="40%" height="40%">
-<img src = "https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/f314d9c1-f30c-4f1d-8ebf-5c8af15017ed.jpg" width="40%" height="40%">
+![메인 1-1](https://github.com/user-attachments/assets/6b221e5f-160a-4dba-860d-e2d1fad19e1b)
 
+![메인 1-4](https://github.com/user-attachments/assets/4931653b-2bb6-4497-910d-8da5a6be9995)
 
-
-#### 로그인
-<br>
-
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/60dcbcd1-3db2-423c-8628-29f6bbdc2dd6)
-<br>
-#### 이미지 생성 1 : 선택지 부여
+#### 로그인 / 회원가입
 <br>
 
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/38e92f53-a58a-4744-a69e-6d7e72a28dcc)
-<br>
-#### 이미지 생성 2 : 직접 프롬프트 입력 / 음성 입력
+![음성 인식 사용자 - 로그인](https://github.com/user-attachments/assets/a9cf8212-4a17-47c2-8f28-ecce302c022c)
+![회원가입 선택](https://github.com/user-attachments/assets/96b5c832-172d-4ec9-b77d-2429f7055098)
+![음성 인식 사용자 - 회원가입3](https://github.com/user-attachments/assets/2d30225b-85f6-45c3-8aab-4679ec6b6065)
+![음성 인식 사용자 - 회원가입1](https://github.com/user-attachments/assets/5b0aeb4f-dca0-4d27-8f0f-0e277d4701ce)
+
 <br>
 
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/b6c1dbb2-3bf5-470b-b6e4-e78c20c4876b)
-<br>
-#### 이미지 생성 3 : (전문가 단계)오브젝트 + 배경 이미지 확인
+#### 이미지 생성 - 초보자
+
+1. 배경, 오브젝트 이미지 종류 선택
+2. 선택된 종류 내에서 랜덤 생성
+
 <br>
 
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/999fdbc8-56e9-4382-bcf6-ef2c53d6533e)
-<br>
-#### 이미지 생성 4 : (전문가 단계)오브젝트 이미지 배경 제거 + 위치 및 크기 조정
-<br>
-
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/0006b84c-4e4d-416c-83a1-b43ed3eaf4d7)
-<br>
-#### 이미지 생성 4 : 필터 
-<br>
-
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/fd3ce550-c3d1-4846-a431-ac70b3ad705c)
-<br>
-#### 이미지 저장
-<br>
+![스크린샷 2024-11-05 162430](https://github.com/user-attachments/assets/74f8967a-e93c-4722-b8ad-ef1ad287af7e)
 
 
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/8ae7ae33-c031-4323-9230-f7c648222881)
 <br>
+
+#### 이미지 생성 - 전문가 
+
+1. 화충, 그림 스타일, 보정 정도 선택
+2. 배경, 오브젝트의 프롬프트 직접 입력
+3. 이미지 추가, 삭제, 위치/크기 수정 등을 통하여 이미지 커스텀
+4. 필터 적용
+5. 커스텀 이미지 생성
+
+<br>
+
+![스크린샷 2024-11-05 162922](https://github.com/user-attachments/assets/c3067287-da07-40f8-a558-3d3e738189e9)
+![스크린샷 2024-11-05 163008](https://github.com/user-attachments/assets/46f84df2-f8cc-4eef-9339-f745f9183bc2)
+![스크린샷 2024-11-05 163036](https://github.com/user-attachments/assets/d3f6f174-ea51-421b-b2dd-ab4a2dd4d257)
+
+
+<br>
+
 #### 갤러리 내에서 확인
+- 웹 페이지 내의 갤러리 뿐만 아니라 언리얼엔진을 이용해 제작된 가상의 전시관을 통해서도 자신의 그림 / 다른 사용자의 그림 감상이 가능하다.
+- 가상 공간 전시관은 기본 / 바다 두가지 테마로 제작되어 다양하게 이용 가능하다.
 <br>
 
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/cc4bcefb-2648-47f7-8fde-09b27168ed7e)
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/7cde6814-da71-40af-8a2b-1b42cfddfe15)
-![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/2d58a4ee-77ec-4a3c-b11e-78dacb01c20b)
+![스크린샷 2024-11-05 164309](https://github.com/user-attachments/assets/8230d896-912e-47eb-9a4b-fe1a30cef7b0)
 
+![스크린샷 2024-11-05 163427](https://github.com/user-attachments/assets/235b8521-1041-44f8-8a14-6108ee22e0a1)
 
+![스크린샷 2024-11-05 163135](https://github.com/user-attachments/assets/3dff68b9-916b-46ed-a450-f0660ab9162d)
+
+---
 
 ![image](https://github.com/gahyeon11/AI_Image_with-voice/assets/117976216/6bc8115b-9841-4638-a51c-80bbcce48779)
 
